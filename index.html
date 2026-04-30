@@ -222,13 +222,22 @@ body::after{content:'';position:fixed;top:0;right:0;bottom:0;left:0;background:r
 .sb{padding:12px}
 .dr{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.dr:last-child{margin-bottom:0}
 .df{display:flex;flex-direction:column;gap:4px}.df.full{grid-column:1/-1}
-.dl{font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em}
+.dl{font-family:'JetBrains Mono','Courier New',Courier,monospace;font-size:.58rem;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.06em;font-weight:500}
 .dw{position:relative;display:flex;align-items:center}
-.dp,.ds{position:absolute;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--tx3);pointer-events:none}.dp{left:9px}.ds{right:9px}
-.di{width:100%;padding:9px 10px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:5px;color:var(--tx-input);font-size:.84rem;font-weight:600;outline:none;-webkit-transition:border-color .18s,box-shadow .18s;transition:border-color .18s,box-shadow .18s;-webkit-appearance:none}
-.di:focus{border-color:var(--teal)}.di.hp{padding-left:22px}.di.hs{padding-right:22px}
+.dp,.ds{position:absolute;font-family:'JetBrains Mono','Courier New',Courier,monospace;font-size:.78rem;color:rgba(255,255,255,.65);pointer-events:none;font-weight:600}.dp{left:10px}.ds{right:10px}.dp{left:9px}.ds{right:9px}
+.di{width:100%;padding:9px 10px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:5px;color:#ffffff;font-size:.84rem;font-weight:500;outline:none;-webkit-transition:border-color .2s,box-shadow .2s;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none}
+.di:focus{border-color:#00d4a4;-webkit-box-shadow:0 0 0 3px rgba(0,212,164,.22);box-shadow:0 0 0 3px rgba(0,212,164,.22);color:#ffffff}.di.hp{padding-left:22px}.di.hs{padding-right:22px}
 .di[readonly]{background:rgba(0,212,164,.06);color:var(--teal);font-weight:600;font-family:'JetBrains Mono',monospace;font-size:.74rem}
 .di[readonly].blue{background:var(--input-readonly-blue-bg);color:var(--input-readonly-blue-tx)}
+.di::-webkit-input-placeholder{color:rgba(255,255,255,.45);font-weight:400}
+.di::-moz-placeholder{color:rgba(255,255,255,.45);font-weight:400;opacity:1}
+.di:-ms-input-placeholder{color:rgba(255,255,255,.45);font-weight:400}
+.di::placeholder{color:rgba(255,255,255,.45);font-weight:400}
+[data-theme="light"] .di{color:#0d1f35}
+[data-theme="light"] .di::-webkit-input-placeholder{color:rgba(13,31,53,.45)}
+[data-theme="light"] .di::-moz-placeholder{color:rgba(13,31,53,.45);opacity:1}
+[data-theme="light"] .di::placeholder{color:rgba(13,31,53,.45)}
+[data-theme="light"] .di:focus{border-color:#007a5e;-webkit-box-shadow:0 0 0 3px rgba(0,122,94,.2);box-shadow:0 0 0 3px rgba(0,122,94,.2);color:#0d1f35}
 .ddiv{height:1px;background:var(--border2);margin:12px 0}
 .dtax{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
 .dtb{flex:1;min-width:56px;padding:5px 7px;background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--tx3);font-family:'JetBrains Mono',monospace;font-size:.58rem;font-weight:500;transition:.15s}
@@ -628,13 +637,13 @@ body::after{content:'';position:fixed;top:0;right:0;bottom:0;left:0;background:r
   <section class="lsec" style="border-top:1px solid var(--border);padding-top:60px">
     <div class="ltag">Pricing</div>
     <h2 class="lh">Inizia gratis. Scala quando serve.</h2>
-    <div class="lsub">50 analisi al giorno con il piano Free. Pro sblocca tutto senza limiti.</div>
+    <div class="lsub">20 analisi al giorno con il piano Free. Pro sblocca tutto senza limiti.</div>
     <div class="pgrid">
       <div class="pc">
         <div class="pcp">Free</div>
         <div class="pca"><span class="cur">€</span>0</div>
         <div class="pcper">per sempre</div>
-        <ul class="pcf"><li>50 analisi/giorno</li><li>Messa a Reddito</li><li>4 regimi fiscali</li><li>Scenari</li></ul>
+        <ul class="pcf"><li>20 analisi/giorno</li><li>Messa a Reddito</li><li>4 regimi fiscali</li><li>Scenari</li></ul>
         <button class="pcb pcb-o" onclick="openAuth('reg')">Inizia Gratis</button>
       </div>
       <div class="pc hi">
@@ -649,14 +658,6 @@ body::after{content:'';position:fixed;top:0;right:0;bottom:0;left:0;background:r
 
   <footer class="foot"><strong>InvestPro</strong> · Analisi finanziaria immobiliare · © 2026</footer>
 </div>
-      <div class="fc"><div class="fci">💶</div><div class="fct">Cashflow Netto</div><div class="fcd">Ricavi − OTA − costi − tasse − mutuo. In tempo reale.</div></div>
-      <div class="fc"><div class="fci">🏠</div><div class="fct">Messa a Reddito</div><div class="fcd">ADR, occupazione, 4 regimi fiscali, vacancy.</div></div>
-      <div class="fc"><div class="fci">🔄</div><div class="fct">Trading / Flip</div><div class="fcd">Acquisto → ristrutturazione → vendita. Piano Pro.</div></div>
-      <div class="fc"><div class="fci">🎯</div><div class="fct">3 Scenari</div><div class="fcd">Pessimistico, moderato, ottimistico automatici.</div></div>
-      <div class="fc"><div class="fci">🏦</div><div class="fct">Struttura Finanziaria</div><div class="fcd">LTV, rata PMT, equity, rivalutazione.</div></div>
-    </div>
-  </section>
-
 <!-- ═══ AUTH ═══ -->
 <div id="auth">
   <div class="abox">
@@ -770,10 +771,10 @@ const SUPER_ADMIN_EMAIL='lucaiolienrico@gmail.com';
 const sb=supabase.createClient(SB_URL,SB_KEY);
 
 // ════════════════════════════════════════════════
-// USAGE LIMIT — 50 calcoli/giorno per utenti Free
+// USAGE LIMIT — 20 calcoli/giorno per utenti Free
 // Reset automatico a mezzanotte via localStorage
 // ════════════════════════════════════════════════
-const LIM=50;
+const LIM=20;
 const td=()=>new Date().toISOString().split('T')[0];
 function gCnt(){
   if(localStorage.getItem('ip_d')!==td()){
@@ -822,6 +823,18 @@ sb.auth.onAuthStateChange(async(_,session)=>{
 
     // Se super_admin: forza isPro=true (accesso incondizionato)
     if(isSuperAdmin) isPro=true;
+
+    // ── RBAC BYPASS: se l'utente ha accesso completo (admin o pro),
+    //    ripristina lo stato da qualsiasi lock montato nel DOM prima
+    //    del completamento dell'autenticazione (es. calc() anonimo pre-login
+    //    che ha già accumulato il counter localStorage e mostrato l'overlay).
+    if(hasFullAccess()){
+      limShown = false;                                                    // sblocca il guard
+      document.getElementById('lock-overlay')?.classList.remove('on');    // rimuove overlay
+      closePW();                                                           // chiude paywall se aperto
+      document.getElementById('nav-use')?.classList.add('hidden');        // nasconde pill contatore
+      document.getElementById('frame-pill')?.classList.add('hidden');     // nasconde pill nel frame
+    }
 
     // Mostra app, nascondi landing
     document.getElementById('hero').classList.add('hidden');
@@ -1113,7 +1126,9 @@ function setTax(r,btn){
 }
 
 function calc(){
-  // LIMITE GIORNALIERO — bypass per super_admin e Pro
+  // ── LIMITE GIORNALIERO ──────────────────────────────────────────────
+  // isLimited() = !isSuperAdmin && !isPro
+  // super_admin e Pro entrano sempre nel ramo else, saltando tutto il blocco.
   if(isLimited()){
     const c=gCnt();
     if(c>=LIM){
@@ -1123,13 +1138,19 @@ function calc(){
         openPW('limit');
       }
       uPill();
-      return; // blocca calcolo
+      return;
     }
     iCnt(); uPill(); limShown=false;
     document.getElementById('lock-overlay').classList.remove('on');
     const nc=gCnt();
     if(nc===LIM-5) toast('⚠️ 5 analisi rimaste oggi.','warn');
     if(nc===LIM)   toast('⚠️ Ultima analisi del giorno.','warn');
+  } else {
+    // Utente con accesso completo: garantisce che overlay e pill
+    // non siano mai visibili, indipendentemente dallo stato precedente.
+    document.getElementById('lock-overlay')?.classList.remove('on');
+    document.getElementById('nav-use')?.classList.add('hidden');
+    document.getElementById('frame-pill')?.classList.add('hidden');
   }
 
   // FINANZIAMENTO
