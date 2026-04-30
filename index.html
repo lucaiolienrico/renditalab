@@ -567,7 +567,7 @@ body::after{content:'';position:fixed;top:0;right:0;bottom:0;left:0;background:r
 
     <!-- RESULTS -->
     <div class="fresults" id="results">
-      <div class="lock" id="lock-overlay"><div style="font-size:1.8rem">🔒</div><div class="lock-h">Limite raggiunto</div><div class="lock-p">20 analisi esaurite oggi. Registrati per continuare domani, o passa a Pro.</div><button class="lock-btn" onclick="openAuth('reg')">Registrati Gratis</button><button class="lock-skip" onclick="openPW('limit')">oppure Pro →</button></div>
+      <div class="lock" id="lock-overlay"><div style="font-size:1.8rem">🔒</div><div class="lock-h">Limite raggiunto</div><div class="lock-p">50 analisi esaurite oggi. Registrati per continuare domani, o passa a Pro.</div><button class="lock-btn" onclick="openAuth('reg')">Registrati Gratis</button><button class="lock-skip" onclick="openPW('limit')">oppure Pro →</button></div>
 
       <div class="krow"><div class="kc"><div class="kl">Investimento</div><div class="kv" id="k-inv">€ 0</div></div><div class="kc"><div class="kl">ROI Annuo</div><div class="kv" id="k-roi">0%</div></div><div class="kc"><div class="kl" id="k-cfl">Cashflow/Mese</div><div class="kv" id="k-cf">€ 0</div></div><div class="kc"><div class="kl">Break-even</div><div class="kv" id="k-be">—</div></div></div>
 
@@ -637,13 +637,13 @@ body::after{content:'';position:fixed;top:0;right:0;bottom:0;left:0;background:r
   <section class="lsec" style="border-top:1px solid var(--border);padding-top:60px">
     <div class="ltag">Pricing</div>
     <h2 class="lh">Inizia gratis. Scala quando serve.</h2>
-    <div class="lsub">50 analisi al giorno con il piano Free. Pro sblocca tutto senza limiti.</div>
+    <div class="lsub">20 analisi al giorno con il piano Free. Pro sblocca tutto senza limiti.</div>
     <div class="pgrid">
       <div class="pc">
         <div class="pcp">Free</div>
         <div class="pca"><span class="cur">€</span>0</div>
         <div class="pcper">per sempre</div>
-        <ul class="pcf"><li>20 analisi/giorno</li><li>Messa a Reddito</li><li>4 regimi fiscali</li><li>Scenari</li></ul>
+        <ul class="pcf"><li>50 analisi/giorno</li><li>Messa a Reddito</li><li>4 regimi fiscali</li><li>Scenari</li></ul>
         <button class="pcb pcb-o" onclick="openAuth('reg')">Inizia Gratis</button>
       </div>
       <div class="pc hi">
@@ -747,7 +747,7 @@ body::after{content:'';position:fixed;top:0;right:0;bottom:0;left:0;background:r
   <div class="pwbox">
     <div class="pwtag">InvestPro Pro</div>
     <div class="pwh" id="pw-h">Sblocca l'analisi completa</div>
-    <div class="pwp" id="pw-p">Piano Free: 20 analisi/giorno. Pro sblocca tutto senza limiti.</div>
+    <div class="pwp" id="pw-p">Piano Free: 50 analisi/giorno. Pro sblocca tutto senza limiti.</div>
     <ul class="pwf"><li>Analisi illimitate</li><li>Trading / Flip</li><li>Salvataggio progetti</li><li>Export Excel</li><li>Supporto prioritario</li></ul>
     <div class="pwbtns">
       <button class="pwb pwm" id="co-m" onclick="checkout('monthly')">€19,99 / mese</button>
@@ -758,6 +758,7 @@ body::after{content:'';position:fixed;top:0;right:0;bottom:0;left:0;background:r
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 // ════════════════════════════════════════════════
@@ -771,10 +772,10 @@ const SUPER_ADMIN_EMAIL='lucaiolienrico@gmail.com';
 const sb=supabase.createClient(SB_URL,SB_KEY);
 
 // ════════════════════════════════════════════════
-// USAGE LIMIT — 50 calcoli/giorno per utenti Free
+// USAGE LIMIT — 20 calcoli/giorno per utenti Free
 // Reset automatico a mezzanotte via localStorage
 // ════════════════════════════════════════════════
-const LIM=60;
+const LIM=50;
 const td=()=>new Date().toISOString().split('T')[0];
 function gCnt(){
   if(localStorage.getItem('ip_d')!==td()){
@@ -815,7 +816,19 @@ const isLimited     = ()=> !isSuperAdmin && !isPro;
 sb.auth.onAuthStateChange(async(_,session)=>{
   user=session?.user??null;
   if(user){
-    const{data:p}=await sb.from('profiles').select('*').eq('id',user.id).single();
+    // Fetch profilo con gestione errore e retry
+    let p=null;
+    try{
+      const{data,error}=await sb.from('profiles').select('*').eq('id',user.id).single();
+      if(error) throw error;
+      p=data;
+    }catch(profileErr){
+      console.error('Errore caricamento profilo:',profileErr);
+      // Retry una volta dopo 500ms (il trigger potrebbe non aver ancora creato il profilo)
+      await new Promise(r=>setTimeout(r,500));
+      const{data:retry}=await sb.from('profiles').select('*').eq('id',user.id).single();
+      p=retry;
+    }
     profile=p;
     isPro=p?.plan==='pro';
     // Super admin: chi ha role='super_admin' O email corrispondente
@@ -916,12 +929,21 @@ function sTab(t){
 
 async function doLogin(){
   const b=document.getElementById('b-li'),e=document.getElementById('e-li');
-  b.disabled=true;b.textContent='...';e.classList.remove('on');
-  const{error}=await sb.auth.signInWithPassword({
-    email:document.getElementById('i-em').value.trim(),
-    password:document.getElementById('i-pw').value
-  });
-  if(error){e.textContent='Credenziali non valide.';e.classList.add('on')}
+  const email=document.getElementById('i-em').value.trim();
+  const pass=document.getElementById('i-pw').value;
+  if(!email||!pass){e.textContent='Inserisci email e password.';e.classList.add('on');return}
+  b.disabled=true;b.textContent='Accesso in corso...';e.classList.remove('on');
+  try{
+    const{error}=await sb.auth.signInWithPassword({email,password:pass});
+    if(error){
+      const msgs={'Invalid login credentials':'Email o password non corretti.','Email not confirmed':'Conferma prima la tua email.'};
+      e.textContent=msgs[error.message]||'Errore di accesso. Riprova.';
+      e.classList.add('on');
+    }
+  }catch(err){
+    e.textContent='Errore di rete. Controlla la connessione.';
+    e.classList.add('on');
+  }
   b.disabled=false;b.textContent='Accedi →';
 }
 
@@ -963,69 +985,78 @@ async function doLogout(){await sb.auth.signOut()}
 // Usa le RPC PostgreSQL protette lato DB
 // ════════════════════════════════════════════════
 async function openAdminPanel(){
-  if(!isSuperAdmin){toast('Accesso negato. Solo Super Admin.','err');return}
+  if(!isSuperAdmin){toast('Accesso negato.','err');return}
   document.getElementById('admin-panel').classList.add('on');
-  document.getElementById('adm-loading').style.display='block';
-  document.getElementById('adm-table-wrap').style.display='none';
+  const loadEl=document.getElementById('adm-loading');
+  const tableEl=document.getElementById('adm-table-wrap');
+  loadEl.style.display='block';loadEl.textContent='Caricamento...';
+  tableEl.style.display='none';
 
-  try {
-    // Statistiche via RPC protetta
-    const{data:stats,error:se}=await sb.rpc('admin_get_stats');
-    if(!se&&stats){
-      document.getElementById('as-tot').textContent=stats.total_users;
-      document.getElementById('as-pro').textContent=stats.pro_users;
-      document.getElementById('as-free').textContent=stats.free_users;
-      document.getElementById('as-proj').textContent=stats.total_projects;
-      document.getElementById('as-today').textContent=stats.users_today;
-      document.getElementById('as-stripe').textContent=stats.stripe_customers;
+  try{
+    const[sR,uR]=await Promise.allSettled([
+      sb.rpc('admin_get_stats'),
+      sb.rpc('admin_list_users')
+    ]);
+
+    // Stats
+    if(sR.status==='fulfilled'&&!sR.value.error){
+      const s=sR.value.data;
+      document.getElementById('as-tot').textContent=s.total_users??'—';
+      document.getElementById('as-pro').textContent=s.pro_users??'—';
+      document.getElementById('as-free').textContent=s.free_users??'—';
+      document.getElementById('as-proj').textContent=s.total_projects??'—';
+      document.getElementById('as-today').textContent=s.users_today??'—';
+      document.getElementById('as-stripe').textContent=s.stripe_customers??'—';
+    }else{
+      toast('Errore statistiche.','err');
+      ['as-tot','as-pro','as-free','as-proj','as-today','as-stripe'].forEach(id=>document.getElementById(id).textContent='—');
     }
 
-    // Lista utenti via RPC protetta
-    const{data:users,error:ue}=await sb.rpc('admin_list_users');
-    if(ue){toast('Errore caricamento utenti: '+ue.message,'err');return}
-
-    const tbody=document.getElementById('adm-tbody');
-    tbody.innerHTML='';
-    (users||[]).forEach(u=>{
-      const isSA=u.role==='super_admin';
-      const date=new Date(u.created_at).toLocaleDateString('it-IT');
-      tbody.innerHTML+=`<tr>
-        <td class="em">${u.email}</td>
-        <td>${u.display_name||'—'}</td>
-        <td>
-          <select onchange="adminChangePlan('${u.id}',this.value)" ${isSA?'disabled':''}>
-            <option value="free" ${u.plan==='free'?'selected':''}>Free</option>
-            <option value="pro"  ${u.plan==='pro' ?'selected':''}>Pro</option>
-          </select>
-        </td>
-        <td class="${isSA?'role-sa':u.role==='admin'?'role-admin':''}">${u.role}</td>
-        <td style="font-family:'JetBrains Mono',monospace;font-size:.66rem">${date}</td>
-        <td>${!isSA?`<select onchange="adminChangeRole('${u.id}',this.value)">
-          <option value="user"  ${u.role==='user' ?'selected':''}>User</option>
-          <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
-        </select>`:'<span style="color:var(--gold);font-size:.7rem">Root</span>'}</td>
-      </tr>`;
-    });
-
-    document.getElementById('adm-loading').style.display='none';
-    document.getElementById('adm-table-wrap').style.display='block';
-  } catch(err){
-    toast('Errore admin panel: '+err.message,'err');
+    // Users
+    if(uR.status==='fulfilled'&&!uR.value.error){
+      const users=uR.value.data||[];
+      const tbody=document.getElementById('adm-tbody');
+      tbody.innerHTML='';
+      users.forEach(u=>{
+        const isSA=u.role==='super_admin';
+        const date=new Date(u.created_at).toLocaleDateString('it-IT');
+        tbody.innerHTML+=`<tr>
+          <td class="em">${u.email||'—'}</td>
+          <td>${u.display_name||'—'}</td>
+          <td><select onchange="adminChangePlan('${u.id}',this.value)" ${isSA?'disabled':''}><option value="free" ${u.plan==='free'?'selected':''}>Free</option><option value="pro" ${u.plan==='pro'?'selected':''}>Pro</option></select></td>
+          <td class="${isSA?'role-sa':u.role==='admin'?'role-admin':''}">${u.role}</td>
+          <td style="font-family:monospace;font-size:.66rem">${date}</td>
+          <td>${!isSA?`<select onchange="adminChangeRole('${u.id}',this.value)"><option value="user" ${u.role==='user'?'selected':''}>User</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option></select>`:'<span style="color:var(--gold)">Root</span>'}</td>
+        </tr>`;
+      });
+      tableEl.style.display='block';
+    }else{
+      loadEl.textContent='Errore caricamento utenti. Chiudi e riprova.';
+      return;
+    }
+  }catch(err){
+    loadEl.textContent='Errore: '+(err.message||'connessione fallita');
+    return;
   }
+  loadEl.style.display='none';
 }
 
 function closeAdminPanel(){document.getElementById('admin-panel').classList.remove('on')}
 
 async function adminChangePlan(uid,plan){
-  const{error}=await sb.rpc('admin_update_user_plan',{target_user_id:uid,new_plan:plan});
-  if(error)toast('Errore: '+error.message,'err');
-  else toast(`Piano → ${plan.toUpperCase()}`, 'ok');
+  try{
+    const{error}=await sb.rpc('admin_update_user_plan',{target_user_id:uid,new_plan:plan});
+    if(error)throw error;
+    toast('Piano aggiornato → '+plan.toUpperCase(),'ok');
+  }catch(e){toast('Errore aggiornamento piano: '+(e.message||'sconosciuto'),'err')}
 }
 
 async function adminChangeRole(uid,role){
-  const{error}=await sb.rpc('admin_update_user_role',{target_user_id:uid,new_role:role});
-  if(error)toast('Errore: '+error.message,'err');
-  else toast(`Ruolo → ${role}`, 'ok');
+  try{
+    const{error}=await sb.rpc('admin_update_user_role',{target_user_id:uid,new_role:role});
+    if(error)throw error;
+    toast('Ruolo aggiornato → '+role,'ok');
+  }catch(e){toast('Errore aggiornamento ruolo: '+(e.message||'sconosciuto'),'err')}
 }
 
 // ════════════════════════════════════════════════
@@ -1070,24 +1101,36 @@ async function checkout(period){
   const pid=period==='monthly'?PRM:PRY;
   const btn=document.getElementById(period==='monthly'?'co-m':'co-y');
   const orig=btn.innerHTML;
-  btn.disabled=true;btn.textContent='...';
+  btn.disabled=true;btn.textContent='Collegamento a Stripe...';
   try{
-    const{data:{session}}=await sb.auth.getSession();
-    if(!session)throw new Error('Sessione scaduta. Fai login di nuovo.');
+    const{data:{session},error:sErr}=await sb.auth.getSession();
+    if(sErr||!session){
+      // Sessione scaduta: prova refresh
+      const{data:ref,error:rErr}=await sb.auth.refreshSession();
+      if(rErr||!ref?.session)throw new Error('Sessione scaduta. Esci e accedi di nuovo.');
+    }
+    const tkn=(await sb.auth.getSession()).data.session.access_token;
+    // Fetch con timeout di 15s
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),15000);
     const res=await fetch(SB_URL+'/functions/v1/create-checkout',{
       method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':'Bearer '+session.access_token,
-        'apikey':SB_KEY
-      },
-      body:JSON.stringify({priceId:pid})
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+tkn,'apikey':SB_KEY},
+      body:JSON.stringify({priceId:pid}),
+      signal:controller.signal
     });
+    clearTimeout(timeout);
+    if(!res.ok){
+      const errData=await res.json().catch(()=>({}));
+      throw new Error(errData.error||'Errore server ('+res.status+')');
+    }
     const data=await res.json();
-    if(!res.ok||!data.url)throw new Error(data.error||'URL non ricevuto');
+    if(!data.url)throw new Error('URL checkout non ricevuto dal server.');
+    btn.textContent='Reindirizzamento...';
     location.href=data.url;
   }catch(e){
-    toast('Errore pagamento: '+e.message,'err');
+    if(e.name==='AbortError') toast('Timeout: il server non risponde. Riprova.','err');
+    else toast('Errore: '+e.message,'err');
     btn.disabled=false;btn.innerHTML=orig;
   }
 }
@@ -1237,45 +1280,68 @@ async function saveProject(){
   const name=document.getElementById('proj-name').value||'Nuova Analisi';
   const data={mode,name};
   ids.forEach(id=>{const el=document.getElementById(id);if(el)data[id]=el.value});
-  const{error}=await sb.from('projects').upsert(
-    {user_id:user.id,name,data,updated_at:new Date().toISOString()},
-    {onConflict:'user_id,name'}
-  );
-  error?toast('Errore salvataggio: '+error.message,'err'):toast('✓ Progetto salvato.','ok');
+  try{
+    const{error}=await sb.from('projects').upsert(
+      {user_id:user.id,name,data,updated_at:new Date().toISOString()},
+      {onConflict:'user_id,name'}
+    );
+    if(error)throw error;
+    toast('✓ Progetto salvato.','ok');
+  }catch(e){
+    toast('Errore salvataggio: '+(e.message||'sconosciuto'),'err');
+  }
 }
 
 function doExport(){
   if(!canExport()){openPW('export');return}
-  const name=document.getElementById('proj-name').value||'analisi';
-  const rows=mode==='rent'?[
-    ['InvestPro — Analisi Affitto: '+name],[],
-    ['Ricavi lordi/anno',   document.getElementById('r-g')?.textContent],
-    ['Commissioni OTA',     document.getElementById('r-ota')?.textContent],
-    ['Tassa soggiorno',     document.getElementById('r-ct')?.textContent],
-    ['Costi operativi',     document.getElementById('r-op')?.textContent],
-    ['Imposte',             document.getElementById('r-tax')?.textContent],
-    ['Mutuo/anno',          document.getElementById('r-mort')?.textContent],
-    ['Notti occupate',      document.getElementById('r-n')?.textContent],
-    ['MOL mensile',         document.getElementById('r-mol')?.textContent],
-    ['Cashflow netto/mese', document.getElementById('br-cf')?.textContent],
-    ['ROI',                 document.getElementById('k-roi')?.textContent],
-    ['Break-even',          document.getElementById('k-be')?.textContent],
-  ]:[
-    ['InvestPro — Analisi Flip: '+name],[],
-    ['Prezzo vendita',      document.getElementById('f-sell')?.textContent],
-    ['Costi acquisizione',  document.getElementById('f-acq')?.textContent],
-    ['Comm. agenzia',       document.getElementById('f-ag')?.textContent],
-    ['Costi holding',       document.getElementById('f-hold')?.textContent],
-    ['Profitto lordo',      document.getElementById('f-gross')?.textContent],
-    ['Imposte plus-val.',   document.getElementById('f-tax')?.textContent],
-    ['Profitto netto',      document.getElementById('br-fl')?.textContent],
-    ['ROI',                 document.getElementById('k-roi')?.textContent],
-  ];
-  const csv=rows.map(r=>r.join('\t')).join('\n');
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([csv],{type:'text/tab-separated-values'}));
-  a.download=name+'.tsv';a.click();
-  toast('✓ Export scaricato.','ok');
+  try{
+    if(typeof XLSX==='undefined') throw new Error('Libreria Excel non caricata. Ricarica la pagina.');
+    const name=document.getElementById('proj-name').value||'Analisi';
+    const rows=mode==='rent'?[
+      ['Parametro','Valore'],
+      ['Prezzo Acquisto',n('price')],['Ristrutturazione',n('reno')],['Costi Notarili',n('closing')],
+      ['LTV %',n('ltv')],['Tasso %',n('rate')],['Durata anni',n('years')],
+      ['ADR/notte',n('adr')],['Occupazione %',n('occ')],['OTA %',n('ota')],
+      ['Ospiti medi',n('guests')],['Costi fissi/mese',n('fixed')],['Variabili/notte',n('varco')],
+      ['Manutenzione/mese',n('maint')],['Vacancy %',n('vac')],['Aliquota fiscale %',n('tax-rate')],
+      ['Tassa soggiorno/notte',n('city-tax')],
+      [],[],['Risultato','Valore'],
+      ['Ricavi lordi/anno',   document.getElementById('r-g')?.textContent],
+      ['Commissioni OTA',     document.getElementById('r-ota')?.textContent],
+      ['Tassa soggiorno',     document.getElementById('r-ct')?.textContent],
+      ['Costi operativi',     document.getElementById('r-op')?.textContent],
+      ['Imposte',             document.getElementById('r-tax')?.textContent],
+      ['Mutuo/anno',          document.getElementById('r-mort')?.textContent],
+      ['Notti occupate',      document.getElementById('r-n')?.textContent],
+      ['MOL mensile',         document.getElementById('r-mol')?.textContent],
+      ['Cashflow netto/mese', document.getElementById('br-cf')?.textContent],
+      ['ROI annuo',           document.getElementById('k-roi')?.textContent],
+      ['Break-even',          document.getElementById('k-be')?.textContent],
+    ]:[
+      ['Parametro','Valore'],
+      ['Prezzo Acquisto',n('price')],['Ristrutturazione',n('reno')],['Costi Notarili',n('closing')],
+      ['Prezzo Vendita',n('flip-price')],['Durata mesi',n('flip-months')],
+      ['Comm. Agenzia %',n('flip-ag')],['Holding/mese',n('flip-hold')],['Plus-valenza %',n('flip-tax')],
+      [],[],['Risultato','Valore'],
+      ['Prezzo vendita',      document.getElementById('f-sell')?.textContent],
+      ['Costi acquisizione',  document.getElementById('f-acq')?.textContent],
+      ['Comm. agenzia',       document.getElementById('f-ag')?.textContent],
+      ['Costi holding',       document.getElementById('f-hold')?.textContent],
+      ['Profitto lordo',      document.getElementById('f-gross')?.textContent],
+      ['Imposte',             document.getElementById('f-tax')?.textContent],
+      ['Profitto netto',      document.getElementById('br-fl')?.textContent],
+      ['ROI',                 document.getElementById('k-roi')?.textContent],
+    ];
+    const ws=XLSX.utils.aoa_to_sheet([['InvestPro — '+(mode==='rent'?'Affitto':'Flip')+': '+name],...rows]);
+    // Larghezza colonne automatica
+    ws['!cols']=[{wch:24},{wch:18}];
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,'Analisi');
+    XLSX.writeFile(wb,name+'.xlsx');
+    toast('✓ File Excel scaricato.','ok');
+  }catch(err){
+    toast('Errore export: '+err.message,'err');
+  }
 }
 
 // ════════════════════════════════════════════════
