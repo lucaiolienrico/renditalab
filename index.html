@@ -929,12 +929,51 @@ sb.auth.onAuthStateChange(async(event,session)=>{
     calc();
   } else {
     // Se doLogout ha già resettato stato + UI, salta il re-render ridondante.
-    // Previene doppio DOM flush / flicker su animazioni.
     if(_logoutDone) return;
 
-    // Logout innescato da evento esterno (es. token scaduto, signOut da altro tab):
-    // reset completo necessario perché nessuno ha già pulito.
     user=null; isPro=false; isSuperAdmin=false; profile=null; limShown=false;
+
+    // ── Rileva rientro da Stripe con sessione scaduta ──────────────────────
+    // ip_stripe_intent viene impostato da checkout() subito prima del redirect.
+    // Se è presente E l'URL contiene ?success=1, la sessione è scaduta
+    // durante il checkout — guida l'utente al re-login invece di mostrare
+    // silenziosamente la landing.
+    let stripeIntent=false;
+    try{stripeIntent=!!localStorage.getItem('ip_stripe_intent')}catch(e){}
+    const _usp=new URLSearchParams(location.search);
+    const fromStripeSuccess=!!_usp.get('success');
+
+    if(stripeIntent&&fromStripeSuccess){
+      // ── Pulizia sessione corrotta ──────────────────────────────────────
+      // La sessione Supabase in localStorage potrebbe essere in stato
+      // parzialmente aggiornato (token ruotato non salvato prima del
+      // redirect). Rimozione preventiva per sbloccare nuovi login.
+      try{
+        const sbHost=SB_URL.replace('https://','').split('.')[0];
+        Object.keys(localStorage)
+          .filter(k=>k.includes('sb-')||k.includes(sbHost)||k.includes('supabase'))
+          .forEach(k=>localStorage.removeItem(k));
+        localStorage.removeItem('ip_stripe_intent');
+      }catch(e){}
+      history.replaceState({},'',location.pathname);
+      resetUIToLanding();
+      calc();
+      // Mostra modal di login con messaggio contestuale al posto del
+      // generico reset alla landing — l'utente sa che il pagamento è andato.
+      setTimeout(()=>{
+        openAuth('login');
+        const errEl=document.getElementById('e-li');
+        if(errEl){
+          errEl.textContent='Pagamento ricevuto. La sessione è scaduta durante il checkout: accedi di nuovo per attivare il piano Pro.';
+          errEl.classList.add('on');
+          errEl.style.cssText='color:var(--teal);background:rgba(0,212,164,.07);border-color:rgba(0,212,164,.3)';
+        }
+      },180);
+      return;
+    }
+
+    // ── Logout esterno normale (token scaduto, altro tab) ─────────────
+    try{localStorage.removeItem('ip_stripe_intent')}catch(e){}
     resetUIToLanding();
     calc();
   }
@@ -970,8 +1009,25 @@ async function doLogin(){
   try{
     const{error}=await sb.auth.signInWithPassword({email,password:pass});
     if(error){
-      const msgs={'Invalid login credentials':'Email o password non corretti.','Email not confirmed':'Conferma prima la tua email.'};
-      e.textContent=msgs[error.message]||'Errore di accesso. Riprova.';
+      const knownMsgs={
+        'Invalid login credentials':'Email o password non corretti.',
+        'Email not confirmed':'Conferma prima la tua email.'
+      };
+      const knownError=knownMsgs[error.message];
+      if(!knownError){
+        // Errore sconosciuto → potenziale stato sessione corrotto in localStorage.
+        // Pulizia preventiva dei token Supabase: sblocca il login su browser
+        // che hanno un refresh token invalidato (es. dopo redirect Stripe).
+        try{
+          const sbHost=SB_URL.replace('https://','').split('.')[0];
+          Object.keys(localStorage)
+            .filter(k=>k.includes('sb-')||k.includes(sbHost)||k.includes('supabase'))
+            .forEach(k=>localStorage.removeItem(k));
+        }catch(_){}
+        e.textContent='Errore di accesso. Sessione locale pulita: riprova ora.';
+      }else{
+        e.textContent=knownError;
+      }
       e.classList.add('on');
     }
   }catch(err){
@@ -1259,6 +1315,9 @@ async function checkout(period){
     const data=await res.json();
     if(!data.url)throw new Error('URL checkout non ricevuto dal server.');
     btn.textContent='Reindirizzamento...';
+    // Marcatore persistente: se la sessione scade durante il checkout Stripe,
+    // onAuthStateChange può rilevare il rientro e guidare il re-login.
+    try{localStorage.setItem('ip_stripe_intent',Date.now().toString())}catch(e){}
     location.href=data.url;
   }catch(e){
     if(e.name==='AbortError') toast('Timeout: il server non risponde. Riprova.','err');
