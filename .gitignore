@@ -1,6 +1,7 @@
 # Mai committare chiavi reali
-# Ricorda: config.js contiene chiavi Stripe/Supabase
-# Se usi variabili d'ambiente, aggiungi .env qui
+.env
+.env.*
+assets/js/config.js
 
 .DS_Store
 Thumbs.db

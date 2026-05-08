@@ -829,8 +829,8 @@ function uPill(){
 // STATO GLOBALE + RBAC
 // ════════════════════════════════════════════════
 let user=null, isPro=false, isSuperAdmin=false, profile=null, mode='rent', limShown=false;
-let _authBusy=false; // Guard: previene race condition su onAuthStateChange multipli
-let _logoutDone=false; // Guard: doLogout ha già resettato UI → onAuthStateChange SIGNED_OUT può saltare il re-render
+let _pendingAuth=null;
+let _authProcessing=false;
 
 // Helper RBAC — il super_admin bypassa tutto
 const hasFullAccess = ()=> isSuperAdmin || isPro;
@@ -842,13 +842,24 @@ const isLimited     = ()=> !isSuperAdmin && !isPro;
 // ════════════════════════════════════════════════
 // AUTH LIFECYCLE
 // ════════════════════════════════════════════════
-sb.auth.onAuthStateChange(async(event,session)=>{
-  if(_authBusy){console.log('[auth] skip evento sovrapposto:',event);return;}
-  _authBusy=true;
-  try{
+sb.auth.onAuthStateChange((event,session)=>{
+  _pendingAuth={event,session};
+  if(_authProcessing) return;
+  _authProcessing=true;
+  (async()=>{
+    while(_pendingAuth){
+      const{event:ev,session:ses}=_pendingAuth;
+      _pendingAuth=null;
+      try{ await _handleAuth(ev,ses) }
+      catch(err){ console.error('[auth] errore lifecycle:',err) }
+    }
+    _authProcessing=false;
+  })();
+});
+
+async function _handleAuth(event,session){
   user=session?.user??null;
   if(user){
-    // Fetch profilo con gestione errore e retry
     let p=null;
     try{
       const{data,error}=await sb.from('profiles').select('*').eq('id',user.id).single();
@@ -856,33 +867,25 @@ sb.auth.onAuthStateChange(async(event,session)=>{
       p=data;
     }catch(profileErr){
       console.error('Errore caricamento profilo:',profileErr);
-      // Retry una volta dopo 500ms (il trigger potrebbe non aver ancora creato il profilo)
       await new Promise(r=>setTimeout(r,500));
       const{data:retry}=await sb.from('profiles').select('*').eq('id',user.id).single();
       p=retry;
     }
+    if(_pendingAuth) return;
+
     profile=p;
     isPro=p?.plan==='pro';
-    // Super admin: determinato SOLO dal campo role nel DB.
-    // Nessun fallback su email hardcoded → zero information disclosure nel sorgente.
     isSuperAdmin=p?.role==='super_admin';
-
-    // Se super_admin: forza isPro=true (accesso incondizionato)
     if(isSuperAdmin) isPro=true;
 
-    // ── RBAC BYPASS: se l'utente ha accesso completo (admin o pro),
-    //    ripristina lo stato da qualsiasi lock montato nel DOM prima
-    //    del completamento dell'autenticazione (es. calc() anonimo pre-login
-    //    che ha già accumulato il counter localStorage e mostrato l'overlay).
     if(hasFullAccess()){
-      limShown = false;                                                    // sblocca il guard
-      document.getElementById('lock-overlay')?.classList.remove('on');    // rimuove overlay
-      closePW();                                                           // chiude paywall se aperto
-      document.getElementById('nav-use')?.classList.add('hidden');        // nasconde pill contatore
-      document.getElementById('frame-pill')?.classList.add('hidden');     // nasconde pill nel frame
+      limShown=false;
+      document.getElementById('lock-overlay')?.classList.remove('on');
+      closePW();
+      document.getElementById('nav-use')?.classList.add('hidden');
+      document.getElementById('frame-pill')?.classList.add('hidden');
     }
 
-    // Mostra app, nascondi landing
     document.getElementById('hero').classList.add('hidden');
     document.getElementById('landing-extra').classList.add('hidden');
     document.getElementById('hero-strip')?.classList.add('hidden');
@@ -890,28 +893,23 @@ sb.auth.onAuthStateChange(async(event,session)=>{
     document.getElementById('mode-bar').classList.remove('hidden');
     closeAuth();
 
-    // Nav: nascondi bottoni landing, mostra bottoni app
     document.getElementById('nav-login').classList.add('hidden');
     document.getElementById('nav-reg').classList.add('hidden');
     ['nav-badge','nav-use','proj-name','nav-export','nav-load','nav-save','nav-acct','nav-out']
       .forEach(id=>document.getElementById(id)?.classList.remove('hidden'));
 
-    // Bottone Admin Panel: SOLO super_admin
     const adminBtn=document.getElementById('nav-admin-panel');
     if(isSuperAdmin) adminBtn?.classList.remove('hidden');
     else adminBtn?.classList.add('hidden');
 
-    // Bottone upgrade: nascosto se pro o super_admin
     const upBtn=document.getElementById('nav-up');
     if(hasFullAccess()) upBtn?.classList.add('hidden');
     else upBtn?.classList.remove('hidden');
 
-    // Flip lock: nascosto se accesso completo
     const flipLock=document.getElementById('flip-lock');
     if(hasFullAccess()) flipLock?.classList.add('hidden');
     else flipLock?.classList.remove('hidden');
 
-    // Badge ruolo
     const badge=document.getElementById('nav-badge');
     if(badge){
       if(isSuperAdmin){badge.textContent='★ ADMIN';badge.className='pill pill-sa'}
@@ -921,45 +919,24 @@ sb.auth.onAuthStateChange(async(event,session)=>{
 
     uPill();
 
-    // Gestione ritorno da Stripe
     const u=new URLSearchParams(location.search);
     if(u.get('success')){toast('Piano Pro attivato!','ok');history.replaceState({},'',location.pathname)}
     if(u.get('canceled')){toast('Pagamento annullato.','warn');history.replaceState({},'',location.pathname)}
 
     calc();
   } else {
-    // Se doLogout ha già resettato stato + UI, salta il re-render ridondante.
-    if(_logoutDone) return;
-
     user=null; isPro=false; isSuperAdmin=false; profile=null; limShown=false;
 
-    // ── Rileva rientro da Stripe con sessione scaduta ──────────────────────
-    // ip_stripe_intent viene impostato da checkout() subito prima del redirect.
-    // Se è presente E l'URL contiene ?success=1, la sessione è scaduta
-    // durante il checkout — guida l'utente al re-login invece di mostrare
-    // silenziosamente la landing.
     let stripeIntent=false;
     try{stripeIntent=!!localStorage.getItem('ip_stripe_intent')}catch(e){}
     const _usp=new URLSearchParams(location.search);
     const fromStripeSuccess=!!_usp.get('success');
 
     if(stripeIntent&&fromStripeSuccess){
-      // ── Pulizia sessione corrotta ──────────────────────────────────────
-      // La sessione Supabase in localStorage potrebbe essere in stato
-      // parzialmente aggiornato (token ruotato non salvato prima del
-      // redirect). Rimozione preventiva per sbloccare nuovi login.
-      try{
-        const sbHost=SB_URL.replace('https://','').split('.')[0];
-        Object.keys(localStorage)
-          .filter(k=>k.includes('sb-')||k.includes(sbHost)||k.includes('supabase'))
-          .forEach(k=>localStorage.removeItem(k));
-        localStorage.removeItem('ip_stripe_intent');
-      }catch(e){}
+      try{localStorage.removeItem('ip_stripe_intent')}catch(e){}
       history.replaceState({},'',location.pathname);
       resetUIToLanding();
       calc();
-      // Mostra modal di login con messaggio contestuale al posto del
-      // generico reset alla landing — l'utente sa che il pagamento è andato.
       setTimeout(()=>{
         openAuth('login');
         const errEl=document.getElementById('e-li');
@@ -972,17 +949,11 @@ sb.auth.onAuthStateChange(async(event,session)=>{
       return;
     }
 
-    // ── Logout esterno normale (token scaduto, altro tab) ─────────────
     try{localStorage.removeItem('ip_stripe_intent')}catch(e){}
     resetUIToLanding();
     calc();
   }
-  }catch(err){
-    console.error('[auth] errore lifecycle:',err);
-  }finally{
-    _authBusy=false;
-  }
-});
+}
 
 // ════════════════════════════════════════════════
 // AUTH UI
@@ -1013,21 +984,7 @@ async function doLogin(){
         'Invalid login credentials':'Email o password non corretti.',
         'Email not confirmed':'Conferma prima la tua email.'
       };
-      const knownError=knownMsgs[error.message];
-      if(!knownError){
-        // Errore sconosciuto → potenziale stato sessione corrotto in localStorage.
-        // Pulizia preventiva dei token Supabase: sblocca il login su browser
-        // che hanno un refresh token invalidato (es. dopo redirect Stripe).
-        try{
-          const sbHost=SB_URL.replace('https://','').split('.')[0];
-          Object.keys(localStorage)
-            .filter(k=>k.includes('sb-')||k.includes(sbHost)||k.includes('supabase'))
-            .forEach(k=>localStorage.removeItem(k));
-        }catch(_){}
-        e.textContent='Errore di accesso. Sessione locale pulita: riprova ora.';
-      }else{
-        e.textContent=knownError;
-      }
+      e.textContent=knownMsgs[error.message]||'Errore di accesso. Riprova tra qualche secondo.';
       e.classList.add('on');
     }
   }catch(err){
@@ -1091,38 +1048,25 @@ function resetUIToLanding(){
 async function doLogout(){
   const btn=document.getElementById('nav-out');
   if(btn){btn.disabled=true;btn.textContent='Uscita...';}
-
-  // Flag settato PRIMA di qualsiasi operazione; il finally esterno
-  // garantisce il reset anche se resetUIToLanding() o calc() lanciano.
-  _logoutDone=true;
   try{
-    // ── 1. Reset stato locale PRIMA della rete ──
     user=null; profile=null; isPro=false; isSuperAdmin=false;
     limShown=false;
-
-    // ── 2. Reset UI immediato (single render) ──
     resetUIToLanding();
     calc();
 
-    // ── 3. Chiude modali aperte ──
     try{closeAuth()}catch(e){}
     try{closePW()}catch(e){}
     try{closeAdminPanel()}catch(e){}
     try{closeAcct()}catch(e){}
 
-    // ── 4. signOut con fallback locale ──
     try{
       await sb.auth.signOut();
     }catch(err){
       console.warn('[logout] signOut globale fallito, forzo locale:', err.message);
-      try{
-        await sb.auth.signOut({scope:'local'});
-      }catch(localErr){
-        console.error('[logout] anche signOut locale fallito:', localErr.message);
-      }
+      try{ await sb.auth.signOut({scope:'local'}) }
+      catch(localErr){ console.error('[logout] anche signOut locale fallito:', localErr.message) }
     }
   }finally{
-    _logoutDone=false;
     if(btn){btn.disabled=false;btn.textContent='Esci';}
   }
 }
@@ -1304,7 +1248,7 @@ async function checkout(period){
     const res=await fetch(SB_URL+'/functions/v1/create-checkout',{
       method:'POST',
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+tkn,'apikey':SB_KEY},
-      body:JSON.stringify({priceId:pid}),
+      body:JSON.stringify({priceId:pid,successUrl:location.origin+'/index.html?success=1',cancelUrl:location.origin+'/index.html?canceled=1'}),
       signal:controller.signal
     });
     clearTimeout(timeout);
