@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://amzjefyegfxkpzjifynj.supabase.co https://*.supabase.co wss://amzjefyegfxkpzjifynj.supabase.co wss://*.supabase.co https://api.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>InvestPro — Analisi Finanziaria Immobiliare</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -475,6 +477,137 @@ body:has(#proj-modal.on) #chat-widget{opacity:0;pointer-events:none;transform:tr
 }
 .theme-toggle:hover{background:var(--bg4,var(--bg3));border-color:var(--teal)}
 
+/* ═══ FASE 1: BRAND SETTINGS MODAL ═══ */
+#brand-modal{position:fixed;inset:0;background:rgba(5,10,20,.88);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;z-index:8400;padding:20px;opacity:0;pointer-events:none;transition:.22s;overflow-y:auto}
+#brand-modal.on{opacity:1;pointer-events:all}
+.brand-box{width:100%;max-width:440px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rx);padding:28px;transform:translateY(10px);transition:.22s}
+#brand-modal.on .brand-box{transform:none}
+.brand-box .afg{margin-bottom:10px}
+.brand-preview{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);margin-bottom:14px}
+.brand-preview-logo{width:48px;height:48px;border-radius:6px;object-fit:contain;background:var(--bg3);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.brand-preview-logo img{max-width:100%;max-height:100%}
+.brand-preview-name{font-size:.88rem;font-weight:700;color:var(--tx)}
+.color-row{display:flex;gap:10px;margin-bottom:10px}
+.color-field{flex:1;display:flex;flex-direction:column;gap:4px}
+.color-field input[type="color"]{width:100%;height:36px;border:1px solid var(--input-border);border-radius:var(--r);background:var(--input-bg);cursor:pointer;padding:2px}
+
+/* ═══ FASE 2: PROJECTS — Search + Sort + History ═══ */
+.proj-toolbar{display:flex;gap:8px;margin-bottom:12px;align-items:center}
+.proj-search{flex:1;background:var(--input-bg);border:1px solid var(--input-border);border-radius:var(--r);padding:8px 10px;color:var(--tx-input);font-size:.78rem;font-family:inherit;outline:none;transition:border-color .18s}
+.proj-search:focus{border-color:var(--input-border-focus);box-shadow:0 0 0 2px rgba(0,212,164,.12)}
+.proj-sort{background:var(--bg);border:1px solid var(--input-border);border-radius:var(--r);padding:7px 8px;color:var(--tx);font-size:.72rem;font-family:inherit;cursor:pointer;outline:none}
+.proj-count{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3);margin-bottom:8px}
+.proj-history-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.proj-history-back{background:none;border:1px solid var(--border);border-radius:var(--r);padding:5px 10px;font-size:.72rem;color:var(--tx2);cursor:pointer;transition:.15s;font-family:inherit}
+.proj-history-back:hover{color:var(--teal);border-color:var(--teal)}
+.proj-history-title{font-size:.88rem;font-weight:700;color:var(--tx);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ver-item{display:flex;align-items:center;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);gap:10px;transition:.15s}
+.ver-item:hover{border-color:var(--border2)}
+.ver-badge{width:32px;height:32px;background:var(--tg);border:1px solid rgba(0,212,164,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;color:var(--teal);flex-shrink:0}
+.ver-info{flex:1;min-width:0}
+.ver-date{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--tx3)}
+.ver-note{font-size:.74rem;color:var(--tx2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ver-btns{display:flex;gap:5px;flex-shrink:0}
+.ver-load{background:var(--teal);border:none;color:var(--bg);padding:4px 10px;border-radius:4px;font-size:.66rem;font-weight:700;cursor:pointer;transition:.15s;font-family:inherit}
+.ver-load:hover{background:var(--teal-h)}
+.ver-del{background:none;border:1px solid rgba(255,81,112,.3);color:var(--red);padding:4px 7px;border-radius:4px;font-size:.66rem;cursor:pointer;transition:.15s;font-family:inherit}
+.ver-del:hover{background:rgba(255,81,112,.08)}
+.proj-hist-btn{background:none;border:1px solid rgba(0,212,164,.3);color:var(--teal);padding:4px 8px;border-radius:4px;font-size:.64rem;cursor:pointer;transition:.15s;font-family:inherit;white-space:nowrap}
+.proj-hist-btn:hover{background:rgba(0,212,164,.08)}
+
+/* ═══ FASE 3: TEAM MANAGEMENT MODAL ═══ */
+#team-modal{position:fixed;inset:0;background:rgba(5,10,20,.88);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;z-index:8600;padding:20px;opacity:0;pointer-events:none;transition:.22s;overflow-y:auto}
+#team-modal.on{opacity:1;pointer-events:all}
+.team-box{width:100%;max-width:540px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rx);padding:28px;transform:translateY(10px);transition:.22s}
+#team-modal.on .team-box{transform:none}
+.team-section{margin-bottom:20px}
+.team-section-lbl{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.team-section-lbl::before{content:'';width:12px;height:1px;background:var(--gold)}
+.team-info-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:.8rem}
+.team-info-row:last-child{border:none}
+.team-info-k{color:var(--tx3)}.team-info-v{font-weight:600;color:var(--tx)}
+.tm-item{display:flex;align-items:center;padding:9px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);gap:10px;margin-bottom:5px;transition:.15s}
+.tm-item:hover{border-color:var(--border2)}
+.tm-avatar{width:32px;height:32px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:var(--teal);flex-shrink:0;font-family:'JetBrains Mono',monospace}
+.tm-info{flex:1;min-width:0}
+.tm-email{font-size:.76rem;font-weight:600;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tm-role{font-family:'JetBrains Mono',monospace;font-size:.54rem;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.tm-role.owner{color:var(--gold)}.tm-role.admin{color:var(--teal)}.tm-role.member{color:var(--tx3)}
+.tm-actions{display:flex;gap:5px;flex-shrink:0;align-items:center}
+.tm-actions select{background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--tx);padding:3px 6px;font-size:.68rem;cursor:pointer;font-family:inherit}
+.tm-remove{background:none;border:1px solid rgba(255,81,112,.3);color:var(--red);padding:3px 7px;border-radius:4px;font-size:.62rem;cursor:pointer;transition:.15s;font-family:inherit}
+.tm-remove:hover{background:rgba(255,81,112,.08)}
+.invite-row{display:flex;gap:8px;margin-top:10px}
+.invite-row input{flex:1}
+.invite-row select{width:100px}
+.invite-row button{white-space:nowrap}
+.inv-item{display:flex;align-items:center;padding:8px 12px;background:var(--bg);border:1px solid rgba(212,169,64,.25);border-radius:var(--r);gap:8px;margin-bottom:5px;font-size:.76rem}
+.inv-email{flex:1;color:var(--tx2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.inv-status{font-family:'JetBrains Mono',monospace;font-size:.54rem;padding:2px 6px;border-radius:10px}
+.inv-status.pending{color:var(--amber);background:var(--ag);border:1px solid rgba(240,160,48,.3)}
+.inv-status.accepted{color:var(--teal);background:var(--tg);border:1px solid rgba(0,212,164,.3)}
+.inv-status.declined{color:var(--red);background:var(--rg);border:1px solid rgba(255,81,112,.3)}
+.inv-cancel{background:none;border:1px solid var(--border);color:var(--tx3);padding:3px 7px;border-radius:4px;font-size:.62rem;cursor:pointer;font-family:inherit;transition:.15s}
+.inv-cancel:hover{color:var(--red);border-color:rgba(255,81,112,.3)}
+.invite-banner{background:linear-gradient(135deg,rgba(212,169,64,.12),rgba(212,169,64,.04));border:1px solid rgba(212,169,64,.35);border-radius:var(--rl);padding:14px 16px;margin:0 auto 16px;max-width:1240px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:relative;z-index:2}
+.invite-banner-text{flex:1;font-size:.82rem;color:var(--tx)}
+.invite-banner-text strong{color:var(--gold)}
+.invite-banner-btns{display:flex;gap:6px}
+.invite-banner .ib-accept{background:var(--teal);border:none;color:var(--bg);padding:6px 14px;border-radius:var(--r);font-size:.74rem;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s}
+.invite-banner .ib-accept:hover{background:var(--teal-h)}
+.invite-banner .ib-decline{background:none;border:1px solid var(--border);color:var(--tx3);padding:6px 14px;border-radius:var(--r);font-size:.74rem;cursor:pointer;font-family:inherit;transition:.15s}
+.invite-banner .ib-decline:hover{color:var(--red);border-color:rgba(255,81,112,.3)}
+
+/* ═══ FASE 4: SHARED DASHBOARD ═══ */
+.proj-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:12px}
+.proj-tab{background:none;border:none;padding:8px 0;margin-right:18px;font-size:.78rem;font-weight:500;color:var(--tx3);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;transition:.15s;font-family:inherit;display:flex;align-items:center;gap:5px}
+.proj-tab.on{color:var(--teal);border-bottom-color:var(--teal)}
+.proj-tab .tab-count{font-family:'JetBrains Mono',monospace;font-size:.56rem;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1px 6px;color:var(--tx3)}
+.proj-tab.on .tab-count{background:var(--tg);border-color:rgba(0,212,164,.3);color:var(--teal)}
+.proj-item-author{display:flex;align-items:center;gap:5px;margin-top:3px}
+.proj-item-avatar{width:16px;height:16px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.44rem;font-weight:700;color:var(--teal);font-family:'JetBrains Mono',monospace;flex-shrink:0}
+.proj-item-author-name{font-family:'JetBrains Mono',monospace;font-size:.54rem;color:var(--tx3)}
+.proj-item-you{font-family:'JetBrains Mono',monospace;font-size:.48rem;color:var(--teal);background:var(--tg);border:1px solid rgba(0,212,164,.25);border-radius:8px;padding:0 5px;margin-left:3px}
+.proj-refresh{background:none;border:1px solid var(--border);color:var(--tx3);width:28px;height:28px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:.82rem;cursor:pointer;transition:.18s;flex-shrink:0}
+.proj-refresh:hover{border-color:var(--teal);color:var(--teal)}
+.proj-refresh.spin{animation:spin-r .6s ease}
+@keyframes spin-r{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.team-empty-state{text-align:center;padding:24px 12px;color:var(--tx3);font-size:.82rem}
+.team-empty-state .tes-icon{font-size:1.6rem;margin-bottom:8px}
+.team-empty-state .tes-hint{font-size:.7rem;color:var(--tx3);margin-top:6px;font-family:'JetBrains Mono',monospace}
+
+/* ═══ FASE 5: WHITE-LABEL ═══ */
+.wl-section{margin-top:18px;padding-top:16px;border-top:1px solid var(--border)}
+.wl-section-lbl{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.wl-section-lbl::before{content:'';width:12px;height:1px;background:var(--gold)}
+.wl-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px}
+.wl-toggle-label{font-size:.8rem;font-weight:600;color:var(--tx);display:flex;align-items:center;gap:6px}
+.wl-toggle-hint{font-size:.62rem;color:var(--tx3);font-family:'JetBrains Mono',monospace}
+.wl-switch{position:relative;width:42px;height:22px;flex-shrink:0}
+.wl-switch input{opacity:0;width:0;height:0}
+.wl-slider{position:absolute;cursor:pointer;inset:0;background:var(--bg3);border:1px solid var(--border);border-radius:22px;transition:.25s}
+.wl-slider::before{content:'';position:absolute;height:16px;width:16px;left:2px;bottom:2px;background:var(--tx3);border-radius:50%;transition:.25s}
+.wl-switch input:checked+.wl-slider{background:var(--teal);border-color:rgba(0,212,164,.4)}
+.wl-switch input:checked+.wl-slider::before{transform:translateX(20px);background:#fff}
+.wl-colors-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.wl-color-field{display:flex;flex-direction:column;gap:3px}
+.wl-color-field label{font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.04em}
+.wl-color-field input[type="color"]{width:100%;height:32px;border:1px solid var(--input-border);border-radius:var(--r);background:var(--input-bg);cursor:pointer;padding:2px}
+.wl-preview{background:var(--bg);border:1px solid var(--border);border-radius:var(--rl);padding:14px;margin-bottom:12px;overflow:hidden}
+.wl-preview-nav{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:var(--r);margin-bottom:10px}
+.wl-preview-nav-logo{width:20px;height:20px;border-radius:4px;object-fit:contain;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.wl-preview-nav-logo img{max-width:100%;max-height:100%}
+.wl-preview-nav-name{font-size:.78rem;font-weight:800;letter-spacing:-.02em}
+.wl-preview-nav-dot{width:6px;height:6px;border-radius:50%}
+.wl-preview-body{padding:8px;border-radius:var(--r)}
+.wl-preview-kpi{display:flex;gap:6px}
+.wl-preview-kpi-item{flex:1;padding:6px 8px;border-radius:4px;border:1px solid rgba(255,255,255,.1)}
+.wl-preview-kpi-label{font-family:'JetBrains Mono',monospace;font-size:.44rem;text-transform:uppercase;letter-spacing:.04em;opacity:.6}
+.wl-preview-kpi-value{font-size:.72rem;font-weight:800;margin-top:2px}
+.nav .nbrand-logo{width:28px;height:28px;border-radius:5px;object-fit:contain;display:none}
+.nav .nbrand-logo.on{display:block}
+.nav .nbrand-text{transition:opacity .2s}
+
 </style>
 </head>
 <body>
@@ -482,7 +615,11 @@ body:has(#proj-modal.on) #chat-widget{opacity:0;pointer-events:none;transform:tr
 
 <!-- ═══ NAV ═══ -->
 <nav class="nav">
-  <div class="nbrand"><div class="ndot"></div>InvestPro</div>
+  <div class="nbrand">
+    <img class="nbrand-logo" id="nbrand-logo" src="" alt="">
+    <div class="ndot" id="nbrand-dot"></div>
+    <span class="nbrand-text" id="nbrand-text">InvestPro</span>
+  </div>
     <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Cambia tema" aria-label="Cambia tema chiaro/scuro">🌙</button>
   <div class="nr" id="nav-r">
     <button class="nb nb-o" id="nav-login" onclick="openAuth('login')">Accedi</button>
@@ -491,7 +628,11 @@ body:has(#proj-modal.on) #chat-widget{opacity:0;pointer-events:none;transform:tr
     <span class="pill pill-free hidden" id="nav-badge">FREE</span>
     <span class="pill-use hidden" id="nav-use">0/50</span>
     <input class="pinput hidden" id="proj-name" type="text" value="Nuova Analisi" placeholder="Nome analisi…">
+    <input class="pinput hidden" id="save-note" type="text" placeholder="Nota versione…" style="width:120px;font-size:.7rem;color:var(--tx3)" title="Nota per lo storico (opzionale)">
     <button class="nb nb-o hidden" id="nav-export" onclick="doExport()">↗ Export</button>
+    <button class="nb nb-o hidden" id="nav-pdf" onclick="doPDF()" style="border-color:rgba(0,212,164,.4);color:var(--teal)">📄 PDF</button>
+    <button class="nb nb-o hidden" id="nav-brand" onclick="openBrandModal()" style="border-color:rgba(212,169,64,.35);color:var(--gold);font-size:.68rem">🎨 Brand</button>
+    <button class="nb nb-o hidden" id="nav-team" onclick="openTeamModal()" style="border-color:rgba(212,169,64,.35);color:var(--gold);font-size:.68rem">👥 Team</button>
     <button class="nb nb-o hidden" id="nav-load" onclick="openProjectsList()">📂 Carica</button>
     <button class="nb nb-f hidden" id="nav-save" onclick="saveProject()">💾 Salva</button>
     <!-- Bottone Admin Panel: visibile SOLO a super_admin -->
@@ -991,127 +1132,229 @@ body:has(#proj-modal.on) #chat-widget{opacity:0;pointer-events:none;transform:tr
   </div>
 </div>
 
-<!-- ═══ PROJECTS LIST MODAL ═══ -->
-<div id="proj-modal">
-  <div class="adbox" style="max-width:440px">
+<!-- ═══ INVITE BANNER ═══ -->
+<div id="invite-banners" style="padding:0 40px"></div>
+
+<!-- ═══ TEAM MANAGEMENT MODAL (Agency) ═══ -->
+<div id="team-modal">
+  <div class="team-box">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div class="adh" style="margin:0">📂 I tuoi progetti</div>
-      <button class="adm-close" onclick="closeProjectsList()">×</button>
+      <div class="adh" style="margin:0">👥 Gestione Team</div>
+      <button class="adm-close" onclick="closeTeamModal()">×</button>
     </div>
-    <div id="proj-list-loading" style="text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--tx3)">Caricamento...</div>
-    <div id="proj-list-empty" class="hidden" style="text-align:center;padding:20px;color:var(--tx3);font-size:.84rem">Nessun progetto salvato.</div>
-    <div id="proj-list-items" style="display:flex;flex-direction:column;gap:6px;max-height:320px;overflow-y:auto"></div>
-    <button class="adbtn" onclick="closeProjectsList()" style="margin-top:14px">Chiudi</button>
+    <div class="team-section">
+      <div class="team-section-lbl">Workspace</div>
+      <div class="team-info-row"><span class="team-info-k">Nome</span><span class="team-info-v" id="tm-ws-name">—</span></div>
+      <div class="team-info-row"><span class="team-info-k">Membri</span><span class="team-info-v" id="tm-ws-count">—</span></div>
+      <div class="team-info-row"><span class="team-info-k">Limite</span><span class="team-info-v" id="tm-ws-max">—</span></div>
+    </div>
+    <div class="team-section">
+      <div class="team-section-lbl">Membri</div>
+      <div id="tm-members-loading" style="text-align:center;padding:12px;font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--tx3)">Caricamento...</div>
+      <div id="tm-members-list"></div>
+    </div>
+    <div class="team-section" id="tm-invite-section">
+      <div class="team-section-lbl">Invita collaboratore</div>
+      <div class="invite-row">
+        <input class="afi" type="email" id="tm-invite-email" placeholder="email@esempio.com" style="font-size:.78rem">
+        <select class="proj-sort" id="tm-invite-role"><option value="member">Membro</option><option value="admin">Admin</option></select>
+        <button class="abtn" onclick="sendInvite()" id="tm-invite-btn" style="padding:8px 14px;font-size:.72rem;margin:0">Invita</button>
+      </div>
+      <div id="tm-invite-err" class="aerr" style="margin-top:8px"></div>
+    </div>
+    <div class="team-section">
+      <div class="team-section-lbl">Inviti inviati</div>
+      <div id="tm-invites-empty" style="font-size:.76rem;color:var(--tx3);padding:8px 0">Nessun invito pendente.</div>
+      <div id="tm-invites-list"></div>
+    </div>
+    <button class="adbtn" onclick="closeTeamModal()">Chiudi</button>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- ═══ BRAND SETTINGS MODAL (Pro+ / Agency) ═══ -->
+<div id="brand-modal">
+  <div class="brand-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div class="adh" style="margin:0">🎨 Brand PDF</div>
+      <button class="adm-close" onclick="closeBrandModal()">×</button>
+    </div>
+    <div class="brand-preview" id="brand-preview">
+      <div class="brand-preview-logo" id="brand-logo-preview"><span style="color:var(--tx3);font-size:.7rem">Logo</span></div>
+      <div class="brand-preview-name" id="brand-name-preview">La tua azienda</div>
+    </div>
+    <div class="afg"><label class="afl">Nome Azienda</label><input class="afi" type="text" id="br-company" placeholder="Es. Rossi Immobiliare" maxlength="100" oninput="updateBrandPreview()"></div>
+    <div class="afg"><label class="afl">URL Logo (immagine pubblica)</label><input class="afi" type="url" id="br-logo" placeholder="https://esempio.com/logo.png" oninput="updateBrandPreview()"></div>
+    <div class="color-row">
+      <div class="color-field"><label class="afl">Colore Primario</label><input type="color" id="br-color1" value="#00d4a4"></div>
+      <div class="color-field"><label class="afl">Colore Secondario</label><input type="color" id="br-color2" value="#050a14"></div>
+    </div>
+    <div class="afg"><label class="afl">Testo Header PDF</label><input class="afi" type="text" id="br-header" placeholder="Report di Analisi Immobiliare" maxlength="120"></div>
+    <div class="afg"><label class="afl">Testo Footer PDF</label><input class="afi" type="text" id="br-footer" placeholder="© 2025 La Tua Azienda" maxlength="200"></div>
+    <div id="brand-err" class="aerr" style="margin-top:10px"></div>
+    <!-- White-label section (solo Agency) -->
+    <div class="wl-section hidden" id="wl-section">
+      <div class="wl-section-lbl">White-label</div>
+      <div class="wl-toggle-row">
+        <div><div class="wl-toggle-label">◈ Attiva White-label</div><div class="wl-toggle-hint">Sostituisce il branding InvestPro con il tuo</div></div>
+        <label class="wl-switch"><input type="checkbox" id="wl-enabled" onchange="updateWlPreview()"><span class="wl-slider"></span></label>
+      </div>
+      <div id="wl-options">
+        <div class="wl-colors-grid">
+          <div class="wl-color-field"><label>Accent (teal)</label><input type="color" id="wl-accent" value="#00d4a4" onchange="updateWlPreview()"></div>
+          <div class="wl-color-field"><label>Accent hover</label><input type="color" id="wl-accent-h" value="#00b88e" onchange="updateWlPreview()"></div>
+          <div class="wl-color-field"><label>Sfondo nav</label><input type="color" id="wl-nav-bg" value="#050a14" onchange="updateWlPreview()"></div>
+          <div class="wl-color-field"><label>Background 1</label><input type="color" id="wl-bg" value="#050a14" onchange="updateWlPreview()"></div>
+          <div class="wl-color-field"><label>Background 2</label><input type="color" id="wl-bg2" value="#0a1628" onchange="updateWlPreview()"></div>
+          <div class="wl-color-field"><label>Background 3</label><input type="color" id="wl-bg3" value="#0f1d35" onchange="updateWlPreview()"></div>
+          <div class="wl-color-field"><label>Testo primario</label><input type="color" id="wl-text" value="#f0f5ff" onchange="updateWlPreview()"></div>
+        </div>
+        <div class="afg" style="margin-bottom:10px"><label class="afl">Nascondi "InvestPro"</label>
+          <div class="wl-toggle-row" style="margin:4px 0 0;padding:6px 10px">
+            <span style="font-size:.74rem;color:var(--tx2)">Mostra solo il tuo brand</span>
+            <label class="wl-switch"><input type="checkbox" id="wl-hide-ip" checked onchange="updateWlPreview()"><span class="wl-slider"></span></label>
+          </div>
+        </div>
+        <div class="afl" style="margin-bottom:6px">Anteprima</div>
+        <div class="wl-preview" id="wl-preview">
+          <div class="wl-preview-nav" id="wl-prev-nav">
+            <div class="wl-preview-nav-dot" id="wl-prev-dot"></div>
+            <div class="wl-preview-nav-logo" id="wl-prev-logo"></div>
+            <div class="wl-preview-nav-name" id="wl-prev-name">InvestPro</div>
+          </div>
+          <div class="wl-preview-body" id="wl-prev-body">
+            <div class="wl-preview-kpi">
+              <div class="wl-preview-kpi-item" id="wl-prev-kpi1"><div class="wl-preview-kpi-label">ROI</div><div class="wl-preview-kpi-value">12.4%</div></div>
+              <div class="wl-preview-kpi-item" id="wl-prev-kpi2"><div class="wl-preview-kpi-label">CF/Mese</div><div class="wl-preview-kpi-value">€ 840</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="abtn" onclick="saveBrandSettings()" id="br-save-btn" style="margin-top:14px">Salva Impostazioni</button>
+    <button class="adbtn" onclick="closeBrandModal()">Chiudi</button>
+  </div>
+</div>
+
+<!-- ═══ PROJECTS LIST MODAL — Tabs / Search / Sort / History ═══ -->
+<div id="proj-modal">
+  <div class="adbox" style="max-width:500px">
+    <div id="proj-view-list">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div class="adh" style="margin:0">📂 Progetti</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <button class="proj-refresh" id="proj-refresh-btn" onclick="refreshProjects()" title="Aggiorna">↻</button>
+          <button class="adm-close" onclick="closeProjectsList()">×</button>
+        </div>
+      </div>
+      <div class="proj-tabs" id="proj-tabs">
+        <button class="proj-tab on" id="proj-tab-mine" onclick="switchProjTab('mine')">I miei <span class="tab-count" id="proj-tab-mine-count">0</span></button>
+        <button class="proj-tab hidden" id="proj-tab-team" onclick="switchProjTab('team')">Team <span class="tab-count" id="proj-tab-team-count">0</span></button>
+      </div>
+      <div class="proj-toolbar">
+        <input class="proj-search" type="text" id="proj-search" placeholder="Cerca progetto…" oninput="filterProjects()">
+        <select class="proj-sort" id="proj-sort" onchange="filterProjects()">
+          <option value="date-desc">Più recente</option><option value="date-asc">Più vecchio</option>
+          <option value="name-asc">Nome A→Z</option><option value="name-desc">Nome Z→A</option>
+        </select>
+      </div>
+      <div class="proj-count" id="proj-count"></div>
+      <div id="proj-list-loading" style="text-align:center;padding:20px;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--tx3)">Caricamento...</div>
+      <div id="proj-list-empty" class="hidden" style="text-align:center;padding:20px;color:var(--tx3);font-size:.84rem">Nessun progetto salvato.</div>
+      <div id="proj-list-items" style="display:flex;flex-direction:column;gap:6px;max-height:360px;overflow-y:auto"></div>
+      <button class="adbtn" onclick="closeProjectsList()" style="margin-top:14px">Chiudi</button>
+    </div>
+    <div id="proj-view-history" class="hidden">
+      <div class="proj-history-header">
+        <button class="proj-history-back" onclick="showProjectListView()">← Indietro</button>
+        <div class="proj-history-title" id="hist-title">Storico</div>
+        <button class="adm-close" onclick="closeProjectsList()">×</button>
+      </div>
+      <div id="hist-loading" style="text-align:center;padding:16px;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--tx3)">Caricamento versioni...</div>
+      <div id="hist-empty" class="hidden" style="text-align:center;padding:16px;color:var(--tx3);font-size:.82rem">Nessuna versione salvata.</div>
+      <div id="hist-items" style="display:flex;flex-direction:column;gap:6px;max-height:360px;overflow-y:auto"></div>
+      <button class="adbtn" onclick="showProjectListView()" style="margin-top:14px">← Torna alla lista</button>
+    </div>
+  </div>
+</div>
+
+<!-- CDN con SRI — hash calcolati da npm packages -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" integrity="sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js" integrity="sha384-en/ztfPSRkGfME4KIm05joYXynqzUgbsG5nMrj/xEFAHXkeZfO3yMK8QQ+mP7p1/" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" integrity="sha384-fCAW/rDWORTbQXSiB7mOg0QtQ5c+r0f544y6XoKjuVva0nMBlCpNUjiFeG5iMdS3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.4/dist/umd/supabase.js" integrity="sha384-7SfFUrg31wOnGWBLLniKFCNmCSguYA5wI1WPDOt7kP/mom4R9/0pwghVEnv0uwYP" crossorigin="anonymous"></script>
 <script>
 // ════════════════════════════════════════════════
 // CONFIG
 // ════════════════════════════════════════════════
 const SB_URL='https://amzjefyegfxkpzjifynj.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtemplZnllZ2Z4a3B6amlmeW5qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1Mjk4NTcsImV4cCI6MjA5MjEwNTg1N30.RDnpaTFtSkx2wmI5vWScef2x9CFgyGxPoAvXy-1lNrE';
-const PRM='price_1T0KhVCP1ytB9mXWR6roA7uB'; // €29,90/mese
-const PRY='price_1TQmhkCP1ytB9mXWHDVnQiKU'; // €199/anno
-const PPM='price_1TWETICP1ytB9mXWNf4YyJPr'; // €59/mese  Pro+
-const AGM='price_1TWETUCP1ytB9mXWwBTgcJJw'; // €149/mese Agency
-// SICUREZZA: super_admin determinato ESCLUSIVAMENTE da profiles.role nel DB.
-// Nessuna email hardcoded nel sorgente pubblico.
-const sb=supabase.createClient(SB_URL,SB_KEY);
+const PRM='price_1T0KhVCP1ytB9mXWR6roA7uB';
+const PRY='price_1TQmhkCP1ytB9mXWHDVnQiKU';
+const PPM='price_1TWETICP1ytB9mXWNf4YyJPr';
+const AGM='price_1TWETUCP1ytB9mXWwBTgcJJw';
+let sb=null;
+if(typeof supabase!=='undefined'&&supabase.createClient){try{sb=supabase.createClient(SB_URL,SB_KEY)}catch(e){console.error('[init] Supabase fallito:',e)}}
+if(!sb){document.addEventListener('DOMContentLoaded',()=>{setTimeout(()=>{if(typeof toast==='function')toast('⚠️ Modalità offline: il calcolatore funziona, autenticazione non disponibile.','warn')},800)})}
 
 // ════════════════════════════════════════════════
-// USAGE LIMIT — 50 calcoli/giorno per utenti Free
-// Reset automatico a mezzanotte via localStorage
+// USAGE LIMIT
 // ════════════════════════════════════════════════
 const LIM=50;
 const td=()=>new Date().toISOString().split('T')[0];
-function gCnt(){
-  if(localStorage.getItem('ip_d')!==td()){
-    localStorage.setItem('ip_d',td());
-    localStorage.setItem('ip_c','0');
-    return 0;
-  }
-  return parseInt(localStorage.getItem('ip_c')||'0');
-}
-function iCnt(){const c=gCnt()+1;localStorage.setItem('ip_c',String(c));return c}
-function uPill(){
-  const c=gCnt();
-  document.querySelectorAll('#frame-pill,#nav-use').forEach(el=>{
-    // Super admin e Pro: nessun limite visualizzato
-    if(hasFullAccess()){el.classList.add('hidden');return}
-    el.classList.remove('hidden','warn','danger');
-    el.textContent=`${c}/${LIM}`;
-    if(c>=LIM)el.classList.add('danger');
-    else if(c>=LIM-5)el.classList.add('warn');
-  });
-}
+function gCnt(){try{if(localStorage.getItem('ip_d')!==td()){localStorage.setItem('ip_d',td());localStorage.setItem('ip_c','0');return 0}const raw=parseInt(localStorage.getItem('ip_c'),10);return(Number.isFinite(raw)&&raw>=0)?raw:0}catch(e){return 0}}
+function iCnt(){try{const c=gCnt()+1;localStorage.setItem('ip_c',String(c));return c}catch(e){return 0}}
+function uPill(){const c=gCnt();document.querySelectorAll('#frame-pill,#nav-use').forEach(el=>{if(hasFullAccess()){el.classList.add('hidden');return}el.classList.remove('hidden','warn','danger');el.textContent=`${c}/${LIM}`;if(c>=LIM)el.classList.add('danger');else if(c>=LIM-5)el.classList.add('warn')})}
 
 // ════════════════════════════════════════════════
-// STATO GLOBALE + RBAC
+// STATO GLOBALE + RBAC (Fix C-1: dichiarazioni unificate)
 // ════════════════════════════════════════════════
 let user=null, isPro=false, isProPlus=false, isAgency=false, isSuperAdmin=false, profile=null, mode='rent', limShown=false;
-let _pendingAuth=null;
-let _authProcessing=false;
-let _logoutDone=false;
+let _pendingAuth=null, _authProcessing=false, _logoutDone=false;
+let _brandCache=null;
+let _workspace=null, _wsMembers=[], _wsInvites=[], _pendingInvites=[];
+let _projCache=[], _teamProjCache=[], _projTab='mine'; // Fix C-1: unica dichiarazione
+let _wlActive=false; // Fase 5
+let _saveLock=false; // Fix M-2
 
-// Pro+ e Agency includono tutto ciò che ha Pro
-const hasFullAccess = ()=> isSuperAdmin || isPro || isProPlus || isAgency;
-const canFlip       = ()=> hasFullAccess();
-const canSave       = ()=> hasFullAccess();
-const canExport     = ()=> hasFullAccess();
-const canPDF        = ()=> isSuperAdmin || isProPlus || isAgency;
-const isLimited     = ()=> !hasFullAccess();
+const hasFullAccess=()=>isSuperAdmin||isPro||isProPlus||isAgency;
+const canFlip=()=>hasFullAccess();
+const canSave=()=>hasFullAccess();
+const canExport=()=>hasFullAccess();
+const canPDF=()=>isSuperAdmin||isProPlus||isAgency;
+const canHistory=()=>isSuperAdmin||isProPlus||isAgency;
+const canTeam=()=>isSuperAdmin||isAgency;
+
+// ════════════════════════════════════════════════
+// UTILITY (Fase 5 — globale, Fix 1.1/5.3)
+// ════════════════════════════════════════════════
+function hexToRgb(hex){const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return[r,g,b]}
+function rgbaFrom(hex,a){const[r,g,b]=hexToRgb(hex);return`rgba(${r},${g},${b},${a})`}
 
 // ════════════════════════════════════════════════
 // AUTH LIFECYCLE
 // ════════════════════════════════════════════════
+if(sb){
 sb.auth.onAuthStateChange((event,session)=>{
   _pendingAuth={event,session};
-  if(_authProcessing) return;
+  if(_authProcessing)return;
   _authProcessing=true;
-  (async()=>{
-    while(_pendingAuth){
-      const{event:ev,session:ses}=_pendingAuth;
-      _pendingAuth=null;
-      try{ await _handleAuth(ev,ses) }
-      catch(err){ console.error('[auth] errore lifecycle:',err) }
-    }
-    _authProcessing=false;
-  })();
+  (async()=>{while(_pendingAuth){const{event:ev,session:ses}=_pendingAuth;_pendingAuth=null;try{await _handleAuth(ev,ses)}catch(err){console.error('[auth] errore lifecycle:',err)}}_authProcessing=false})();
 });
+}
 
 async function _handleAuth(event,session){
   user=session?.user??null;
   if(user){
     let p=null;
-    try{
-      const{data,error}=await sb.from('profiles').select('*').eq('id',user.id).single();
-      if(error) throw error;
-      p=data;
-    }catch(profileErr){
-      console.error('Errore caricamento profilo:',profileErr);
-      await new Promise(r=>setTimeout(r,500));
-      const{data:retry}=await sb.from('profiles').select('*').eq('id',user.id).single();
-      p=retry;
-    }
-    if(_pendingAuth) return;
+    try{const{data,error}=await sb.from('profiles').select('*').eq('id',user.id).single();if(error)throw error;p=data}
+    catch(profileErr){console.error('Errore caricamento profilo:',profileErr);await new Promise(r=>setTimeout(r,500));const{data:retry}=await sb.from('profiles').select('*').eq('id',user.id).single();p=retry}
+    if(_pendingAuth)return;
 
     profile=p;
-    isPro=p?.plan==='pro';
-    isProPlus=p?.plan==='pro_plus';
-    isAgency=p?.plan==='agency';
-    isSuperAdmin=p?.role==='super_admin';
-    if(isSuperAdmin){isPro=true;isProPlus=true;isAgency=true;}
+    isPro=p?.plan==='pro';isProPlus=p?.plan==='pro_plus';isAgency=p?.plan==='agency';isSuperAdmin=p?.role==='super_admin';
+    if(isSuperAdmin){isPro=true;isProPlus=true;isAgency=true}
 
-    if(hasFullAccess()){
-      limShown=false;
-      document.getElementById('lock-overlay')?.classList.remove('on');
-      closePW();
-      document.getElementById('nav-use')?.classList.add('hidden');
-      document.getElementById('frame-pill')?.classList.add('hidden');
-    }
+    if(hasFullAccess()){limShown=false;document.getElementById('lock-overlay')?.classList.remove('on');closePW();document.getElementById('nav-use')?.classList.add('hidden');document.getElementById('frame-pill')?.classList.add('hidden')}
 
     document.getElementById('hero').classList.add('hidden');
     document.getElementById('landing-extra').classList.add('hidden');
@@ -1122,193 +1365,119 @@ async function _handleAuth(event,session){
 
     document.getElementById('nav-login').classList.add('hidden');
     document.getElementById('nav-reg').classList.add('hidden');
-    ['nav-badge','nav-use','proj-name','nav-export','nav-load','nav-save','nav-acct','nav-out']
-      .forEach(id=>document.getElementById(id)?.classList.remove('hidden'));
+    ['nav-badge','nav-use','proj-name','nav-export','nav-load','nav-save','nav-acct','nav-out'].forEach(id=>document.getElementById(id)?.classList.remove('hidden'));
+
+    // PDF + Brand
+    const pdfBtn=document.getElementById('nav-pdf'),brandBtn=document.getElementById('nav-brand');
+    if(canPDF()){pdfBtn?.classList.remove('hidden');brandBtn?.classList.remove('hidden')}else{pdfBtn?.classList.add('hidden');brandBtn?.classList.add('hidden')}
+    // Team
+    const teamBtn=document.getElementById('nav-team');
+    if(canTeam())teamBtn?.classList.remove('hidden');else teamBtn?.classList.add('hidden');
+    // Save note
+    const noteInput=document.getElementById('save-note');
+    if(canHistory())noteInput?.classList.remove('hidden');else noteInput?.classList.add('hidden');
 
     const adminBtn=document.getElementById('nav-admin-panel');
-    if(isSuperAdmin) adminBtn?.classList.remove('hidden');
-    else adminBtn?.classList.add('hidden');
-
+    if(isSuperAdmin)adminBtn?.classList.remove('hidden');else adminBtn?.classList.add('hidden');
     const upBtn=document.getElementById('nav-up');
-    if(hasFullAccess()) upBtn?.classList.add('hidden');
-    else upBtn?.classList.remove('hidden');
-
+    if(hasFullAccess())upBtn?.classList.add('hidden');else upBtn?.classList.remove('hidden');
     const flipLock=document.getElementById('flip-lock');
-    if(hasFullAccess()) flipLock?.classList.add('hidden');
-    else flipLock?.classList.remove('hidden');
+    if(hasFullAccess())flipLock?.classList.add('hidden');else flipLock?.classList.remove('hidden');
 
     const badge=document.getElementById('nav-badge');
     if(badge){
       if(isSuperAdmin){badge.textContent='★ ADMIN';badge.className='pill pill-sa'}
-      else if(isAgency) {badge.textContent='◈ AGENCY';badge.className='pill pill-sa'}
+      else if(isAgency){badge.textContent='◈ AGENCY';badge.className='pill pill-sa'}
       else if(isProPlus){badge.textContent='✦ PRO+';badge.className='pill pill-pro'}
-      else if(isPro)  {badge.textContent='✦ PRO';  badge.className='pill pill-pro'}
-      else            {badge.textContent='FREE';    badge.className='pill pill-free'}
+      else if(isPro){badge.textContent='✦ PRO';badge.className='pill pill-pro'}
+      else{badge.textContent='FREE';badge.className='pill pill-free'}
     }
-
     uPill();
 
     const u=new URLSearchParams(location.search);
     if(u.get('success')){toast('Piano Pro attivato!','ok');history.replaceState({},'',location.pathname)}
     if(u.get('canceled')){toast('Pagamento annullato.','warn');history.replaceState({},'',location.pathname)}
 
-    calc();
-  } else {
-    if(_logoutDone) return;
-    user=null; isPro=false; isProPlus=false; isAgency=false; isSuperAdmin=false; profile=null; limShown=false;
+    // Carica workspace, membri, inviti (Fase 3/4)
+    await loadUserWorkspace();
+    if(_workspace){try{const{data:members}=await sb.from('workspace_members').select('id,user_id,role,joined_at').eq('workspace_id',_workspace.id);_wsMembers=members||[]}catch(e){console.error('[ws members]',e)}}
 
-    let stripeIntent=false;
-    try{stripeIntent=!!localStorage.getItem('ip_stripe_intent')}catch(e){}
-    const _usp=new URLSearchParams(location.search);
-    const fromStripeSuccess=!!_usp.get('success');
-
-    if(stripeIntent&&fromStripeSuccess){
-      try{localStorage.removeItem('ip_stripe_intent')}catch(e){}
-      history.replaceState({},'',location.pathname);
-      resetUIToLanding();
-      calc();
-      setTimeout(()=>{
-        openAuth('login');
-        const errEl=document.getElementById('e-li');
-        if(errEl){
-          errEl.textContent='Pagamento ricevuto. La sessione è scaduta durante il checkout: accedi di nuovo per attivare il piano Pro.';
-          errEl.classList.add('on');
-          errEl.style.cssText='color:var(--teal);background:rgba(0,212,164,.07);border-color:rgba(0,212,164,.3)';
-        }
-      },180);
-      return;
+    // Applica white-label (Fase 5 + Fix C-2)
+    if(_workspace){
+      try{
+        const brandOwnerId=_workspace.owner_id||user.id;
+        if(!_brandCache||_brandCache.user_id!==brandOwnerId){const{data:bs}=await sb.rpc('get_workspace_brand',{p_workspace_id:_workspace.id});if(bs)_brandCache=bs}
+        if(_brandCache&&_brandCache.whitelabel_enabled)applyWhiteLabel(_brandCache);
+      }catch(e){console.error('[whitelabel]',e)}
+    }else if(canTeam()){
+      try{if(!_brandCache){const{data:bs}=await sb.from('brand_settings').select('*').eq('user_id',user.id).maybeSingle();if(bs)_brandCache=bs}if(_brandCache&&_brandCache.whitelabel_enabled)applyWhiteLabel(_brandCache)}catch(e){console.error('[whitelabel]',e)}
     }
 
-    try{localStorage.removeItem('ip_stripe_intent')}catch(e){}
-    resetUIToLanding();
+    checkPendingInvites();
     calc();
+  } else {
+    if(_logoutDone)return;
+    user=null;isPro=false;isProPlus=false;isAgency=false;isSuperAdmin=false;profile=null;limShown=false;
+    let stripeIntent=false;try{const intentTs=parseInt(localStorage.getItem('ip_stripe_intent'),10);if(Number.isFinite(intentTs)){if(Date.now()-intentTs<15*60*1000)stripeIntent=true;else localStorage.removeItem('ip_stripe_intent')}}catch(e){}
+    const _usp=new URLSearchParams(location.search);const fromStripeSuccess=!!_usp.get('success');
+    if(stripeIntent&&fromStripeSuccess){
+      try{localStorage.removeItem('ip_stripe_intent')}catch(e){}
+      history.replaceState({},'',location.pathname);resetUIToLanding();calc();
+      setTimeout(()=>{openAuth('login');const errEl=document.getElementById('e-li');if(errEl){errEl.textContent='Pagamento ricevuto. Accedi di nuovo per attivare il piano Pro.';errEl.classList.add('on');errEl.style.cssText='color:var(--teal);background:rgba(0,212,164,.07);border-color:rgba(0,212,164,.3)'}},180);
+      return;
+    }
+    try{localStorage.removeItem('ip_stripe_intent')}catch(e){}
+    resetUIToLanding();calc();
   }
 }
 
 // ════════════════════════════════════════════════
 // AUTH UI
 // ════════════════════════════════════════════════
-function openAuth(tab='login'){
-  document.getElementById('auth').classList.add('on');
-  sTab(tab==='login'?'li':'re');
-  setTimeout(()=>document.getElementById(tab==='login'?'i-em':'i-nm')?.focus(),150);
-}
+function openAuth(tab='login'){document.getElementById('auth').classList.add('on');sTab(tab==='login'?'li':'re');setTimeout(()=>document.getElementById(tab==='login'?'i-em':'i-nm')?.focus(),150)}
 function closeAuth(){document.getElementById('auth').classList.remove('on')}
-function sTab(t){
-  ['li','re'].forEach(x=>{
-    document.getElementById(`t-${x}`).classList.toggle('on',x===t);
-    document.getElementById(`f-${x}`).classList.toggle('hidden',x!==t);
-  });
-}
+function sTab(t){['li','re'].forEach(x=>{document.getElementById(`t-${x}`).classList.toggle('on',x===t);document.getElementById(`f-${x}`).classList.toggle('hidden',x!==t)})}
 
 async function doLogin(){
   const b=document.getElementById('b-li'),e=document.getElementById('e-li');
-  const email=document.getElementById('i-em').value.trim();
-  const pass=document.getElementById('i-pw').value;
+  const email=document.getElementById('i-em').value.trim(),pass=document.getElementById('i-pw').value;
   if(!email||!pass){e.textContent='Inserisci email e password.';e.classList.add('on');return}
   b.disabled=true;b.textContent='Accesso in corso...';e.classList.remove('on');
-  try{
-    const{error}=await sb.auth.signInWithPassword({email,password:pass});
-    if(error){
-      const knownMsgs={
-        'Invalid login credentials':'Email o password non corretti.',
-        'Email not confirmed':'Conferma prima la tua email.'
-      };
-      e.textContent=knownMsgs[error.message]||'Errore di accesso. Riprova tra qualche secondo.';
-      e.classList.add('on');
-    }
-  }catch(err){
-    e.textContent='Errore di rete. Controlla la connessione.';
-    e.classList.add('on');
-  }
+  try{const{error}=await sb.auth.signInWithPassword({email,password:pass});if(error){const m={'Invalid login credentials':'Email o password non corretti.','Email not confirmed':'Conferma prima la tua email.'};e.textContent=m[error.message]||'Errore di accesso.';e.classList.add('on')}}
+  catch(err){e.textContent='Errore di rete.';e.classList.add('on')}
   b.disabled=false;b.textContent='Accedi →';
 }
 
 async function doReg(){
   const b=document.getElementById('b-re'),e=document.getElementById('e-re'),ok=document.getElementById('o-re');
   b.disabled=true;b.textContent='...';e.classList.remove('on');ok.classList.remove('on');
-
-  const name=document.getElementById('i-nm').value.trim();
-  const email=document.getElementById('i-rem').value.trim();
-  const pass=document.getElementById('i-rpw').value;
-
+  const name=document.getElementById('i-nm').value.trim(),email=document.getElementById('i-rem').value.trim(),pass=document.getElementById('i-rpw').value;
   if(!name){e.textContent='Inserisci il nome.';e.classList.add('on');b.disabled=false;b.textContent='Crea Account →';return}
   if(!email){e.textContent='Inserisci l\'email.';e.classList.add('on');b.disabled=false;b.textContent='Crea Account →';return}
-  if(pass.length<8){e.textContent='La password deve essere di almeno 8 caratteri.';e.classList.add('on');b.disabled=false;b.textContent='Crea Account →';return}
-
-  // SICUREZZA: il piano NON viene passato nei metadati.
-  // Il DB imposta sempre 'free' alla creazione (trigger handle_new_user).
-  // Il piano Pro viene attivato ESCLUSIVAMENTE dal webhook Stripe dopo il pagamento.
-  const{error}=await sb.auth.signUp({
-    email,
-    password:pass,
-    options:{data:{display_name:name}}
-  });
-
-  if(error){
-    e.textContent=error.message.includes('already')?'Email già registrata.':'Errore. Riprova.';
-    e.classList.add('on');
-  }else{
-    ok.textContent='✓ Account Free creato! Controlla la tua email per confermare, poi accedi.';
-    ok.classList.add('on');
-  }
+  if(pass.length<8){e.textContent='Min. 8 caratteri.';e.classList.add('on');b.disabled=false;b.textContent='Crea Account →';return}
+  const{error}=await sb.auth.signUp({email,password:pass,options:{data:{display_name:name}}});
+  if(error){e.textContent=error.message.includes('already')?'Email già registrata.':'Errore. Riprova.';e.classList.add('on')}
+  else{ok.textContent='✓ Account Free creato! Controlla la tua email per confermare.';ok.classList.add('on')}
   b.disabled=false;b.textContent='Crea Account →';
 }
 
 // ════════════════════════════════════════════════
-// LIVE CHAT WIDGET — invio asincrono via email
+// LIVE CHAT
 // ════════════════════════════════════════════════
 async function sendChatMsg(){
-  const nameEl=document.getElementById('chat-name');
-  const msgEl=document.getElementById('chat-msg');
-  const name=nameEl.value.trim();
-  const message=msgEl.value.trim();
+  const nameEl=document.getElementById('chat-name'),msgEl=document.getElementById('chat-msg');
+  const name=nameEl.value.trim(),message=msgEl.value.trim();
   if(!name||!message){toast('Inserisci nome e messaggio.','err');return}
-
-  const btn=document.getElementById('chat-send');
-  const orig=btn.textContent;
-  btn.disabled=true;btn.textContent='Invio in corso...';
-
-  try{
-    // Chiama la Edge Function send-contact → email a lucaiolienrico@gmail.com
-    const res=await fetch(SB_URL+'/functions/v1/send-contact',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','apikey':SB_KEY},
-      body:JSON.stringify({name,message})
-    });
-
-    const data=await res.json().catch(()=>({}));
-
-    if(!res.ok){
-      // Fallback mailto se la Edge Function non è raggiungibile
-      const sub=encodeURIComponent('[InvestPro] Messaggio da '+name);
-      const bod=encodeURIComponent('Nome: '+name+'\n\nMessaggio:\n'+message);
-      window.open('mailto:lucaiolienrico@gmail.com?subject='+sub+'&body='+bod,'_blank');
-      toast('Email aperta nel client di posta.','ok');
-      btn.disabled=false;btn.textContent=orig;
-      return;
-    }
-
-    // Successo: nasconde il form e mostra conferma
-    document.getElementById('chat-sent').style.display='block';
-    nameEl.style.display='none';
-    msgEl.style.display='none';
-    btn.style.display='none';
-    toast('✓ Messaggio inviato!','ok');
-
-  }catch(err){
-    // Fallback mailto su errore di rete
-    const sub=encodeURIComponent('[InvestPro] Messaggio da '+name);
-    const bod=encodeURIComponent('Nome: '+name+'\n\nMessaggio:\n'+message);
-    window.open('mailto:lucaiolienrico@gmail.com?subject='+sub+'&body='+bod,'_blank');
-    btn.disabled=false;btn.textContent=orig;
-  }
+  const btn=document.getElementById('chat-send'),orig=btn.textContent;btn.disabled=true;btn.textContent='Invio...';
+  try{const res=await fetch(SB_URL+'/functions/v1/send-contact',{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY},body:JSON.stringify({name,message})});if(!res.ok){window.open('mailto:support@appnetto.it?subject='+encodeURIComponent('[InvestPro] '+name)+'&body='+encodeURIComponent(message),'_blank');toast('Email aperta.','ok');btn.disabled=false;btn.textContent=orig;return}document.getElementById('chat-sent').style.display='block';nameEl.style.display='none';msgEl.style.display='none';btn.style.display='none';toast('✓ Messaggio inviato!','ok')}
+  catch(err){window.open('mailto:support@appnetto.it?subject='+encodeURIComponent('[InvestPro] '+name)+'&body='+encodeURIComponent(message),'_blank');btn.disabled=false;btn.textContent=orig}
 }
+
 // ════════════════════════════════════════════════
-// Estratta per single-source-of-truth: evita duplicazione e garantisce
-// che doLogout e il listener eseguano lo stesso identico DOM reset.
+// RESET UI
 // ════════════════════════════════════════════════
 function resetUIToLanding(){
+  resetWhiteLabel();
   document.getElementById('hero').classList.remove('hidden');
   document.getElementById('landing-extra').classList.remove('hidden');
   document.getElementById('hero-strip')?.classList.remove('hidden');
@@ -1316,594 +1485,466 @@ function resetUIToLanding(){
   document.getElementById('mode-bar').classList.add('hidden');
   document.getElementById('nav-login').classList.remove('hidden');
   document.getElementById('nav-reg').classList.remove('hidden');
-  ['nav-badge','nav-use','proj-name','nav-export','nav-load','nav-save',
-   'nav-admin-panel','nav-acct','nav-up','nav-out']
-    .forEach(id=>document.getElementById(id)?.classList.add('hidden'));
+  ['nav-badge','nav-use','proj-name','nav-export','nav-load','nav-save','nav-admin-panel','nav-acct','nav-up','nav-out','nav-pdf','nav-brand','save-note','nav-team'].forEach(id=>document.getElementById(id)?.classList.add('hidden'));
   document.getElementById('lock-overlay')?.classList.remove('on');
+  _workspace=null;_wsMembers=[];_wsInvites=[];_pendingInvites=[];
+  document.getElementById('invite-banners').innerHTML='';
   try{closePW()}catch(e){}
 }
 
 async function doLogout(){
-  const btn=document.getElementById('nav-out');
-  if(btn){btn.disabled=true;btn.textContent='Uscita...';}
-  _logoutDone=true;
-  try{
-    user=null; profile=null; isPro=false; isProPlus=false; isAgency=false; isSuperAdmin=false;
-    limShown=false;
-    resetUIToLanding();
-    calc();
-
-    try{closeAuth()}catch(e){}
-    try{closePW()}catch(e){}
-    try{closeAdminPanel()}catch(e){}
-    try{closeAcct()}catch(e){}
-
-    try{
-      await sb.auth.signOut();
-    }catch(err){
-      console.warn('[logout] signOut globale fallito, forzo locale:', err.message);
-      try{ await sb.auth.signOut({scope:'local'}) }
-      catch(localErr){ console.error('[logout] anche signOut locale fallito:', localErr.message) }
-    }
-  }finally{
-    _logoutDone=false;
-    if(btn){btn.disabled=false;btn.textContent='Esci';}
-  }
+  const btn=document.getElementById('nav-out');if(btn){btn.disabled=true;btn.textContent='Uscita...'}_logoutDone=true;
+  try{user=null;profile=null;isPro=false;isProPlus=false;isAgency=false;isSuperAdmin=false;limShown=false;_brandCache=null;resetUIToLanding();calc();
+    try{closeAuth()}catch(e){}try{closePW()}catch(e){}try{closeAdminPanel()}catch(e){}try{closeAcct()}catch(e){}
+    try{await sb.auth.signOut()}catch(err){try{await sb.auth.signOut({scope:'local'})}catch(e){}}
+  }finally{_logoutDone=false;if(btn){btn.disabled=false;btn.textContent='Esci'}}
 }
 
 // ════════════════════════════════════════════════
-// ADMIN PANEL — solo super_admin
-// Usa le RPC PostgreSQL protette lato DB
+// ADMIN PANEL
 // ════════════════════════════════════════════════
 async function openAdminPanel(){
   if(!isSuperAdmin){toast('Accesso negato.','err');return}
   document.getElementById('admin-panel').classList.add('on');
-  const loadEl=document.getElementById('adm-loading');
-  const tableEl=document.getElementById('adm-table-wrap');
-  loadEl.style.display='block';loadEl.textContent='Caricamento...';
-  tableEl.style.display='none';
-
+  const loadEl=document.getElementById('adm-loading'),tableEl=document.getElementById('adm-table-wrap');
+  loadEl.style.display='block';loadEl.textContent='Caricamento...';tableEl.style.display='none';
   try{
-    const[sR,uR]=await Promise.allSettled([
-      sb.rpc('admin_get_stats'),
-      sb.rpc('admin_list_users')
-    ]);
-
-    // Stats
-    if(sR.status==='fulfilled'&&!sR.value.error){
-      const s=sR.value.data;
-      document.getElementById('as-tot').textContent=s.total_users??'—';
-      document.getElementById('as-pro').textContent=s.pro_users??'—';
-      document.getElementById('as-free').textContent=s.free_users??'—';
-      document.getElementById('as-proj').textContent=s.total_projects??'—';
-      document.getElementById('as-today').textContent=s.users_today??'—';
-      document.getElementById('as-stripe').textContent=s.stripe_customers??'—';
-    }else{
-      toast('Errore statistiche.','err');
-      ['as-tot','as-pro','as-free','as-proj','as-today','as-stripe'].forEach(id=>document.getElementById(id).textContent='—');
-    }
-
-    // Users — costruzione DOM sicura (no innerHTML con dati utente)
+    const[sR,uR]=await Promise.allSettled([sb.rpc('admin_get_stats'),sb.rpc('admin_list_users')]);
+    if(sR.status==='fulfilled'&&!sR.value.error){const s=sR.value.data;document.getElementById('as-tot').textContent=s.total_users??'—';document.getElementById('as-pro').textContent=s.pro_users??'—';document.getElementById('as-free').textContent=s.free_users??'—';document.getElementById('as-proj').textContent=s.total_projects??'—';document.getElementById('as-today').textContent=s.users_today??'—';document.getElementById('as-stripe').textContent=s.stripe_customers??'—'}
     if(uR.status==='fulfilled'&&!uR.value.error){
-      const users=uR.value.data||[];
-      const tbody=document.getElementById('adm-tbody');
-      tbody.innerHTML='';
-      users.forEach(u=>{
-        const isSA=u.role==='super_admin';
-        const date=new Date(u.created_at).toLocaleDateString('it-IT');
-        // Whitelist: u.id è UUID Supabase, u.role è enum controllato dal DB.
-        // u.email e u.display_name sono user-controlled → mai interpolati in innerHTML.
-        const uid=String(u.id).replace(/[^a-f0-9\-]/gi,''); // sanitize UUID extra-safety
-        const roleClass=isSA?'role-sa':u.role==='admin'?'role-admin':'';
-        const planVal=['free','pro','pro_plus','agency'].includes(u.plan)?u.plan:'free';
-        const roleVal=u.role==='admin'?'admin':'user';
-
+      const users=uR.value.data||[];const tbody=document.getElementById('adm-tbody');tbody.innerHTML='';
+      users.forEach(u=>{const isSA=u.role==='super_admin';const date=new Date(u.created_at).toLocaleDateString('it-IT');const uid=String(u.id).replace(/[^a-f0-9\-]/gi,'');const planVal=['free','pro','pro_plus','agency'].includes(u.plan)?u.plan:'free';const roleVal=u.role==='admin'?'admin':'user';
         const tr=document.createElement('tr');
-
-        // Email (textContent = auto-escaped)
-        const tdEm=document.createElement('td');
-        tdEm.className='em';tdEm.textContent=u.email||'—';tr.appendChild(tdEm);
-
-        // Display name (textContent = auto-escaped)
-        const tdNm=document.createElement('td');
-        tdNm.textContent=u.display_name||'—';tr.appendChild(tdNm);
-
-        // Piano select
-        const tdPlan=document.createElement('td');
-        const selPlan=document.createElement('select');
-        selPlan.disabled=isSA;
-        ['free','pro','pro_plus','agency'].forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v==='pro_plus'?'Pro+':v.charAt(0).toUpperCase()+v.slice(1);if(v===planVal)o.selected=true;selPlan.appendChild(o)});
-        selPlan.addEventListener('change',()=>adminChangePlan(uid,selPlan.value));
-        tdPlan.appendChild(selPlan);tr.appendChild(tdPlan);
-
-        // Ruolo
-        const tdRole=document.createElement('td');
-        if(roleClass)tdRole.className=roleClass;
-        tdRole.textContent=u.role||'user';tr.appendChild(tdRole);
-
-        // Data
-        const tdDate=document.createElement('td');
-        tdDate.style.cssText='font-family:monospace;font-size:.66rem';
-        tdDate.textContent=date;tr.appendChild(tdDate);
-
-        // Azioni (ruolo select o label Root)
-        const tdAct=document.createElement('td');
-        if(!isSA){
-          const selRole=document.createElement('select');
-          ['user','admin'].forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v.charAt(0).toUpperCase()+v.slice(1);if(v===roleVal)o.selected=true;selRole.appendChild(o)});
-          selRole.addEventListener('change',()=>adminChangeRole(uid,selRole.value));
-          tdAct.appendChild(selRole);
-        }else{
-          const sp=document.createElement('span');sp.style.color='var(--gold)';sp.textContent='Root';tdAct.appendChild(sp);
-        }
-        tr.appendChild(tdAct);
-        tbody.appendChild(tr);
-      });
+        const tdEm=document.createElement('td');tdEm.className='em';tdEm.textContent=u.email||'—';tr.appendChild(tdEm);
+        const tdNm=document.createElement('td');tdNm.textContent=u.display_name||'—';tr.appendChild(tdNm);
+        const tdPlan=document.createElement('td');const selPlan=document.createElement('select');selPlan.disabled=isSA;['free','pro','pro_plus','agency'].forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v==='pro_plus'?'Pro+':v.charAt(0).toUpperCase()+v.slice(1);if(v===planVal)o.selected=true;selPlan.appendChild(o)});selPlan.addEventListener('change',()=>adminChangePlan(uid,selPlan.value));tdPlan.appendChild(selPlan);tr.appendChild(tdPlan);
+        const tdRole=document.createElement('td');if(isSA)tdRole.className='role-sa';else if(u.role==='admin')tdRole.className='role-admin';tdRole.textContent=u.role||'user';tr.appendChild(tdRole);
+        const tdDate=document.createElement('td');tdDate.style.cssText='font-family:monospace;font-size:.66rem';tdDate.textContent=date;tr.appendChild(tdDate);
+        const tdAct=document.createElement('td');if(!isSA){const selRole=document.createElement('select');['user','admin'].forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v.charAt(0).toUpperCase()+v.slice(1);if(v===roleVal)o.selected=true;selRole.appendChild(o)});selRole.addEventListener('change',()=>adminChangeRole(uid,selRole.value));tdAct.appendChild(selRole)}else{const sp=document.createElement('span');sp.style.color='var(--gold)';sp.textContent='Root';tdAct.appendChild(sp)}tr.appendChild(tdAct);
+        tbody.appendChild(tr)});
       tableEl.style.display='block';
-    }else{
-      loadEl.textContent='Errore caricamento utenti. Chiudi e riprova.';
-      return;
-    }
-  }catch(err){
-    loadEl.textContent='Errore: '+(err.message||'connessione fallita');
-    return;
-  }
+    }else{loadEl.textContent='Errore caricamento utenti.';return}
+  }catch(err){loadEl.textContent='Errore: '+(err.message||'connessione fallita');return}
   loadEl.style.display='none';
 }
-
 function closeAdminPanel(){document.getElementById('admin-panel').classList.remove('on')}
-
-async function adminChangePlan(uid,plan){
-  try{
-    const{error}=await sb.rpc('admin_update_user_plan',{target_user_id:uid,new_plan:plan});
-    if(error)throw error;
-    toast('Piano aggiornato → '+plan.toUpperCase(),'ok');
-  }catch(e){toast('Errore aggiornamento piano: '+(e.message||'sconosciuto'),'err')}
-}
-
-async function adminChangeRole(uid,role){
-  try{
-    const{error}=await sb.rpc('admin_update_user_role',{target_user_id:uid,new_role:role});
-    if(error)throw error;
-    toast('Ruolo aggiornato → '+role,'ok');
-  }catch(e){toast('Errore aggiornamento ruolo: '+(e.message||'sconosciuto'),'err')}
-}
+async function adminChangePlan(uid,plan){try{const{error}=await sb.rpc('admin_update_user_plan',{target_user_id:uid,new_plan:plan});if(error)throw error;toast('Piano → '+plan.toUpperCase(),'ok')}catch(e){toast('Errore: '+(e.message||''),'err')}}
+async function adminChangeRole(uid,role){try{const{error}=await sb.rpc('admin_update_user_role',{target_user_id:uid,new_role:role});if(error)throw error;toast('Ruolo → '+role,'ok')}catch(e){toast('Errore: '+(e.message||''),'err')}}
 
 // ════════════════════════════════════════════════
-// ACCOUNT MODAL — info personali per ogni utente
+// ACCOUNT MODAL
 // ════════════════════════════════════════════════
 function openAcct(){
-  const modal=document.getElementById('acct-modal');
   document.getElementById('acct-email').textContent=user?.email||'—';
   const planEl=document.getElementById('acct-plan');
   if(isSuperAdmin){planEl.textContent='★ SUPER ADMIN';planEl.className='adv gold'}
-  else if(isAgency) {planEl.textContent='◈ AGENCY';     planEl.className='adv gold'}
-  else if(isProPlus){planEl.textContent='✦ PRO+';       planEl.className='adv teal'}
-  else if(isPro)    {planEl.textContent='✦ PRO';         planEl.className='adv teal'}
-  else              {planEl.textContent='Free';           planEl.className='adv amber'}
+  else if(isAgency){planEl.textContent='◈ AGENCY';planEl.className='adv gold'}
+  else if(isProPlus){planEl.textContent='✦ PRO+';planEl.className='adv teal'}
+  else if(isPro){planEl.textContent='✦ PRO';planEl.className='adv teal'}
+  else{planEl.textContent='Free';planEl.className='adv amber'}
   document.getElementById('acct-role').textContent=profile?.role||'user';
   document.getElementById('acct-usage').textContent=isLimited()?`${gCnt()}/${LIM} oggi`:'Illimitate';
-  document.getElementById('acct-exp').textContent=profile?.plan_expires_at
-    ?new Date(profile.plan_expires_at).toLocaleDateString('it-IT'):'—';
-  const upBtn=document.getElementById('acct-up-btn');
-  if(hasFullAccess()){upBtn.style.display='none'}else{upBtn.style.display='block'}
-  modal.classList.add('on');
+  document.getElementById('acct-exp').textContent=profile?.plan_expires_at?new Date(profile.plan_expires_at).toLocaleDateString('it-IT'):'—';
+  const upBtn=document.getElementById('acct-up-btn');if(hasFullAccess())upBtn.style.display='none';else upBtn.style.display='block';
+  document.getElementById('acct-modal').classList.add('on');
 }
 function closeAcct(){document.getElementById('acct-modal').classList.remove('on')}
+const isLimited=()=>!hasFullAccess();
 
 // ════════════════════════════════════════════════
 // PAYWALL
 // ════════════════════════════════════════════════
 function openPW(reason){
   const h=document.getElementById('pw-h'),p=document.getElementById('pw-p');
-  const msgs={
-    limit:  ['Limite giornaliero raggiunto',`${LIM} analisi esaurite per oggi. Pro offre calcoli illimitati.`],
-    flip:   ['Trading/Flip — Piano Pro','La simulazione flip è riservata al piano Pro.'],
-    save:   ['Salvataggio — Piano Pro','Salva e recupera i tuoi progetti con il piano Pro.'],
-    export: ['Export — Piano Pro','Esporta i risultati in Excel con il piano Pro.'],
-  };
+  const msgs={limit:['Limite giornaliero raggiunto',`${LIM} analisi esaurite. Pro = illimitate.`],flip:['Trading/Flip — Pro','Simulazione flip riservata al piano Pro.'],save:['Salvataggio — Pro','Salva i tuoi progetti con Pro.'],export:['Export — Pro','Esporta in Excel con Pro.']};
   const[t,s]=msgs[reason]||['Sblocca tutto','Pro = calcoli illimitati + funzionalità avanzate.'];
-  h.textContent=t;p.textContent=s;
-  document.getElementById('pw').classList.add('on');
+  h.textContent=t;p.textContent=s;document.getElementById('pw').classList.add('on');
 }
 function closePW(){document.getElementById('pw').classList.remove('on')}
 
 async function checkout(period){
-  if(!user){openAuth('reg');closePW();toast('Registrati prima di acquistare.','warn');return}
-  const pidMap={monthly:PRM,yearly:PRY,proplus:PPM,agency:AGM};
-  const btnMap={monthly:'co-m',yearly:'co-y',proplus:'co-pp',agency:'co-ag'};
-  const pid=pidMap[period];
-  if(!pid){toast('Piano non riconosciuto.','err');return}
-  const btn=document.getElementById(btnMap[period]);
-  const orig=btn?.innerHTML;
-  if(btn){btn.disabled=true;btn.textContent='Collegamento a Stripe...';}
-  try{
-    const{data,error:fnErr}=await sb.functions.invoke('create-checkout',{
-      body:{priceId:pid,successUrl:location.origin+location.pathname+'?success=1',cancelUrl:location.origin+location.pathname+'?canceled=1'}
-    });
-    if(fnErr)throw new Error(fnErr.message||'Errore Edge Function');
-    if(!data?.url)throw new Error('URL checkout non ricevuto dal server.');
-    if(btn)btn.textContent='Reindirizzamento...';
-    // Marcatore persistente: se la sessione scade durante il checkout Stripe,
-    // onAuthStateChange può rilevare il rientro e guidare il re-login.
-    try{localStorage.setItem('ip_stripe_intent',Date.now().toString())}catch(e){}
-    location.href=data.url;
-  }catch(e){
-    if(e.name==='AbortError') toast('Timeout: il server non risponde. Riprova.','err');
-    else toast('Errore: '+e.message,'err');
-    if(btn){btn.disabled=false;btn.innerHTML=orig;}
-  }
+  if(!user){openAuth('reg');closePW();toast('Registrati prima.','warn');return}
+  const pidMap={monthly:PRM,yearly:PRY,proplus:PPM,agency:AGM};const btnMap={monthly:'co-m',yearly:'co-y',proplus:'co-pp',agency:'co-ag'};
+  const pid=pidMap[period];if(!pid){toast('Piano non riconosciuto.','err');return}
+  const btn=document.getElementById(btnMap[period]);const orig=btn?.innerHTML;if(btn){btn.disabled=true;btn.textContent='Collegamento a Stripe...'}
+  try{const{data,error:fnErr}=await sb.functions.invoke('create-checkout',{body:{priceId:pid,successUrl:location.origin+location.pathname+'?success=1',cancelUrl:location.origin+location.pathname+'?canceled=1'}});if(fnErr)throw new Error(fnErr.message);if(!data?.url)throw new Error('URL checkout non ricevuto.');if(btn)btn.textContent='Reindirizzamento...';try{localStorage.setItem('ip_stripe_intent',Date.now().toString())}catch(e){}location.href=data.url}
+  catch(e){toast('Errore: '+e.message,'err');if(btn){btn.disabled=false;btn.innerHTML=orig}}
 }
 
 // ════════════════════════════════════════════════
 // MODE TOGGLE
 // ════════════════════════════════════════════════
-function clickFlip(){
-  if(!canFlip()){openPW('flip');return}
-  setMode('flip');
-}
-function setMode(m){
-  mode=m;
-  document.getElementById('pill-rent').classList.toggle('on',m==='rent');
-  document.getElementById('pill-flip').classList.toggle('on',m==='flip');
-  document.getElementById('sec-rent').style.display=m==='rent'?'':'none';
-  document.getElementById('sec-flip').classList.toggle('on',m==='flip');
-  document.getElementById('rent-res').classList.toggle('off',m!=='rent');
-  document.getElementById('flip-res').classList.toggle('on',m==='flip');
-  document.getElementById('k-cfl').textContent=m==='rent'?'CF/Mese':'Profit/Mese';
-  calc();
-}
+function clickFlip(){if(!canFlip()){openPW('flip');return}setMode('flip')}
+function setMode(m){mode=m;document.getElementById('pill-rent').classList.toggle('on',m==='rent');document.getElementById('pill-flip').classList.toggle('on',m==='flip');document.getElementById('sec-rent').style.display=m==='rent'?'':'none';document.getElementById('sec-flip').classList.toggle('on',m==='flip');document.getElementById('rent-res').classList.toggle('off',m!=='rent');document.getElementById('flip-res').classList.toggle('on',m==='flip');document.getElementById('k-cfl').textContent=m==='rent'?'CF/Mese':'Profit/Mese';calc()}
 
 // ════════════════════════════════════════════════
-// CALCULATOR — formule finanziarie
+// CALCULATOR
 // ════════════════════════════════════════════════
 const eur=v=>new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v);
 const pct=v=>v.toFixed(2)+'%';
 const n=id=>parseFloat(document.getElementById(id)?.value)||0;
 function sv(id,v){const el=document.getElementById(id);if(el)el.textContent=v}
-function setTax(r,btn){
-  document.getElementById('tax-rate').value=r;
-  document.querySelectorAll('.dtb').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  calc();
-}
+function setTax(r,btn){document.getElementById('tax-rate').value=r;document.querySelectorAll('.dtb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');calc()}
+
+let _calcTimer=null;
+function _scheduleCount(){if(_calcTimer)clearTimeout(_calcTimer);_calcTimer=setTimeout(()=>{if(!isLimited())return;const c=gCnt();if(c>=LIM){if(!limShown){limShown=true;document.getElementById('lock-overlay').classList.add('on');openPW('limit')}uPill();return}iCnt();uPill();limShown=false;document.getElementById('lock-overlay').classList.remove('on');const nc=gCnt();if(nc===LIM-1)toast('⚠️ Ultima analisi.','warn');if(nc===LIM)toast('⚠️ Analisi esaurite.','warn');_calcTimer=null},800)}
 
 function calc(){
-  // ── LIMITE GIORNALIERO ──────────────────────────────────────────────
-  // isLimited() = !isSuperAdmin && !isPro
-  // super_admin e Pro entrano sempre nel ramo else, saltando tutto il blocco.
-  if(isLimited()){
-    const c=gCnt();
-    if(c>=LIM){
-      if(!limShown){
-        limShown=true;
-        document.getElementById('lock-overlay').classList.add('on');
-        openPW('limit');
-      }
-      uPill();
-      return;
-    }
-    iCnt(); uPill(); limShown=false;
-    document.getElementById('lock-overlay').classList.remove('on');
-    const nc=gCnt();
-    if(nc===LIM-1) toast('⚠️ Ultima analisi disponibile oggi.','warn');
-    if(nc===LIM)   toast('⚠️ Analisi giornaliere esaurite.','warn');
-  } else {
-    // Utente con accesso completo: garantisce che overlay e pill
-    // non siano mai visibili, indipendentemente dallo stato precedente.
-    document.getElementById('lock-overlay')?.classList.remove('on');
-    document.getElementById('nav-use')?.classList.add('hidden');
-    document.getElementById('frame-pill')?.classList.add('hidden');
-  }
-
-  // FINANZIAMENTO
-  const price=n('price'),reno=n('reno'),closing=n('closing');
-  const ltv=n('ltv'),rate=n('rate'),years=n('years');
-  const loan=price*(ltv/100), equity=price-loan+reno+closing;
-  const mr=(rate/100)/12, np=years*12;
+  if(isLimited()){const c=gCnt();if(c>=LIM){if(!limShown){limShown=true;document.getElementById('lock-overlay').classList.add('on');openPW('limit')}uPill();return}_scheduleCount()}
+  else{document.getElementById('lock-overlay')?.classList.remove('on');document.getElementById('nav-use')?.classList.add('hidden');document.getElementById('frame-pill')?.classList.add('hidden')}
+  const price=n('price'),reno=n('reno'),closing=n('closing');const ltv=n('ltv'),rate=n('rate'),years=n('years');
+  const loan=price*(ltv/100),equity=price-loan+reno+closing;const mr=(rate/100)/12,np=years*12;
   const mp=mr>0?loan*(mr*Math.pow(1+mr,np))/(Math.pow(1+mr,np)-1):(np>0?loan/np:0);
   document.getElementById('mort-pay').value=Math.round(mp).toLocaleString('it-IT');
   document.getElementById('equity-req').value=Math.round(equity).toLocaleString('it-IT');
-
   if(mode==='flip'&&canFlip()){calcFlip(equity,mp);return}
-
-  // AFFITTO
-  const adr=n('adr'),occ=n('occ'),taxR=n('tax-rate'),otaP=n('ota');
-  const fc=n('fixed'),vc=n('varco'),maint=n('maint'),vac=n('vac');
-  const guests=n('guests'),ct=n('city-tax');
-  const nights=365*(occ/100), gross=adr*nights;
-  const otaC=gross*(otaP/100), ctC=guests*nights*ct;
-  const ops=fc*12+vc*nights+maint*12+gross*(vac/100);
-  const taxes=Math.max(0,(gross-otaC-ops)*(taxR/100));
-  const mortY=mp*12, net=gross-otaC-ctC-ops-taxes-mortY;
-  const mcf=net/12, mol=(gross-otaC-ops)/12;
-  const coc=equity>0?(net/equity)*100:0;
-  const be=net>0?equity/net:null;
-
-  sv('k-inv',eur(equity));
-  sv('k-roi',pct(coc));
-  const cfEl=document.getElementById('k-cf');
-  cfEl.textContent=eur(mcf);cfEl.className='kv '+(mcf>=0?'pos':'neg');
-  sv('k-be',be?be.toFixed(1)+'a':'Mai');
-  sv('r-g',eur(gross)); sv('r-ota',eur(otaC)); sv('r-ct',eur(ctC));
-  sv('r-op',eur(ops));  sv('r-tax',eur(taxes)); sv('r-mort',eur(mortY));
-  sv('r-n',Math.round(nights)+' notti'); sv('r-mol',eur(mol));
-
-  const bv=document.getElementById('br-cf'), bd=document.getElementById('big-cf');
-  bv.textContent=eur(mcf); bv.className='bv '+(mcf>=0?'':'neg');
-  bd.className='big '+(mcf<0?'neg':'');
-  sv('br-cfs',`ROI ${pct(coc)} · BE ${be?be.toFixed(1)+'a':'Mai'}`);
-
-  // Scenari
-  [{o:50,k:'p'},{o:65,k:'m'},{o:85,k:'o'}].forEach(s=>{
-    const nb=365*(s.o/100), gr=adr*nb;
-    const op=fc*12+vc*nb+maint*12+gr*(vac/100);
-    const tx=Math.max(0,(gr-gr*(otaP/100)-op)*(taxR/100));
-    const cf=(gr-gr*(otaP/100)-op-tx-mp*12)/12;
-    sv(`s${s.k}-o`,s.o+'%');
-    const el=document.getElementById(`s${s.k}-v`);
-    el.textContent=eur(cf);el.className='scv '+(cf>=0?'pos':'neg');
-  });
+  const adr=n('adr'),occ=n('occ'),taxR=n('tax-rate'),otaP=n('ota');const fc=n('fixed'),vc=n('varco'),maint=n('maint'),vac=n('vac');const guests=n('guests'),ct=n('city-tax');
+  const nights=365*(occ/100),gross=adr*nights;const otaC=gross*(otaP/100),ctC=guests*nights*ct;
+  const ops=fc*12+vc*nights+maint*12+gross*(vac/100);const taxes=Math.max(0,(gross-otaC-ops)*(taxR/100));
+  const mortY=mp*12,net=gross-otaC-ctC-ops-taxes-mortY;const mcf=net/12,mol=(gross-otaC-ops)/12;
+  const coc=equity>0?(net/equity)*100:0;const be=net>0?equity/net:null;
+  sv('k-inv',eur(equity));sv('k-roi',pct(coc));
+  const cfEl=document.getElementById('k-cf');cfEl.textContent=eur(mcf);cfEl.className='kv '+(mcf>=0?'pos':'neg');
+  sv('k-be',be?be.toFixed(1)+'a':'Mai');sv('r-g',eur(gross));sv('r-ota',eur(otaC));sv('r-ct',eur(ctC));sv('r-op',eur(ops));sv('r-tax',eur(taxes));sv('r-mort',eur(mortY));sv('r-n',Math.round(nights)+' notti');sv('r-mol',eur(mol));
+  const bv=document.getElementById('br-cf'),bd=document.getElementById('big-cf');bv.textContent=eur(mcf);bv.className='bv '+(mcf>=0?'':'neg');bd.className='big '+(mcf<0?'neg':'');sv('br-cfs',`ROI ${pct(coc)} · BE ${be?be.toFixed(1)+'a':'Mai'}`);
+  [{o:50,k:'p'},{o:65,k:'m'},{o:85,k:'o'}].forEach(s=>{const nb=365*(s.o/100),gr=adr*nb;const op=fc*12+vc*nb+maint*12+gr*(vac/100);const tx=Math.max(0,(gr-gr*(otaP/100)-op)*(taxR/100));const cf=(gr-gr*(otaP/100)-op-tx-mp*12)/12;sv(`s${s.k}-o`,s.o+'%');const el=document.getElementById(`s${s.k}-v`);el.textContent=eur(cf);el.className='scv '+(cf>=0?'pos':'neg')});
 }
 
 function calcFlip(equity,mp){
-  const price=n('price'),reno=n('reno'),closing=n('closing');
-  const sell=n('flip-price'),months=n('flip-months'),ag=n('flip-ag');
-  const hold=n('flip-hold'),ftax=n('flip-tax');
-  const agC=sell*(ag/100), holdC=(mp+hold)*months;
-  const gross=sell-price-reno-closing-agC-holdC;
-  const taxes=Math.max(0,gross*(ftax/100)), net=gross-taxes;
-  const roi=equity>0?(net/equity)*100:0, mP=months>0?net/months:0;
-
-  sv('k-inv',eur(equity)); sv('k-roi',pct(roi));
-  const cfEl=document.getElementById('k-cf');
-  cfEl.textContent=eur(mP);cfEl.className='kv '+(mP>=0?'pos':'neg');
-  sv('k-be',months+'m');
-  sv('f-sell',eur(sell)); sv('f-acq',eur(price+reno+closing));
-  sv('f-ag',eur(agC));    sv('f-hold',eur(holdC));
-  sv('f-gross',eur(gross)); sv('f-tax',eur(taxes));
-  const bv=document.getElementById('br-fl'), bd=document.getElementById('big-fl');
-  bv.textContent=eur(net);bv.className='bv '+(net>=0?'':'neg');
-  bd.className='big '+(net<0?'neg':'');
-  sv('br-fls',`ROI ${pct(roi)} · ${months} mesi`);
+  const price=n('price'),reno=n('reno'),closing=n('closing');const sell=n('flip-price'),months=n('flip-months'),ag=n('flip-ag');const hold=n('flip-hold'),ftax=n('flip-tax');
+  const agC=sell*(ag/100),holdC=(mp+hold)*months;const gross=sell-price-reno-closing-agC-holdC;const taxes=Math.max(0,gross*(ftax/100)),net=gross-taxes;
+  const roi=equity>0?(net/equity)*100:0,mP=months>0?net/months:0;
+  sv('k-inv',eur(equity));sv('k-roi',pct(roi));const cfEl=document.getElementById('k-cf');cfEl.textContent=eur(mP);cfEl.className='kv '+(mP>=0?'pos':'neg');sv('k-be',months+'m');
+  sv('f-sell',eur(sell));sv('f-acq',eur(price+reno+closing));sv('f-ag',eur(agC));sv('f-hold',eur(holdC));sv('f-gross',eur(gross));sv('f-tax',eur(taxes));
+  const bv=document.getElementById('br-fl'),bd=document.getElementById('big-fl');bv.textContent=eur(net);bv.className='bv '+(net>=0?'':'neg');bd.className='big '+(net<0?'neg':'');sv('br-fls',`ROI ${pct(roi)} · ${months} mesi`);
 }
 
 // ════════════════════════════════════════════════
-// SALVATAGGIO & EXPORT
+// SALVATAGGIO (Fase 2+3 + Fix M-2/M-3)
 // ════════════════════════════════════════════════
 async function saveProject(){
-  if(!canSave()){openPW('save');return}
-  if(!user)return;
-  const ids=['price','reno','closing','city-tax','ltv','rate','years','apprec',
-    'adr','occ','ota','guests','fixed','varco','maint','vac','tax-rate',
-    'flip-price','flip-months','flip-ag','flip-hold','flip-tax'];
-  const name=document.getElementById('proj-name').value||'Nuova Analisi';
-  const data={mode,name};
-  ids.forEach(id=>{const el=document.getElementById(id);if(el)data[id]=el.value});
+  if(!canSave()){openPW('save');return}if(!user)return;
+  if(_saveLock)return;_saveLock=true;
+  const saveBtn=document.getElementById('nav-save');if(saveBtn){saveBtn.disabled=true;saveBtn.textContent='⏳'}
   try{
-    const{error}=await sb.from('projects').upsert(
-      {user_id:user.id,name,data,updated_at:new Date().toISOString()},
-      {onConflict:'user_id,name'}
-    );
-    if(error)throw error;
-    toast('✓ Progetto salvato.','ok');
-  }catch(e){
-    toast('Errore salvataggio: '+(e.message||'sconosciuto'),'err');
-  }
+    const ids=['price','reno','closing','city-tax','ltv','rate','years','apprec','adr','occ','ota','guests','fixed','varco','maint','vac','tax-rate','flip-price','flip-months','flip-ag','flip-hold','flip-tax'];
+    const name=document.getElementById('proj-name').value||'Nuova Analisi';const data={mode,name};
+    ids.forEach(id=>{const el=document.getElementById(id);if(el)data[id]=el.value});
+    const upsertPayload={user_id:user.id,name,data,updated_at:new Date().toISOString()};
+    if(_workspace)upsertPayload.workspace_id=_workspace.id;
+    const{error}=await sb.from('projects').upsert(upsertPayload,{onConflict:'user_id,name'});if(error)throw error;
+    if(canHistory()){
+      let nextVer=1;
+      try{const{data:nv,error:rpcErr}=await sb.rpc('next_version_number',{p_user_id:user.id,p_project_name:name});if(rpcErr)throw rpcErr;nextVer=nv||1;
+        const note=document.getElementById('save-note')?.value.trim().slice(0,200)||'';
+        const{error:verErr}=await sb.from('project_versions').insert({user_id:user.id,project_name:name,data,version:nextVer,note,created_at:new Date().toISOString()});if(verErr)throw verErr;
+        const noteEl=document.getElementById('save-note');if(noteEl)noteEl.value='';toast('✓ Salvato (v'+nextVer+').','ok');
+      }catch(vErr){console.error('[versions] PARTIAL_SAVE:',{user_id:user.id,project_name:name,attempted_version:nextVer,error:vErr?.message,ts:new Date().toISOString()});toast('✓ Salvato, storico non aggiornato.','warn')}
+    }else{toast('✓ Progetto salvato.','ok')}
+  }catch(e){toast('Errore salvataggio: '+(e.message||''),'err')}
+  finally{_saveLock=false;if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='💾 Salva'}}
 }
 
 // ════════════════════════════════════════════════
-// CARICAMENTO PROGETTI
+// CARICAMENTO PROGETTI (Fase 4 + Search/Sort/Team)
 // ════════════════════════════════════════════════
-function openProjectsList(){
-  if(!canSave()){openPW('save');return}
-  if(!user)return;
-  document.getElementById('proj-modal').classList.add('on');
-  fetchProjectsList();
-}
+function openProjectsList(){if(!canSave()){openPW('save');return}if(!user)return;document.getElementById('proj-modal').classList.add('on');showProjectListView();_projTab='mine';document.getElementById('proj-tab-mine').classList.add('on');document.getElementById('proj-tab-team').classList.remove('on');const teamTab=document.getElementById('proj-tab-team');if(_workspace)teamTab.classList.remove('hidden');else teamTab.classList.add('hidden');fetchAllProjects()}
 function closeProjectsList(){document.getElementById('proj-modal').classList.remove('on')}
+function showProjectListView(){document.getElementById('proj-view-list').classList.remove('hidden');document.getElementById('proj-view-history').classList.add('hidden')}
+function showHistoryView(){document.getElementById('proj-view-list').classList.add('hidden');document.getElementById('proj-view-history').classList.remove('hidden')}
+function switchProjTab(tab){_projTab=tab;document.getElementById('proj-tab-mine').classList.toggle('on',tab==='mine');document.getElementById('proj-tab-team').classList.toggle('on',tab==='team');document.getElementById('proj-search').value='';document.getElementById('proj-sort').value='date-desc';renderCurrentTab()}
+function refreshProjects(){const btn=document.getElementById('proj-refresh-btn');btn.classList.add('spin');setTimeout(()=>btn.classList.remove('spin'),600);fetchAllProjects()}
+function filterProjects(){renderCurrentTab()}
 
-async function fetchProjectsList(){
-  const loadEl=document.getElementById('proj-list-loading');
-  const emptyEl=document.getElementById('proj-list-empty');
-  const listEl=document.getElementById('proj-list-items');
+async function fetchAllProjects(){
+  const loadEl=document.getElementById('proj-list-loading'),emptyEl=document.getElementById('proj-list-empty'),listEl=document.getElementById('proj-list-items');
   loadEl.classList.remove('hidden');emptyEl.classList.add('hidden');listEl.innerHTML='';
-
   try{
-    const{data:projects,error}=await sb.from('projects')
-      .select('name,data,updated_at')
-      .eq('user_id',user.id)
-      .order('updated_at',{ascending:false});
-    if(error)throw error;
-    loadEl.classList.add('hidden');
-
-    if(!projects||projects.length===0){
-      emptyEl.classList.remove('hidden');
-      return;
-    }
-
-    // Costruzione DOM sicura — name è user-controlled
-    projects.forEach(p=>{
-      const item=document.createElement('div');
-      item.className='proj-item';
-
-      const info=document.createElement('div');
-      info.className='proj-item-info';
-      const nameEl=document.createElement('div');
-      nameEl.className='proj-item-name';
-      nameEl.textContent=p.name||'Senza nome';
-      const dateEl=document.createElement('div');
-      dateEl.className='proj-item-date';
-      dateEl.textContent=p.updated_at?new Date(p.updated_at).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
-      info.appendChild(nameEl);info.appendChild(dateEl);
-
-      const btns=document.createElement('div');
-      btns.className='proj-item-btns';
-      const loadBtn=document.createElement('button');
-      loadBtn.className='proj-load-btn';loadBtn.textContent='Carica';
-      loadBtn.addEventListener('click',()=>{applyProject(p);closeProjectsList()});
-      const delBtn=document.createElement('button');
-      delBtn.className='proj-del-btn';delBtn.textContent='✕';
-      delBtn.addEventListener('click',async()=>{
-        if(!confirm('Eliminare "'+p.name+'"?'))return;
-        await deleteProject(p.name);
-        fetchProjectsList();
-      });
-      btns.appendChild(loadBtn);btns.appendChild(delBtn);
-
-      item.appendChild(info);item.appendChild(btns);
-      listEl.appendChild(item);
-    });
-  }catch(e){
-    loadEl.textContent='Errore: '+(e.message||'sconosciuto');
-  }
+    const{data:mine,error:mErr}=await sb.from('projects').select('name,data,updated_at,user_id,workspace_id').eq('user_id',user.id).order('updated_at',{ascending:false});if(mErr)throw mErr;
+    _projCache=(mine||[]).map(p=>({...p,_owner:profile?.display_name||'Tu',_isOwn:true}));
+    _teamProjCache=[];
+    if(_workspace){try{const{data:team,error:tErr}=await sb.rpc('team_projects',{p_workspace_id:_workspace.id});if(!tErr&&team)_teamProjCache=team.filter(p=>p.user_id!==user.id).map(p=>({...p,_owner:p.display_name||'Membro',_isOwn:false}))}catch(e){}}
+    document.getElementById('proj-tab-mine-count').textContent=_projCache.length;
+    document.getElementById('proj-tab-team-count').textContent=_teamProjCache.length;
+    loadEl.classList.add('hidden');renderCurrentTab();
+  }catch(e){loadEl.textContent='Errore: '+(e.message||'')}
 }
 
-function applyProject(p){
-  const d=p.data||{};
-  // Ripristina modalità
-  if(d.mode==='flip'&&canFlip()) setMode('flip');
-  else setMode('rent');
+function renderCurrentTab(){
+  const source=_projTab==='team'?_teamProjCache:_projCache;const q=document.getElementById('proj-search').value.trim().toLowerCase();const sort=document.getElementById('proj-sort').value;
+  let filtered=source.slice();if(q)filtered=filtered.filter(p=>(p.name||'').toLowerCase().includes(q)||(p._owner||'').toLowerCase().includes(q));
+  switch(sort){case 'date-asc':filtered.sort((a,b)=>new Date(a.updated_at)-new Date(b.updated_at));break;case 'name-asc':filtered.sort((a,b)=>(a.name||'').localeCompare(b.name||'','it'));break;case 'name-desc':filtered.sort((a,b)=>(b.name||'').localeCompare(a.name||'','it'));break;default:filtered.sort((a,b)=>new Date(b.updated_at)-new Date(a.updated_at))}
+  renderProjectList(filtered);
+}
 
-  // Ripristina nome progetto
-  const nameInput=document.getElementById('proj-name');
-  if(nameInput) nameInput.value=p.name||d.name||'';
-
-  // Ripristina tutti i campi input
-  const ids=['price','reno','closing','city-tax','ltv','rate','years','apprec',
-    'adr','occ','ota','guests','fixed','varco','maint','vac','tax-rate',
-    'flip-price','flip-months','flip-ag','flip-hold','flip-tax'];
-  ids.forEach(id=>{
-    const el=document.getElementById(id);
-    if(el&&d[id]!==undefined) el.value=d[id];
+function renderProjectList(projects){
+  const listEl=document.getElementById('proj-list-items'),emptyEl=document.getElementById('proj-list-empty'),countEl=document.getElementById('proj-count');listEl.innerHTML='';
+  if(!projects.length){if(_projTab==='team'&&!_teamProjCache.length){emptyEl.classList.add('hidden');const es=document.createElement('div');es.className='team-empty-state';es.innerHTML='<div class="tes-icon">👥</div>Nessun progetto del team.<div class="tes-hint">I progetti dei membri appariranno qui.</div>';listEl.appendChild(es);countEl.textContent='';return}emptyEl.classList.remove('hidden');countEl.textContent='0 risultati';return}
+  emptyEl.classList.add('hidden');countEl.textContent=projects.length+' progett'+(projects.length===1?'o':'i');
+  const isWsOwner=_workspace&&_workspace.owner_id===user?.id;
+  projects.forEach(p=>{
+    const item=document.createElement('div');item.className='proj-item';
+    const info=document.createElement('div');info.className='proj-item-info';
+    const nameEl=document.createElement('div');nameEl.className='proj-item-name';nameEl.textContent=p.name||'Senza nome';
+    const dateEl=document.createElement('div');dateEl.className='proj-item-date';dateEl.textContent=p.updated_at?new Date(p.updated_at).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
+    const modeTag=document.createElement('span');modeTag.style.cssText='font-family:"JetBrains Mono",monospace;font-size:.52rem;color:var(--tx3);margin-left:6px';modeTag.textContent=(p.data?.mode==='flip')?'FLIP':'RENT';dateEl.appendChild(modeTag);
+    info.appendChild(nameEl);info.appendChild(dateEl);
+    if(_workspace){const authorRow=document.createElement('div');authorRow.className='proj-item-author';const av=document.createElement('div');av.className='proj-item-avatar';av.textContent=(p._owner||'??').slice(0,2).toUpperCase();const an=document.createElement('span');an.className='proj-item-author-name';an.textContent=p._owner||'—';authorRow.appendChild(av);authorRow.appendChild(an);if(p._isOwn){const yt=document.createElement('span');yt.className='proj-item-you';yt.textContent='TU';authorRow.appendChild(yt)}info.appendChild(authorRow)}
+    const btns=document.createElement('div');btns.className='proj-item-btns';
+    if(canHistory()&&p._isOwn){const hb=document.createElement('button');hb.className='proj-hist-btn';hb.textContent='📜';hb.title='Storico';hb.addEventListener('click',()=>openProjectHistory(p.name));btns.appendChild(hb)}
+    const lb=document.createElement('button');lb.className='proj-load-btn';lb.textContent='Carica';lb.addEventListener('click',()=>{applyProject(p);closeProjectsList()});btns.appendChild(lb);
+    // Fix M-6: solo owner/superadmin possono eliminare progetti altrui
+    if(p._isOwn||(_projTab==='team'&&(isSuperAdmin||isWsOwner))){const db=document.createElement('button');db.className='proj-del-btn';db.textContent='✕';db.addEventListener('click',async()=>{if(!confirm('Eliminare "'+p.name+'"?'))return;await deleteProjectByOwner(p.user_id,p.name);fetchAllProjects()});btns.appendChild(db)}
+    item.appendChild(info);item.appendChild(btns);listEl.appendChild(item);
   });
-
-  calc();
-  toast('✓ Progetto caricato.','ok');
 }
 
-async function deleteProject(name){
+function applyProject(p){const d=p.data||{};if(d.mode==='flip'&&canFlip())setMode('flip');else setMode('rent');const ni=document.getElementById('proj-name');if(ni)ni.value=p.name||d.name||'';
+  ['price','reno','closing','city-tax','ltv','rate','years','apprec','adr','occ','ota','guests','fixed','varco','maint','vac','tax-rate','flip-price','flip-months','flip-ag','flip-hold','flip-tax'].forEach(id=>{const el=document.getElementById(id);if(el&&d[id]!==undefined)el.value=d[id]});calc();
+  toast(p._isOwn===false?'✓ Progetto di '+(p._owner||'team')+' caricato.':'✓ Progetto caricato.','ok');
+}
+
+// Fix M-5: usa RPC cascade per eliminare progetto + versioni
+async function deleteProjectByOwner(targetUserId,name){
   if(!user)return;
-  try{
-    const{error}=await sb.from('projects')
-      .delete()
-      .eq('user_id',user.id)
-      .eq('name',name);
-    if(error)throw error;
-    toast('Progetto eliminato.','ok');
+  try{const{data,error}=await sb.rpc('delete_project_cascade',{p_target_user_id:targetUserId,p_project_name:name});if(error)throw error;if(data&&!data.ok)throw new Error(data.error||'Eliminazione negata.');
+    const vDel=data?.versions_deleted||0;toast('Progetto eliminato.'+(vDel>0?` (${vDel} version${vDel>1?'i':'e'})`:'')+'.','ok');
   }catch(e){
-    toast('Errore eliminazione: '+(e.message||'sconosciuto'),'err');
+    // Fallback: eliminazione diretta se RPC non disponibile
+    try{if(canHistory())await sb.from('project_versions').delete().eq('user_id',targetUserId).eq('project_name',name);const{error}=await sb.from('projects').delete().eq('user_id',targetUserId).eq('name',name);if(error)throw error;toast('Progetto eliminato.','ok')}
+    catch(e2){toast('Errore: '+(e2.message||e.message||''),'err')}
   }
 }
+async function deleteProject(name){await deleteProjectByOwner(user?.id,name)}
 
+// ════════════════════════════════════════════════
+// STORICO VERSIONI (Fase 2)
+// ════════════════════════════════════════════════
+async function openProjectHistory(projectName){
+  if(!canHistory())return;showHistoryView();document.getElementById('hist-title').textContent='📜 '+projectName;
+  const loadEl=document.getElementById('hist-loading'),emptyEl=document.getElementById('hist-empty'),listEl=document.getElementById('hist-items');
+  loadEl.classList.remove('hidden');emptyEl.classList.add('hidden');listEl.innerHTML='';
+  try{const{data:versions,error}=await sb.from('project_versions').select('id,version,note,data,created_at').eq('user_id',user.id).eq('project_name',projectName).order('version',{ascending:false});if(error)throw error;loadEl.classList.add('hidden');
+    if(!versions||!versions.length){emptyEl.classList.remove('hidden');return}
+    versions.forEach(v=>{const item=document.createElement('div');item.className='ver-item';
+      const badge=document.createElement('div');badge.className='ver-badge';badge.textContent='v'+v.version;
+      const info=document.createElement('div');info.className='ver-info';const de=document.createElement('div');de.className='ver-date';de.textContent=new Date(v.created_at).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});info.appendChild(de);
+      if(v.note){const ne=document.createElement('div');ne.className='ver-note';ne.textContent=v.note;info.appendChild(ne)}
+      const d=v.data||{};const se=document.createElement('div');se.style.cssText='font-family:"JetBrains Mono",monospace;font-size:.54rem;color:var(--tx3);margin-top:3px';se.textContent=(d.mode==='flip'?'Flip':'Rent')+(d.price?' · Acq. €'+Number(d.price).toLocaleString('it-IT'):'');info.appendChild(se);
+      const btns=document.createElement('div');btns.className='ver-btns';
+      const lb=document.createElement('button');lb.className='ver-load';lb.textContent='Carica';lb.addEventListener('click',()=>{applyProject({name:projectName,data:v.data,_isOwn:true});closeProjectsList()});
+      const db=document.createElement('button');db.className='ver-del';db.textContent='✕';db.addEventListener('click',async()=>{if(!confirm('Eliminare v'+v.version+'?'))return;try{await sb.from('project_versions').delete().eq('id',v.id);toast('Versione eliminata.','ok');openProjectHistory(projectName)}catch(e){toast('Errore: '+(e.message||''),'err')}});
+      btns.appendChild(lb);btns.appendChild(db);item.appendChild(badge);item.appendChild(info);item.appendChild(btns);listEl.appendChild(item)});
+  }catch(e){loadEl.textContent='Errore: '+(e.message||'')}
+}
+
+// ════════════════════════════════════════════════
+// EXPORT EXCEL
+// ════════════════════════════════════════════════
 function doExport(){
   if(!canExport()){openPW('export');return}
-  try{
-    if(typeof XLSX==='undefined') throw new Error('Libreria Excel non caricata. Ricarica la pagina.');
+  try{if(typeof XLSX==='undefined')throw new Error('Libreria Excel non caricata.');
     const name=document.getElementById('proj-name').value||'Analisi';
-    const rows=mode==='rent'?[
-      ['Parametro','Valore'],
-      ['Prezzo Acquisto',n('price')],['Ristrutturazione',n('reno')],['Costi Notarili',n('closing')],
-      ['LTV %',n('ltv')],['Tasso %',n('rate')],['Durata anni',n('years')],
-      ['ADR/notte',n('adr')],['Occupazione %',n('occ')],['OTA %',n('ota')],
-      ['Ospiti medi',n('guests')],['Costi fissi/mese',n('fixed')],['Variabili/notte',n('varco')],
-      ['Manutenzione/mese',n('maint')],['Vacancy %',n('vac')],['Aliquota fiscale %',n('tax-rate')],
-      ['Tassa soggiorno/notte',n('city-tax')],
-      [],[],['Risultato','Valore'],
-      ['Ricavi lordi/anno',   document.getElementById('r-g')?.textContent],
-      ['Commissioni OTA',     document.getElementById('r-ota')?.textContent],
-      ['Tassa soggiorno',     document.getElementById('r-ct')?.textContent],
-      ['Costi operativi',     document.getElementById('r-op')?.textContent],
-      ['Imposte',             document.getElementById('r-tax')?.textContent],
-      ['Mutuo/anno',          document.getElementById('r-mort')?.textContent],
-      ['Notti occupate',      document.getElementById('r-n')?.textContent],
-      ['MOL mensile',         document.getElementById('r-mol')?.textContent],
-      ['Cashflow netto/mese', document.getElementById('br-cf')?.textContent],
-      ['ROI annuo',           document.getElementById('k-roi')?.textContent],
-      ['Break-even',          document.getElementById('k-be')?.textContent],
-    ]:[
-      ['Parametro','Valore'],
-      ['Prezzo Acquisto',n('price')],['Ristrutturazione',n('reno')],['Costi Notarili',n('closing')],
-      ['Prezzo Vendita',n('flip-price')],['Durata mesi',n('flip-months')],
-      ['Comm. Agenzia %',n('flip-ag')],['Holding/mese',n('flip-hold')],['Plus-valenza %',n('flip-tax')],
-      [],[],['Risultato','Valore'],
-      ['Prezzo vendita',      document.getElementById('f-sell')?.textContent],
-      ['Costi acquisizione',  document.getElementById('f-acq')?.textContent],
-      ['Comm. agenzia',       document.getElementById('f-ag')?.textContent],
-      ['Costi holding',       document.getElementById('f-hold')?.textContent],
-      ['Profitto lordo',      document.getElementById('f-gross')?.textContent],
-      ['Imposte',             document.getElementById('f-tax')?.textContent],
-      ['Profitto netto',      document.getElementById('br-fl')?.textContent],
-      ['ROI',                 document.getElementById('k-roi')?.textContent],
-    ];
-    const ws=XLSX.utils.aoa_to_sheet([['InvestPro — '+(mode==='rent'?'Affitto':'Flip')+': '+name],...rows]);
-    // Larghezza colonne automatica
-    ws['!cols']=[{wch:24},{wch:18}];
-    const wb=XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb,ws,'Analisi');
-    XLSX.writeFile(wb,name+'.xlsx');
-    toast('✓ File Excel scaricato.','ok');
-  }catch(err){
-    toast('Errore export: '+err.message,'err');
-  }
+    const rows=mode==='rent'?[['Parametro','Valore'],['Prezzo Acquisto',n('price')],['Ristrutturazione',n('reno')],['Costi Notarili',n('closing')],['LTV %',n('ltv')],['Tasso %',n('rate')],['Durata anni',n('years')],['ADR/notte',n('adr')],['Occupazione %',n('occ')],['OTA %',n('ota')],['Ospiti medi',n('guests')],['Costi fissi/mese',n('fixed')],['Variabili/notte',n('varco')],['Manutenzione/mese',n('maint')],['Vacancy %',n('vac')],['Aliquota fiscale %',n('tax-rate')],['Tassa soggiorno/notte',n('city-tax')],[],[],['Risultato','Valore'],['Ricavi lordi/anno',document.getElementById('r-g')?.textContent],['Commissioni OTA',document.getElementById('r-ota')?.textContent],['Tassa soggiorno',document.getElementById('r-ct')?.textContent],['Costi operativi',document.getElementById('r-op')?.textContent],['Imposte',document.getElementById('r-tax')?.textContent],['Mutuo/anno',document.getElementById('r-mort')?.textContent],['Notti occupate',document.getElementById('r-n')?.textContent],['MOL mensile',document.getElementById('r-mol')?.textContent],['Cashflow netto/mese',document.getElementById('br-cf')?.textContent],['ROI annuo',document.getElementById('k-roi')?.textContent],['Break-even',document.getElementById('k-be')?.textContent]]:[['Parametro','Valore'],['Prezzo Acquisto',n('price')],['Ristrutturazione',n('reno')],['Costi Notarili',n('closing')],['Prezzo Vendita',n('flip-price')],['Durata mesi',n('flip-months')],['Comm. Agenzia %',n('flip-ag')],['Holding/mese',n('flip-hold')],['Plus-valenza %',n('flip-tax')],[],[],['Risultato','Valore'],['Prezzo vendita',document.getElementById('f-sell')?.textContent],['Costi acquisizione',document.getElementById('f-acq')?.textContent],['Comm. agenzia',document.getElementById('f-ag')?.textContent],['Costi holding',document.getElementById('f-hold')?.textContent],['Profitto lordo',document.getElementById('f-gross')?.textContent],['Imposte',document.getElementById('f-tax')?.textContent],['Profitto netto',document.getElementById('br-fl')?.textContent],['ROI',document.getElementById('k-roi')?.textContent]];
+    const ws=XLSX.utils.aoa_to_sheet([['InvestPro — '+(mode==='rent'?'Affitto':'Flip')+': '+name],...rows]);ws['!cols']=[{wch:24},{wch:18}];
+    const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Analisi');XLSX.writeFile(wb,name+'.xlsx');toast('✓ File Excel scaricato.','ok');
+  }catch(err){toast('Errore export: '+err.message,'err')}
 }
+
+// ════════════════════════════════════════════════
+// FASE 1: REPORT PDF BRANDIZZATO
+// ════════════════════════════════════════════════
+function openBrandModal(){if(!canPDF()){openPW('export');return}document.getElementById('brand-modal').classList.add('on');const wlSection=document.getElementById('wl-section');if(canTeam())wlSection.classList.remove('hidden');else wlSection.classList.add('hidden');loadBrandSettings()}
+function closeBrandModal(){document.getElementById('brand-modal').classList.remove('on')}
+function updateBrandPreview(){const name=document.getElementById('br-company').value.trim(),url=document.getElementById('br-logo').value.trim();document.getElementById('brand-name-preview').textContent=name||'La tua azienda';const lw=document.getElementById('brand-logo-preview');if(url){lw.innerHTML='';const img=document.createElement('img');img.src=url;img.alt='Logo';img.onerror=()=>{lw.innerHTML='<span style="color:var(--red);font-size:.6rem">URL non valido</span>'};lw.appendChild(img)}else{lw.innerHTML='<span style="color:var(--tx3);font-size:.7rem">Logo</span>'}}
+
+async function loadBrandSettings(){if(!user)return;try{const{data,error}=await sb.from('brand_settings').select('*').eq('user_id',user.id).maybeSingle();if(error)throw error;if(data){_brandCache=data;document.getElementById('br-company').value=data.company_name||'';document.getElementById('br-logo').value=data.logo_url||'';document.getElementById('br-color1').value=data.primary_color||'#00d4a4';document.getElementById('br-color2').value=data.secondary_color||'#050a14';document.getElementById('br-header').value=data.header_text||'';document.getElementById('br-footer').value=data.footer_text||'';updateBrandPreview();if(canTeam())loadWlFields(data)}}catch(e){console.error('[brand] load:',e)}}
+
+async function saveBrandSettings(){if(!user||!canPDF())return;const btn=document.getElementById('br-save-btn'),errEl=document.getElementById('brand-err');btn.disabled=true;btn.textContent='Salvataggio...';errEl.classList.remove('on');
+  const payload={user_id:user.id,company_name:document.getElementById('br-company').value.trim().slice(0,100),logo_url:document.getElementById('br-logo').value.trim().slice(0,500),primary_color:document.getElementById('br-color1').value||'#00d4a4',secondary_color:document.getElementById('br-color2').value||'#050a14',header_text:document.getElementById('br-header').value.trim().slice(0,120),footer_text:document.getElementById('br-footer').value.trim().slice(0,200),updated_at:new Date().toISOString()};
+  if(canTeam()){payload.whitelabel_enabled=document.getElementById('wl-enabled').checked;payload.accent_color=document.getElementById('wl-accent').value||'#00d4a4';payload.accent_hover=document.getElementById('wl-accent-h').value||'#00b88e';payload.nav_bg=document.getElementById('wl-nav-bg').value||'#050a14';payload.bg_color=document.getElementById('wl-bg').value||'#050a14';payload.bg2_color=document.getElementById('wl-bg2').value||'#0a1628';payload.bg3_color=document.getElementById('wl-bg3').value||'#0f1d35';payload.text_color=document.getElementById('wl-text').value||'#f0f5ff';payload.hide_investpro=document.getElementById('wl-hide-ip').checked}
+  const hexRe=/^#[0-9a-fA-F]{6}$/;if(!hexRe.test(payload.primary_color)||!hexRe.test(payload.secondary_color)){errEl.textContent='Colore non valido.';errEl.classList.add('on');btn.disabled=false;btn.textContent='Salva Impostazioni';return}
+  try{const{error}=await sb.from('brand_settings').upsert(payload,{onConflict:'user_id'});if(error)throw error;_brandCache=payload;toast('✓ Brand salvato.','ok');closeBrandModal();if(canTeam()){if(payload.whitelabel_enabled)applyWhiteLabel(payload);else resetWhiteLabel()}}
+  catch(e){errEl.textContent='Errore: '+(e.message||'');errEl.classList.add('on')}
+  btn.disabled=false;btn.textContent='Salva Impostazioni';
+}
+
+// Fix M-1: feedback CORS su logo
+async function fetchLogoBase64(url){if(!url)return null;try{return await new Promise((resolve)=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>{const MAX_W=360,MAX_H=120;let w=img.naturalWidth,h=img.naturalHeight;if(w>MAX_W){h=h*(MAX_W/w);w=MAX_W}if(h>MAX_H){w=w*(MAX_H/h);h=MAX_H}const c=document.createElement('canvas');c.width=w;c.height=h;const ctx=c.getContext('2d');try{ctx.drawImage(img,0,0,w,h);resolve({dataUrl:c.toDataURL('image/png'),w,h})}catch(ce){resolve({failed:'cors'})}};img.onerror=()=>resolve({failed:'load'});setTimeout(()=>resolve({failed:'timeout'}),5000);img.src=url})}catch(e){return{failed:'exception'}}}
+
+async function doPDF(){
+  if(!canPDF()){openPW('export');return}
+  if(typeof jspdf==='undefined'||!jspdf.jsPDF){toast('Libreria PDF non caricata.','err');return}
+  toast('Generazione PDF...','ok');
+  if(!_brandCache&&user){try{const{data}=await sb.from('brand_settings').select('*').eq('user_id',user.id).maybeSingle();if(data)_brandCache=data}catch(e){}}
+  const brand=_brandCache||{};const projName=document.getElementById('proj-name').value||'Analisi';const isFlip=mode==='flip';
+  const{jsPDF}=jspdf;const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});const pageW=doc.internal.pageSize.getWidth(),pageH=doc.internal.pageSize.getHeight(),margin=18,usable=pageW-margin*2;let y=margin;
+  const pc=brand.primary_color||'#00d4a4';const sc=brand.secondary_color||'#050a14';const pcRgb=hexToRgb(pc);const scRgb=hexToRgb(sc);
+  // Header bar
+  doc.setFillColor(...scRgb);doc.rect(0,0,pageW,32,'F');doc.setFillColor(...pcRgb);doc.rect(0,30,pageW,2.5,'F');
+  let headerTextX=margin;
+  const logoData=await fetchLogoBase64(brand.logo_url);
+  if(logoData&&logoData.failed){const reasons={cors:'CORS bloccato',load:'URL non raggiungibile',timeout:'Timeout 5s'};toast('⚠️ Logo non nel PDF: '+(reasons[logoData.failed]||'errore'),'warn')}
+  if(logoData&&logoData.dataUrl){const logoH=18,logoW=(logoData.w/logoData.h)*logoH;doc.addImage(logoData.dataUrl,'PNG',margin,6,logoW,logoH);headerTextX=margin+logoW+6}
+  doc.setFont('helvetica','bold');doc.setFontSize(14);doc.setTextColor(255,255,255);doc.text(brand.company_name||'InvestPro',headerTextX,16);
+  if(brand.header_text){doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(200,210,220);doc.text(brand.header_text,headerTextX,22)}
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(160,180,200);doc.text(new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'}),pageW-margin,14,{align:'right'});doc.text(isFlip?'Trading / Flip':'Messa a Reddito',pageW-margin,20,{align:'right'});
+  y=40;doc.setFont('helvetica','bold');doc.setFontSize(18);doc.setTextColor(...scRgb);doc.text(projName,margin,y);y+=10;doc.setDrawColor(...pcRgb);doc.setLineWidth(0.6);doc.line(margin,y,pageW-margin,y);y+=8;
+  // KPIs
+  const kpis=[{label:'Investimento',value:document.getElementById('k-inv')?.textContent||'—'},{label:'ROI Annuo',value:document.getElementById('k-roi')?.textContent||'—'},{label:isFlip?'Profit/Mese':'CF/Mese',value:document.getElementById('k-cf')?.textContent||'—'},{label:'Break-even',value:document.getElementById('k-be')?.textContent||'—'}];
+  const kpiW=usable/4;kpis.forEach((kpi,i)=>{const x=margin+i*kpiW;doc.setFillColor(...pcRgb);doc.rect(x+1,y,1.2,20,'F');doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(120,130,140);doc.text(kpi.label.toUpperCase(),x+5,y+7);doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(...scRgb);doc.text(kpi.value,x+5,y+15)});y+=28;
+  // Params table
+  doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...scRgb);doc.text('Parametri di Input',margin,y);y+=5;
+  const paramRows=isFlip?[['Prezzo Acquisto',eur(n('price'))],['Ristrutturazione',eur(n('reno'))],['Costi Notarili',eur(n('closing'))],['LTV',n('ltv')+'%'],['Tasso',n('rate')+'%'],['Durata',n('years')+' anni'],['Prezzo Vendita',eur(n('flip-price'))],['Durata Flip',n('flip-months')+' mesi'],['Comm. Agenzia',n('flip-ag')+'%'],['Holding/mese',eur(n('flip-hold'))],['Plus-valenza',n('flip-tax')+'%']]:[['Prezzo Acquisto',eur(n('price'))],['Ristrutturazione',eur(n('reno'))],['Costi Notarili',eur(n('closing'))],['LTV',n('ltv')+'%'],['Tasso',n('rate')+'%'],['Durata',n('years')+' anni'],['ADR/notte',eur(n('adr'))],['Occupazione',n('occ')+'%'],['OTA',n('ota')+'%'],['Ospiti medi',n('guests')],['Costi fissi/mese',eur(n('fixed'))],['Variabili/notte',eur(n('varco'))],['Manutenzione/mese',eur(n('maint'))],['Vacancy',n('vac')+'%'],['Aliquota fiscale',n('tax-rate')+'%'],['Tassa soggiorno/notte',eur(n('city-tax'))]];
+  doc.autoTable({startY:y,head:[['Parametro','Valore']],body:paramRows,margin:{left:margin,right:margin},theme:'grid',headStyles:{fillColor:pcRgb,textColor:[255,255,255],fontStyle:'bold',fontSize:8},bodyStyles:{fontSize:8,textColor:[40,50,60],cellPadding:3},alternateRowStyles:{fillColor:[245,248,252]},columnStyles:{0:{cellWidth:usable*0.55,fontStyle:'bold'},1:{cellWidth:usable*0.45,halign:'right'}}});
+  y=doc.lastAutoTable.finalY+10;if(y>pageH-90){doc.addPage();y=margin}
+  // Results table
+  doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...scRgb);doc.text(isFlip?'Analisi Flip':'Conto Economico',margin,y);y+=5;
+  const resultRows=isFlip?[['Vendita',document.getElementById('f-sell')?.textContent||'—'],['Costi acquisizione',document.getElementById('f-acq')?.textContent||'—'],['Comm. agenzia',document.getElementById('f-ag')?.textContent||'—'],['Costi holding',document.getElementById('f-hold')?.textContent||'—'],['Profitto lordo',document.getElementById('f-gross')?.textContent||'—'],['Imposte',document.getElementById('f-tax')?.textContent||'—'],['PROFITTO NETTO',document.getElementById('br-fl')?.textContent||'—']]:[['Ricavi lordi/anno',document.getElementById('r-g')?.textContent||'—'],['Commissioni OTA',document.getElementById('r-ota')?.textContent||'—'],['Tassa soggiorno',document.getElementById('r-ct')?.textContent||'—'],['Costi operativi',document.getElementById('r-op')?.textContent||'—'],['Imposte',document.getElementById('r-tax')?.textContent||'—'],['Mutuo/anno',document.getElementById('r-mort')?.textContent||'—'],['Notti occupate',document.getElementById('r-n')?.textContent||'—'],['MOL/mese',document.getElementById('r-mol')?.textContent||'—'],['CASHFLOW NETTO/MESE',document.getElementById('br-cf')?.textContent||'—']];
+  doc.autoTable({startY:y,head:[['Voce','Importo']],body:resultRows,margin:{left:margin,right:margin},theme:'grid',headStyles:{fillColor:pcRgb,textColor:[255,255,255],fontStyle:'bold',fontSize:8},bodyStyles:{fontSize:8,textColor:[40,50,60],cellPadding:3},alternateRowStyles:{fillColor:[245,248,252]},columnStyles:{0:{cellWidth:usable*0.55,fontStyle:'bold'},1:{cellWidth:usable*0.45,halign:'right'}},didParseCell:function(data){if(data.row.index===resultRows.length-1){data.cell.styles.fillColor=pcRgb;data.cell.styles.textColor=[255,255,255];data.cell.styles.fontStyle='bold';data.cell.styles.fontSize=10}}});
+  y=doc.lastAutoTable.finalY+10;
+  // Scenari (rent only)
+  if(!isFlip){if(y>pageH-50){doc.addPage();y=margin}doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...scRgb);doc.text('Scenari',margin,y);y+=5;
+    doc.autoTable({startY:y,head:[['Scenario','Cashflow/mese']],body:[['Pessimistico (50%)',document.getElementById('sp-v')?.textContent||'—'],['Moderato (65%)',document.getElementById('sm-v')?.textContent||'—'],['Ottimistico (85%)',document.getElementById('so-v')?.textContent||'—']],margin:{left:margin,right:margin},theme:'grid',headStyles:{fillColor:pcRgb,textColor:[255,255,255],fontStyle:'bold',fontSize:8},bodyStyles:{fontSize:9,textColor:[40,50,60],cellPadding:4},columnStyles:{0:{cellWidth:usable*0.55,fontStyle:'bold'},1:{cellWidth:usable*0.45,halign:'right',fontStyle:'bold'}}})}
+  // Footer
+  const totalPages=doc.internal.getNumberOfPages();for(let i=1;i<=totalPages;i++){doc.setPage(i);doc.setDrawColor(...pcRgb);doc.setLineWidth(0.4);doc.line(margin,pageH-16,pageW-margin,pageH-16);doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(140,150,160);doc.text(brand.footer_text||('Generato con '+(brand.company_name||'InvestPro')),margin,pageH-11);doc.text('Pagina '+i+'/'+totalPages,pageW-margin,pageH-11,{align:'right'})}
+  doc.save((projName.replace(/[^a-zA-Z0-9À-ú ]/g,'').trim()||'Report')+'_InvestPro.pdf');toast('✓ PDF scaricato.','ok');
+}
+
+// ════════════════════════════════════════════════
+// FASE 3: TEAM MANAGEMENT
+// ════════════════════════════════════════════════
+function openTeamModal(){if(!canTeam()){openPW('export');return}document.getElementById('team-modal').classList.add('on');loadTeamData()}
+function closeTeamModal(){document.getElementById('team-modal').classList.remove('on')}
+
+async function loadUserWorkspace(){if(!user)return;try{const{data:owned}=await sb.from('workspaces').select('id,name,max_members,owner_id').eq('owner_id',user.id).maybeSingle();if(owned){_workspace=owned;return}const{data:membership}=await sb.from('workspace_members').select('workspace_id').eq('user_id',user.id).limit(1).maybeSingle();if(membership){const{data:ws}=await sb.from('workspaces').select('id,name,max_members,owner_id').eq('id',membership.workspace_id).single();if(ws)_workspace=ws}}catch(e){console.error('[workspace]',e)}}
+
+async function loadTeamData(){
+  if(!_workspace){await loadUserWorkspace();if(!_workspace){document.getElementById('tm-members-loading').textContent='Nessun workspace trovato.';return}}
+  document.getElementById('tm-ws-name').textContent=_workspace.name;document.getElementById('tm-ws-max').textContent=_workspace.max_members+' utenti';
+  const loadEl=document.getElementById('tm-members-loading'),listEl=document.getElementById('tm-members-list');loadEl.style.display='block';listEl.innerHTML='';
+  try{const{data:members,error:mErr}=await sb.from('workspace_members').select('id,user_id,role,joined_at').eq('workspace_id',_workspace.id).order('joined_at',{ascending:true});if(mErr)throw mErr;_wsMembers=members||[];document.getElementById('tm-ws-count').textContent=_wsMembers.length+'/'+_workspace.max_members;loadEl.style.display='none';
+    const userIds=_wsMembers.map(m=>m.user_id);const{data:profiles}=await sb.from('profiles').select('id,display_name').in('id',userIds);const profMap={};(profiles||[]).forEach(p=>profMap[p.id]=p);
+    const isOwner=_workspace.owner_id===user?.id||isSuperAdmin;
+    _wsMembers.forEach(m=>{const prof=profMap[m.user_id]||{};const item=document.createElement('div');item.className='tm-item';
+      const avatar=document.createElement('div');avatar.className='tm-avatar';avatar.textContent=(prof.display_name||'??').slice(0,2).toUpperCase();
+      const info=document.createElement('div');info.className='tm-info';const emailEl=document.createElement('div');emailEl.className='tm-email';emailEl.textContent=prof.display_name||m.user_id.slice(0,8);const roleEl=document.createElement('div');roleEl.className='tm-role '+m.role;roleEl.textContent=m.role.toUpperCase();info.appendChild(emailEl);info.appendChild(roleEl);
+      item.appendChild(avatar);item.appendChild(info);
+      if(isOwner&&m.role!=='owner'&&m.user_id!==user.id){const acts=document.createElement('div');acts.className='tm-actions';const sel=document.createElement('select');['member','admin'].forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r.charAt(0).toUpperCase()+r.slice(1);if(r===m.role)o.selected=true;sel.appendChild(o)});sel.addEventListener('change',()=>updateMemberRole(m.id,sel.value));acts.appendChild(sel);const rmBtn=document.createElement('button');rmBtn.className='tm-remove';rmBtn.textContent='✕';rmBtn.addEventListener('click',async()=>{if(!confirm('Rimuovere?'))return;try{await sb.from('workspace_members').delete().eq('id',m.id);toast('Rimosso.','ok');loadTeamData()}catch(e){toast('Errore.','err')}});acts.appendChild(rmBtn);item.appendChild(acts)}
+      if(m.user_id===user.id&&m.role!=='owner'){const acts=document.createElement('div');acts.className='tm-actions';const lb=document.createElement('button');lb.className='tm-remove';lb.textContent='Esci';lb.addEventListener('click',async()=>{if(!confirm('Lasciare il team?'))return;try{await sb.from('workspace_members').delete().eq('id',m.id);_workspace=null;toast('Uscito.','ok');closeTeamModal()}catch(e){toast('Errore.','err')}});acts.appendChild(lb);item.appendChild(acts)}
+      listEl.appendChild(item)});
+    const myRole=_wsMembers.find(m=>m.user_id===user.id)?.role;document.getElementById('tm-invite-section').style.display=(isOwner||myRole==='admin')?'block':'none';
+    await loadTeamInvites();
+  }catch(e){loadEl.textContent='Errore: '+(e.message||'')}
+}
+
+async function updateMemberRole(memberId,newRole){try{await sb.from('workspace_members').update({role:newRole}).eq('id',memberId);toast('Ruolo → '+newRole.toUpperCase(),'ok');loadTeamData()}catch(e){toast('Errore.','err')}}
+
+// Fix M-4: verifica esistenza email prima di invitare
+async function sendInvite(){
+  if(!_workspace)return;const emailEl=document.getElementById('tm-invite-email'),roleEl=document.getElementById('tm-invite-role'),errEl=document.getElementById('tm-invite-err'),btn=document.getElementById('tm-invite-btn');const email=emailEl.value.trim().toLowerCase();errEl.classList.remove('on');
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){errEl.textContent='Email non valida.';errEl.classList.add('on');return}
+  // Fix M-4: check user exists
+  try{const{data:exists,error:chkErr}=await sb.rpc('check_user_exists_by_email',{p_email:email});if(chkErr)throw chkErr;if(!exists){errEl.textContent='Nessun utente con questa email. Deve prima registrarsi su InvestPro.';errEl.classList.add('on');return}}catch(e){console.warn('[invite] check fallita, procedo:',e)}
+  if(_wsMembers.length>=_workspace.max_members){errEl.textContent='Limite '+_workspace.max_members+' membri raggiunto.';errEl.classList.add('on');return}
+  btn.disabled=true;btn.textContent='Invio...';
+  try{const{error}=await sb.from('workspace_invites').insert({workspace_id:_workspace.id,invited_email:email,invited_by:user.id,role:roleEl.value||'member',status:'pending',expires_at:new Date(Date.now()+7*86400000).toISOString()});if(error){errEl.textContent=error.message?.includes('duplicate')?'Invito già inviato.':'Errore: '+(error.message||'');errEl.classList.add('on')}else{emailEl.value='';toast('✓ Invito inviato a '+email,'ok');loadTeamInvites()}}catch(e){errEl.textContent='Errore di rete.';errEl.classList.add('on')}
+  btn.disabled=false;btn.textContent='Invita';
+}
+
+async function loadTeamInvites(){if(!_workspace)return;const listEl=document.getElementById('tm-invites-list'),emptyEl=document.getElementById('tm-invites-empty');listEl.innerHTML='';
+  try{const{data:invites,error}=await sb.from('workspace_invites').select('id,invited_email,role,status,created_at,expires_at').eq('workspace_id',_workspace.id).order('created_at',{ascending:false}).limit(20);if(error)throw error;_wsInvites=invites||[];
+    if(!_wsInvites.length){emptyEl.style.display='block';return}emptyEl.style.display='none';
+    _wsInvites.forEach(inv=>{const item=document.createElement('div');item.className='inv-item';const es=document.createElement('span');es.className='inv-email';es.textContent=inv.invited_email;const rs=document.createElement('span');rs.style.cssText='font-family:"JetBrains Mono",monospace;font-size:.54rem;color:var(--tx3);margin-left:4px';rs.textContent=inv.role.toUpperCase();const ss=document.createElement('span');ss.className='inv-status '+inv.status;const isExp=new Date(inv.expires_at)<new Date();ss.textContent=isExp&&inv.status==='pending'?'SCADUTO':inv.status.toUpperCase();item.appendChild(es);item.appendChild(rs);item.appendChild(ss);
+      if(inv.status==='pending'&&!isExp){const cb=document.createElement('button');cb.className='inv-cancel';cb.textContent='✕';cb.addEventListener('click',async()=>{try{await sb.from('workspace_invites').delete().eq('id',inv.id);toast('Annullato.','ok');loadTeamInvites()}catch(e){toast('Errore.','err')}});item.appendChild(cb)}
+      listEl.appendChild(item)})
+  }catch(e){}}
+
+async function checkPendingInvites(){if(!user||!sb)return;const container=document.getElementById('invite-banners');container.innerHTML='';
+  try{const{data:invites,error}=await sb.rpc('get_my_pending_invites');if(error)throw error;_pendingInvites=invites||[];if(!_pendingInvites.length)return;
+    for(const inv of _pendingInvites){let wsName='un team';try{const{data:ws}=await sb.from('workspaces').select('name').eq('id',inv.workspace_id).single();if(ws)wsName=ws.name}catch(e){}
+      const banner=document.createElement('div');banner.className='invite-banner';banner.id='inv-banner-'+inv.id;
+      const text=document.createElement('div');text.className='invite-banner-text';const strong=document.createElement('strong');strong.textContent=wsName;text.appendChild(document.createTextNode('Invitato a '));text.appendChild(strong);text.appendChild(document.createTextNode(' come '+inv.role+'.'));
+      const btns=document.createElement('div');btns.className='invite-banner-btns';
+      const ab=document.createElement('button');ab.className='ib-accept';ab.textContent='✓ Accetta';ab.addEventListener('click',()=>respondInvite(inv.id,'accept'));
+      const db=document.createElement('button');db.className='ib-decline';db.textContent='Rifiuta';db.addEventListener('click',()=>respondInvite(inv.id,'decline'));
+      btns.appendChild(ab);btns.appendChild(db);banner.appendChild(text);banner.appendChild(btns);container.appendChild(banner)}
+  }catch(e){}}
+
+async function respondInvite(inviteId,action){const banner=document.getElementById('inv-banner-'+inviteId);if(banner){banner.style.opacity='0.5';banner.style.pointerEvents='none'}
+  try{const rpcName=action==='accept'?'accept_invite':'decline_invite';const{data,error}=await sb.rpc(rpcName,{p_invite_id:inviteId});if(error)throw error;if(data&&!data.ok)throw new Error(data.error);
+    if(action==='accept'){toast('✓ '+(data?.message||'Invito accettato!'),'ok');await loadUserWorkspace()}else{toast('Invito rifiutato.','ok')}if(banner)banner.remove()
+  }catch(e){toast('Errore: '+(e.message||''),'err');if(banner){banner.style.opacity='1';banner.style.pointerEvents='all'}}}
+
+// ════════════════════════════════════════════════
+// FASE 5: WHITE-LABEL (Fix C-2: usa <style> iniettato)
+// ════════════════════════════════════════════════
+function applyWhiteLabel(brand){
+  if(!brand||!brand.whitelabel_enabled)return;if(!canTeam())return;_wlActive=true;
+  const accent=brand.accent_color||brand.primary_color||'#00d4a4';const accentH=brand.accent_hover||'#00b88e';const bg=brand.bg_color||'#050a14';const bg2=brand.bg2_color||'#0a1628';const bg3=brand.bg3_color||'#0f1d35';const tx=brand.text_color||'#f0f5ff';const navBg=brand.nav_bg||bg;
+  const[aR,aG,aB]=hexToRgb(accent);const lightAccent='#'+[aR,aG,aB].map(c=>Math.max(0,Math.round(c*0.55)).toString(16).padStart(2,'0')).join('');
+  document.getElementById('wl-dynamic-css')?.remove();
+  const style=document.createElement('style');style.id='wl-dynamic-css';
+  style.textContent=`:root,[data-theme="dark"]{--teal:${accent}!important;--teal-h:${accentH}!important;--tg:${rgbaFrom(accent,0.12)}!important;--bg:${bg}!important;--bg2:${bg2}!important;--bg3:${bg3}!important;--bg4:${bg3}!important;--tx:${tx}!important}[data-theme="light"]{--teal:${lightAccent}!important;--teal-h:${lightAccent}!important;--tg:${rgbaFrom(accent,0.10)}!important}`;
+  document.head.appendChild(style);
+  const nav=document.querySelector('.nav');if(nav)nav.style.background=rgbaFrom(navBg,0.92);
+  const dot=document.getElementById('nbrand-dot');if(dot)dot.style.background=accent;
+  const logoEl=document.getElementById('nbrand-logo');if(brand.logo_url&&logoEl){logoEl.src=brand.logo_url;logoEl.classList.add('on');logoEl.onerror=()=>logoEl.classList.remove('on')}
+  const textEl=document.getElementById('nbrand-text');if(textEl){if(brand.hide_investpro!==false){textEl.textContent=brand.company_name||'';if(!brand.company_name&&brand.logo_url)textEl.style.display='none'}else{textEl.textContent=brand.company_name||'InvestPro'}}
+  if(brand.company_name)document.title=brand.company_name+' — Analisi Finanziaria Immobiliare';
+  if(brand.custom_favicon_url){let link=document.querySelector("link[rel*='icon']");if(!link){link=document.createElement('link');link.rel='icon';document.head.appendChild(link)}link.href=brand.custom_favicon_url}
+}
+
+function resetWhiteLabel(){if(!_wlActive)return;_wlActive=false;document.getElementById('wl-dynamic-css')?.remove();
+  const nav=document.querySelector('.nav');if(nav)nav.style.background='';const dot=document.getElementById('nbrand-dot');if(dot)dot.style.background='';
+  const logoEl=document.getElementById('nbrand-logo');if(logoEl){logoEl.classList.remove('on');logoEl.src=''}
+  const textEl=document.getElementById('nbrand-text');if(textEl){textEl.textContent='InvestPro';textEl.style.display=''}
+  document.title='InvestPro — Analisi Finanziaria Immobiliare';const fav=document.querySelector("link[rel*='icon']");if(fav)fav.href=''}
+
+function updateWlPreview(){
+  const enabled=document.getElementById('wl-enabled').checked;const opts=document.getElementById('wl-options');opts.style.opacity=enabled?'1':'0.35';opts.style.pointerEvents=enabled?'all':'none';
+  const accent=document.getElementById('wl-accent').value,navBg=document.getElementById('wl-nav-bg').value,bg=document.getElementById('wl-bg').value,bg2=document.getElementById('wl-bg2').value,tx=document.getElementById('wl-text').value;
+  const hideIP=document.getElementById('wl-hide-ip').checked,company=document.getElementById('br-company').value.trim(),logoUrl=document.getElementById('br-logo').value.trim();
+  document.getElementById('wl-prev-nav').style.background=navBg;document.getElementById('wl-prev-dot').style.background=accent;
+  const prevLogo=document.getElementById('wl-prev-logo');if(logoUrl){prevLogo.innerHTML='';const img=document.createElement('img');img.src=logoUrl;img.style.maxWidth='100%';img.style.maxHeight='100%';img.onerror=()=>{prevLogo.innerHTML=''};prevLogo.appendChild(img)}else{prevLogo.innerHTML=''}
+  const prevName=document.getElementById('wl-prev-name');prevName.style.color=tx;prevName.textContent=hideIP?(company||(logoUrl?'':'InvestPro')):(company||'InvestPro');
+  document.getElementById('wl-prev-body').style.background=bg;
+  document.querySelectorAll('.wl-preview-kpi-item').forEach(el=>{el.style.background=bg2;el.style.borderColor=rgbaFrom(accent,0.2)});
+  document.querySelectorAll('.wl-preview-kpi-label').forEach(el=>{el.style.color=rgbaFrom(tx,0.5)});
+  document.querySelectorAll('.wl-preview-kpi-value').forEach(el=>{el.style.color=accent});
+}
+
+function loadWlFields(brand){if(!brand)return;document.getElementById('wl-enabled').checked=!!brand.whitelabel_enabled;document.getElementById('wl-accent').value=brand.accent_color||brand.primary_color||'#00d4a4';document.getElementById('wl-accent-h').value=brand.accent_hover||'#00b88e';document.getElementById('wl-nav-bg').value=brand.nav_bg||'#050a14';document.getElementById('wl-bg').value=brand.bg_color||'#050a14';document.getElementById('wl-bg2').value=brand.bg2_color||'#0a1628';document.getElementById('wl-bg3').value=brand.bg3_color||'#0f1d35';document.getElementById('wl-text').value=brand.text_color||'#f0f5ff';document.getElementById('wl-hide-ip').checked=brand.hide_investpro!==false;updateWlPreview()}
 
 // ════════════════════════════════════════════════
 // TOAST
 // ════════════════════════════════════════════════
-function toast(msg,type='ok'){
-  const c=document.getElementById('toasts');
-  const t=document.createElement('div');
-  t.className=`toast ${type}`;t.textContent=msg;c.appendChild(t);
-  requestAnimationFrame(()=>t.classList.add('on'));
-  setTimeout(()=>{t.classList.remove('on');setTimeout(()=>t.remove(),300)},3800);
-}
+function toast(msg,type='ok'){const c=document.getElementById('toasts');const t=document.createElement('div');t.className=`toast ${type}`;t.textContent=msg;c.appendChild(t);requestAnimationFrame(()=>t.classList.add('on'));setTimeout(()=>{t.classList.remove('on');setTimeout(()=>t.remove(),300)},3800)}
 
 // ════════════════════════════════════════════════
-// THEME SWITCHER — Light / Dark
+// THEME SWITCHER
 // ════════════════════════════════════════════════
-function toggleTheme(){
-  const root=document.documentElement;
-  const btn=document.getElementById('theme-toggle');
-  const current=root.getAttribute('data-theme')||'dark';
-  const next=current==='dark'?'light':'dark';
-  root.setAttribute('data-theme',next);
-  btn.textContent=next==='dark'?'🌙':'☀️';
-  btn.title=next==='dark'?'Passa al tema chiaro':'Passa al tema scuro';
-  try{localStorage.setItem('ip_theme',next)}catch(e){}
-}
-
-function initTheme(){
-  let saved='dark';
-  try{saved=localStorage.getItem('ip_theme')||'dark'}catch(e){}
-  document.documentElement.setAttribute('data-theme',saved);
-  const btn=document.getElementById('theme-toggle');
-  if(btn)btn.textContent=saved==='dark'?'🌙':'☀️';
-}
+function toggleTheme(){const root=document.documentElement;const btn=document.getElementById('theme-toggle');const current=root.getAttribute('data-theme')||'dark';const next=current==='dark'?'light':'dark';root.setAttribute('data-theme',next);btn.textContent=next==='dark'?'🌙':'☀️';btn.title=next==='dark'?'Passa al tema chiaro':'Passa al tema scuro';try{localStorage.setItem('ip_theme',next)}catch(e){}}
+function initTheme(){let saved='dark';try{saved=localStorage.getItem('ip_theme')||'dark'}catch(e){}document.documentElement.setAttribute('data-theme',saved);const btn=document.getElementById('theme-toggle');if(btn)btn.textContent=saved==='dark'?'🌙':'☀️'}
 
 // ════════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
-  initTheme();
-  calc(); // calcolo iniziale con valori default
-
-  // Enter → submit nei form
+  initTheme();calc();
   document.getElementById('i-pw')?.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
   document.getElementById('i-rpw')?.addEventListener('keydown',e=>{if(e.key==='Enter')doReg()});
-
-  // ESC → chiudi modali; Ctrl+S → salva
   document.addEventListener('keydown',e=>{
-    if(e.key==='Escape'){closeAuth();closePW();closeAdminPanel();closeAcct();closeProjectsList()}
+    if(e.key==='Escape'){closeAuth();closePW();closeAdminPanel();closeAcct();closeProjectsList();closeBrandModal();closeTeamModal()}
     if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();if(user)saveProject()}
   });
-
-  // Click fuori dai modali → chiudi
   document.getElementById('auth').addEventListener('click',e=>{if(e.target===e.currentTarget)closeAuth()});
   document.getElementById('pw').addEventListener('click',e=>{if(e.target===e.currentTarget)closePW()});
   document.getElementById('admin-panel').addEventListener('click',e=>{if(e.target===e.currentTarget)closeAdminPanel()});
   document.getElementById('acct-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeAcct()});
   document.getElementById('proj-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeProjectsList()});
+  document.getElementById('brand-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeBrandModal()});
+  document.getElementById('team-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeTeamModal()});
 });
 </script>
 </body>
