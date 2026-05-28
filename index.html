@@ -3,9 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://amzjefyegfxkpzjifynj.supabase.co https://*.supabase.co wss://amzjefyegfxkpzjifynj.supabase.co wss://*.supabase.co https://api.stripe.com; frame-src https://js.stripe.com https://hooks.stripe.com; object-src 'none'; base-uri 'self'; form-action 'self'">
-<meta name="referrer" content="strict-origin-when-cross-origin">
+
+<!-- ═══ SEO PRIMARIO ═══ -->
 <title>InvestPro — Analisi Finanziaria Immobiliare</title>
+<meta name="description" content="Calcola ROI, cashflow netto e break-even su affitti brevi, STR e operazioni immobiliari. Simulatore con cedolare secca, mutuo, OTA e scenari di occupazione. Gratis.">
+<meta name="keywords" content="analisi investimento immobiliare, calcolo ROI affitto breve, cedolare secca, cashflow immobiliare, airbnb roi calculator, STR analytics, mutuo calcolatore">
+<meta name="author" content="AppNetto S.r.l.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://lucaiolienrico.github.io/Invest/">
+
+<!-- ═══ OPEN GRAPH (Facebook, LinkedIn, WhatsApp, Telegram) ═══ -->
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="InvestPro">
+<meta property="og:title"       content="InvestPro — Analisi Finanziaria Immobiliare">
+<meta property="og:description" content="Calcola ROI, cashflow netto e break-even su affitti brevi e investimenti immobiliari. Cedolare secca, OTA, mutuo, scenari ottimistici/pessimistici. Gratis.">
+<meta property="og:url"         content="https://lucaiolienrico.github.io/Invest/">
+<meta property="og:image"       content="https://lucaiolienrico.github.io/Invest/assets/og-image.png">
+<meta property="og:image:alt"   content="InvestPro — Dashboard analisi investimento immobiliare">
+<meta property="og:image:width"  content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale"      content="it_IT">
+
+<!-- ═══ TWITTER / X CARD ═══ -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="InvestPro — Analisi Finanziaria Immobiliare">
+<meta name="twitter:description" content="Calcola ROI, cashflow e break-even su affitti brevi in pochi secondi. Cedolare secca, OTA, mutuo e scenari inclusi.">
+<meta name="twitter:image"       content="https://lucaiolienrico.github.io/Invest/assets/og-image.png">
+<meta name="twitter:image:alt"   content="InvestPro dashboard">
+
+<!-- ═══ JSON-LD STRUCTURED DATA (Google Rich Results) ═══ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "InvestPro",
+  "url": "https://lucaiolienrico.github.io/Invest/",
+  "description": "Piattaforma SaaS di analisi finanziaria immobiliare per investitori, host Airbnb e agenti immobiliari. Calcola ROI, cashflow netto, cedolare secca e break-even.",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "All",
+  "inLanguage": "it-IT",
+  "offers": [
+    {
+      "@type": "Offer",
+      "name": "Piano Free",
+      "price": "0",
+      "priceCurrency": "EUR",
+      "description": "50 analisi al giorno, calcolatore affitti brevi"
+    },
+    {
+      "@type": "Offer",
+      "name": "Piano Pro",
+      "price": "29.90",
+      "priceCurrency": "EUR",
+      "billingIncrement": "P1M",
+      "description": "Analisi illimitate, salvataggio progetti, export Excel, modalità Flip"
+    }
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "AppNetto S.r.l.",
+    "email": "support@appnetto.it",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Via Roma 14",
+      "addressLocality": "Bari",
+      "postalCode": "70121",
+      "addressCountry": "IT"
+    }
+  }
+}
+</script>
+
+<!-- ═══ FAVICON — Stack completo cross-browser + PWA ═══
+     Priorità di caricamento (browser segue l'ordine nel DOM):
+     1. SVG  → Chrome 80+, Firefox 41+, Edge 80+, Safari 14.1+
+     2. ICO  → IE11, Safari <14, Windows taskbar pin (fallback universale)
+     Brand colors: bg=#050a14  teal=#00d4a4  lettermark=IP -->
+
+<!-- 1. SVG: scalabile, nessun file esterno, tutti i browser moderni -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23050a14'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='system-ui%2C-apple-system%2Csans-serif' font-weight='800' font-size='15' fill='%2300d4a4' letter-spacing='-0.5'%3EIP%3C/text%3E%3C/svg%3E">
+
+<!-- 2. ICO 32x32: fallback per IE11, Safari <13, Windows taskbar -->
+<link rel="shortcut icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAICAAAAEAIAAoEgAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAAAAAAAAAAAAAAAAAAAAAABQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAAAAAAAAAAAAAAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/wAAAAAAAAAAAAAAABQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/wAAAAAAAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/AAAAAAAAAAAUCgX/FAoF/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/6TUAP8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/6TUAP8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/6TUAP8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/pNQA/6TUAP8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/6TUAP8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/pNQA/6TUAP8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/AAAAAAAAAAAUCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAAAAAABQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/wAAAAAAAAAAAAAAABQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAAAAAAAAAAAAAAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/wAAAAAAAAAAAAAAAAAAAAAAAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=">
+<link rel="icon" type="image/x-icon" sizes="32x32" href="data:image/x-icon;base64,AAABAAEAICAAAAEAIAAoEgAAFgAAACgAAAAgAAAAQAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAAAAAAAAAAAAAAAAAAAAAABQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAAAAAAAAAAAAAAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/wAAAAAAAAAAAAAAABQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/wAAAAAAAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/AAAAAAAAAAAUCgX/FAoF/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/6TUAP8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/6TUAP8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/6TUAP8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/pNQA/6TUAP8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/6TUAP8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/pNQA/6TUAP8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/6TUAP+k1AD/pNQA/6TUAP+k1AD/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/pNQA/6TUAP+k1AD/pNQA/6TUAP+k1AD/pNQA/6TUAP+k1AD/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/AAAAAAAAAAAUCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAAAAAABQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/wAAAAAAAAAAAAAAABQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAAAAAAAAAAAAAAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/wAAAAAAAAAAAAAAAAAAAAAAAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/xQKBf8UCgX/FAoF/wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=">
+
+<!-- 3. Apple Touch Icon: iOS home screen (SVG supportato da iOS 14.5+, apr 2021) -->
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='38' fill='%23050a14'/%3E%3Ctext x='90' y='122' text-anchor='middle' font-family='system-ui%2C-apple-system%2Csans-serif' font-weight='800' font-size='82' fill='%2300d4a4' letter-spacing='-2'%3EIP%3C/text%3E%3C/svg%3E">
+
+<!-- 4. PWA Web Manifest: "Aggiungi a schermata home" su Android Chrome -->
+<link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkludmVzdFBybyIsCiAgInNob3J0X25hbWUiOiAiSW52ZXN0UHJvIiwKICAiZGVzY3JpcHRpb24iOiAiQW5hbGlzaSBmaW5hbnppYXJpYSBpbW1vYmlsaWFyZSDigJQgUk9JLCBjYXNoZmxvdywgY2Vkb2xhcmUgc2VjY2EiLAogICJzdGFydF91cmwiOiAiL0ludmVzdC8iLAogICJzY29wZSI6ICIvSW52ZXN0LyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgIm9yaWVudGF0aW9uIjogInBvcnRyYWl0LXByaW1hcnkiLAogICJ0aGVtZV9jb2xvciI6ICIjMDUwYTE0IiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMDUwYTE0IiwKICAibGFuZyI6ICJpdC1JVCIsCiAgImljb25zIjogWwogICAgeyAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbCwlM0NzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgNTEyIDUxMiclM0UlM0NyZWN0IHdpZHRoPSc1MTInIGhlaWdodD0nNTEyJyByeD0nMTEyJyBmaWxsPSclMjMwNTBhMTQnLyUzRSUzQ3RleHQgeD0nMjU2JyB5PSczNTAnIHRleHQtYW5jaG9yPSdtaWRkbGUnIGZvbnQtZmFtaWx5PSdzeXN0ZW0tdWknIGZvbnQtd2VpZ2h0PSc4MDAnIGZvbnQtc2l6ZT0nMjYwJyBmaWxsPSclMjMwMGQ0YTQnJTNFSVAlM0MvdGV4dCUzRSUzQy9zdmclM0UiLCAic2l6ZXMiOiAiNTEyeDUxMiIsICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiLCAicHVycG9zZSI6ICJhbnkgbWFza2FibGUiIH0KICBdCn0=">
+
+<!-- 5. theme-color: colore barra del browser su Chrome mobile e PWA -->
+<meta name="theme-color" content="#050a14" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f0f4f8" media="(prefers-color-scheme: light)">
+
+<!-- 6. Windows tile: colore quando pinnato al menu Start -->
+<meta name="msapplication-TileColor" content="#050a14">
+<meta name="msapplication-config" content="none">
+
+<!-- 7. iOS standalone PWA: nasconde la barra URL, stile status bar -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="InvestPro">
+
+<!-- ═══ PERFORMANCE — Preconnect ai CDN critici ═══ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://amzjefyegfxkpzjifynj.supabase.co">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<!-- Sentry: preconnect per invio eventi senza latenza al primo errore -->
+<link rel="preconnect" href="https://o0.ingest.sentry.io">
+<link rel="dns-prefetch" href="https://sentry.io">
+
+<!-- ═══ CDN — defer: download parallelo durante il parsing HTML ═══
+     defer garantisce:
+     1. Download in parallelo mentre il browser fa il parsing del DOM
+     2. Esecuzione in ordine, dopo che il DOM è completamente parsato
+     3. Prima di DOMContentLoaded — l'app listener li trova già pronti
+     L'ordine è critico: Sentry → xlsx → jspdf → autotable (plugin) → supabase
+     Sentry DEVE essere primo: cattura errori degli altri CDN e del codice app -->
+<script defer
+  src="https://browser.sentry-cdn.com/8.55.0/bundle.tracing.min.js"
+  integrity="sha384-Cq1rVAP6B7kvBqZo3LLpSYr5yLLLFGH6EWHP4sMLVAy5GEMFt8iJrWS7qX9Mzlo"
+  crossorigin="anonymous"></script>
+
+<script defer
+  src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"
+  integrity="sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw"
+  crossorigin="anonymous"></script>
+
+<script defer
+  src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"
+  integrity="sha384-en/ztfPSRkGfME4KIm05joYXynqzUgbsG5nMrj/xEFAHXkeZfO3yMK8QQ+mP7p1/"
+  crossorigin="anonymous"></script>
+
+<script defer
+  src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"
+  integrity="sha384-fCAW/rDWORTbQXSiB7mOg0QtQ5c+r0f544y6XoKjuVva0nMBlCpNUjiFeG5iMdS3"
+  crossorigin="anonymous"></script>
+
+<script defer
+  src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.4/dist/umd/supabase.js"
+  integrity="sha384-7SfFUrg31wOnGWBLLniKFCNmCSguYA5wI1WPDOt7kP/mom4R9/0pwghVEnv0uwYP"
+  crossorigin="anonymous"></script>
+
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://amzjefyegfxkpzjifynj.supabase.co https://*.supabase.co wss://amzjefyegfxkpzjifynj.supabase.co wss://*.supabase.co https://api.stripe.com https://*.ingest.sentry.io; frame-src https://js.stripe.com https://hooks.stripe.com; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ═══ DARK MODE (default) ═══ */
@@ -239,6 +382,35 @@ body::after{content:'';position:fixed;top:0;right:0;bottom:0;left:0;background:r
 .bl{font-family:'JetBrains Mono',monospace;font-size:.52rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
 .bv{font-size:1.9rem;font-weight:900;letter-spacing:-.04em;color:var(--teal);transition:color .25s}.bv.neg{color:var(--red)}
 .bsub{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--tx3);margin-top:4px}
+
+/* ── Disclaimer "non consulenza" — art.1 co.5-bis TUF + Termini ── */
+.calc-disclaimer{
+  margin-top:10px;
+  padding:9px 13px;
+  background:rgba(212,169,64,.06);
+  border:1px solid rgba(212,169,64,.18);
+  border-left:3px solid var(--gold);
+  border-radius:var(--r);
+  display:flex;
+  align-items:flex-start;
+  gap:8px;
+}
+[data-theme="light"] .calc-disclaimer{
+  background:rgba(138,104,0,.06);
+  border-color:rgba(138,104,0,.2);
+  border-left-color:var(--gold);
+}
+.calc-disclaimer-icon{font-size:.78rem;flex-shrink:0;margin-top:1px;line-height:1}
+.calc-disclaimer-text{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.55rem;
+  color:var(--tx3);
+  line-height:1.7;
+  letter-spacing:.01em;
+}
+.calc-disclaimer-text strong{color:var(--tx2);font-weight:600}
+.calc-disclaimer-text a{color:var(--gold);text-decoration:none}
+.calc-disclaimer-text a:hover{text-decoration:underline}
 .scg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .sc{background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:10px;text-align:center}
 .sc.worst{border-color:rgba(255,81,112,.25);background:rgba(255,81,112,.04)}
@@ -351,8 +523,35 @@ body:has(#proj-modal.on) #chat-widget{opacity:0;pointer-events:none;transform:tr
 .afi{background:var(--input-bg);border:1px solid var(--input-border);border-radius:var(--r);padding:11px 13px;color:var(--tx-input);font-size:.88rem;font-weight:500;outline:none;-webkit-transition:border-color .18s;transition:border-color .18s}.afi:focus{border-color:var(--input-border-focus);-webkit-box-shadow:0 0 0 2px rgba(0,212,164,.12);box-shadow:0 0 0 2px rgba(0,212,164,.12)}
 .abtn{background:var(--teal);border:none;border-radius:var(--r);padding:11px;color:var(--bg);font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;transition:.18s;margin-top:4px}.abtn:hover{background:var(--teal-h)}.abtn:disabled{opacity:.4;cursor:not-allowed}
 .aerr{background:var(--rg);border:1px solid rgba(255,81,112,.3);border-radius:var(--r);padding:8px 10px;font-size:.72rem;color:#ff8fa3;display:none}.aerr.on{display:block}
+/* Checkbox T&C — design coerente con .afl e variabili esistenti */
+.terms-wrap{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:border-color .18s;-webkit-transition:border-color .18s}
+.terms-wrap:hover{border-color:var(--border2)}
+.terms-wrap.terms-err{border-color:rgba(255,81,112,.5);background:var(--rg)}
+.terms-cb{appearance:none;-webkit-appearance:none;flex-shrink:0;width:16px;height:16px;margin-top:1px;border:1.5px solid var(--border2);border-radius:3px;background:var(--bg2);cursor:pointer;transition:all .15s;-webkit-transition:all .15s;position:relative}
+.terms-cb:checked{background:var(--teal);border-color:var(--teal)}
+.terms-cb:checked::after{content:'';position:absolute;top:2px;left:5px;width:4px;height:7px;border:2px solid var(--bg);border-top:none;border-left:none;transform:rotate(45deg);-webkit-transform:rotate(45deg)}
+.terms-cb:focus{outline:none;-webkit-box-shadow:0 0 0 2px rgba(0,212,164,.2);box-shadow:0 0 0 2px rgba(0,212,164,.2)}
+.terms-text{font-size:.73rem;color:var(--tx2);line-height:1.55;font-family:'Outfit','Segoe UI',Arial,sans-serif}
+.terms-text a{color:var(--teal);text-decoration:none;font-weight:500}.terms-text a:hover{text-decoration:underline}
 .aok{background:var(--tg);border:1px solid rgba(0,212,164,.3);border-radius:var(--r);padding:8px 10px;font-size:.72rem;color:var(--teal);display:none}.aok.on{display:block}
 .aforgot{background:none;border:none;color:var(--tx3);font-size:.7rem;text-decoration:underline;cursor:pointer;text-align:right;margin-top:-4px;align-self:flex-end;transition:.15s;font-family:inherit}.aforgot:hover{color:var(--teal)}
+
+/* ═══ MODAL NUOVA PASSWORD (PASSWORD_RECOVERY) ═══
+   Appare quando Supabase reindirizza con evento PASSWORD_RECOVERY.
+   Z-index 9600: sopra tutto — l'utente DEVE impostare la password. */
+#pwd-reset-modal{position:fixed;inset:0;background:rgba(5,10,20,.95);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);display:flex;align-items:center;justify-content:center;z-index:9600;padding:20px;opacity:0;pointer-events:none;transition:.25s}
+#pwd-reset-modal.on{opacity:1;pointer-events:all}
+.pwr-box{width:100%;max-width:360px;background:var(--bg2);border:1px solid rgba(0,212,164,.3);border-radius:var(--rx);padding:28px;transform:translateY(12px) scale(.97);transition:.25s}
+#pwd-reset-modal.on .pwr-box{transform:none}
+[data-theme="light"] .pwr-box{background:var(--bg2);border-color:rgba(0,122,94,.3)}
+.pwr-badge{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--teal);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.pwr-title{font-size:.96rem;font-weight:700;color:var(--tx);margin-bottom:4px}
+.pwr-sub{font-size:.76rem;color:var(--tx2);line-height:1.55;margin-bottom:18px}
+/* Riusa stili .afg/.afl/.afi/.abtn già definiti — nessuna duplicazione */
+.pwr-strength{height:3px;border-radius:2px;margin-top:4px;transition:width .2s,background .2s;background:var(--border);width:0}
+.pwr-strength-label{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--tx3);margin-top:3px;min-height:14px}
+.pwr-rules{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3);line-height:1.7;margin-bottom:12px}
+.pwr-rules span{display:block}.pwr-rules span.ok{color:var(--teal)}
 .danger-zone{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,81,112,.2)}
 .danger-zone-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--red);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
 .adbtn-danger{width:100%;background:none;border:1px solid rgba(255,81,112,.35);border-radius:var(--r);padding:9px;font-size:.76rem;color:var(--red);transition:.18s;cursor:pointer}.adbtn-danger:hover{background:rgba(255,81,112,.08);border-color:rgba(255,81,112,.6)}
@@ -398,6 +597,33 @@ body:has(#proj-modal.on) #chat-widget{opacity:0;pointer-events:none;transform:tr
 .adk{color:var(--tx3)}.adv{font-weight:600}
 .adv.teal{color:var(--teal)}.adv.amber{color:var(--amber)}.adv.gold{color:var(--gold)}
 .adbtn{width:100%;margin-top:12px;background:none;border:1px solid var(--border);border-radius:var(--r);padding:9px;font-size:.76rem;color:var(--tx3);transition:.18s;cursor:pointer}.adbtn:hover{color:var(--tx);border-color:var(--border2)}
+/* ═══ GDPR EXPORT MODAL ═══ */
+#gdpr-modal{position:fixed;inset:0;background:rgba(5,10,20,.92);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:center;z-index:9400;padding:20px;opacity:0;pointer-events:none;transition:.22s}
+#gdpr-modal.on{opacity:1;pointer-events:all}
+.gdpr-box{width:100%;max-width:440px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rx);padding:28px;transform:translateY(10px) scale(.97);transition:.22s;max-height:90vh;overflow-y:auto}
+#gdpr-modal.on .gdpr-box{transform:none}
+[data-theme="light"] .gdpr-box{background:var(--bg2);border-color:var(--border)}
+.gdpr-title{font-size:.98rem;font-weight:700;color:var(--tx);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.gdpr-sub{font-size:.75rem;color:var(--tx3);font-family:'JetBrains Mono',monospace;margin-bottom:20px;line-height:1.5}
+.gdpr-section{margin-bottom:14px}
+.gdpr-section-lbl{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--teal);text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px}
+.gdpr-checklist{display:flex;flex-direction:column;gap:5px}
+.gdpr-item{display:flex;align-items:flex-start;gap:9px;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);font-size:.76rem;color:var(--tx2);line-height:1.4}
+[data-theme="light"] .gdpr-item{background:var(--bg4)}
+.gdpr-item-icon{font-size:.85rem;flex-shrink:0;margin-top:1px}
+.gdpr-item-text strong{color:var(--tx);font-weight:600}
+.gdpr-item-count{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--teal);margin-top:2px}
+.gdpr-fmt-row{display:flex;gap:8px;margin-top:16px}
+.gdpr-fmt-btn{flex:1;background:none;border:1px solid var(--border2);border-radius:var(--r);padding:9px 6px;font-size:.72rem;font-weight:600;color:var(--tx2);cursor:pointer;font-family:inherit;transition:.15s;display:flex;flex-direction:column;align-items:center;gap:3px}
+.gdpr-fmt-btn:hover{border-color:var(--teal);color:var(--teal)}
+.gdpr-fmt-btn .gdpr-fmt-icon{font-size:1.1rem}
+.gdpr-fmt-btn .gdpr-fmt-label{font-size:.64rem;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.06em}
+.gdpr-legal{font-size:.68rem;color:var(--tx3);line-height:1.6;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+.gdpr-legal a{color:var(--teal);text-decoration:none}.gdpr-legal a:hover{text-decoration:underline}
+.gdpr-progress{display:none;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);margin-top:12px;font-size:.75rem;color:var(--tx2)}
+.gdpr-progress.on{display:flex}
+.gdpr-spinner{width:14px;height:14px;border:2px solid var(--border2);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 /* ═══ PROJECTS LIST MODAL ═══ */
 #proj-modal{position:fixed;inset:0;background:rgba(5,10,20,.88);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;z-index:8300;padding:20px;opacity:0;pointer-events:none;transition:.22s}#proj-modal.on{opacity:1;pointer-events:all}
@@ -936,6 +1162,23 @@ body:has(#cookie-banner.cb-visible) #chat-widget{bottom:calc(24px + 56px)}
           <div class="rr"><span class="rk">Rivalutazione/anno</span><span class="rv pos" id="r-appr">€ 0</span></div>
           <div class="rr"><span class="rk">ROI Totale</span><span class="rv" id="r-troi">0%</span></div>
           <div class="big" id="big-cf"><div class="bl">// Cashflow Mensile Netto</div><div class="bv" id="br-cf">€ 0</div><div class="bsub" id="br-cfs">—</div></div>
+
+          <!-- ── DISCLAIMER LEGALE — obbligatorio ai sensi dell'art.94 TUF (D.Lgs.58/1998)
+               e dell'art.21 co.1 lett.b TUF: divieto di fornire raccomandazioni di investimento
+               senza autorizzazione. Citato anche nei Termini e Condizioni art.2. ── -->
+          <div class="calc-disclaimer" role="note" aria-label="Avviso legale">
+            <span class="calc-disclaimer-icon">⚠</span>
+            <span class="calc-disclaimer-text">
+              <strong>Solo scopo informativo.</strong>
+              I risultati mostrati sono stime basate sui parametri inseriti e non costituiscono
+              consulenza finanziaria, fiscale o di investimento ai sensi del D.Lgs. 58/1998 (TUF)
+              e del D.Lgs. 231/2007. I calcoli fiscali sono approssimazioni operative:
+              la situazione reale dipende da fattori individuali verificabili solo con un
+              <strong>commercialista o consulente abilitato</strong>.
+              InvestPro non è un intermediario finanziario autorizzato.
+              <a href="termini-e-condizioni.html" target="_blank" rel="noopener noreferrer">Termini e Condizioni →</a>
+            </span>
+          </div>
         </div></div>
         <div class="sec"><div class="sh"><span class="st">🎯 Scenari</span></div><div class="sb"><div class="scg">
           <div class="sc worst"><div class="sco" id="sp-o">50%</div><div class="scv neg" id="sp-v">€ 0</div><div class="scl">Pessimistico</div></div>
@@ -954,6 +1197,19 @@ body:has(#cookie-banner.cb-visible) #chat-widget{bottom:calc(24px + 56px)}
           <div class="rr"><span class="rk">Lordo</span><span class="rv pos" id="f-gross">€ 0</span></div>
           <div class="rr"><span class="rk">Imposte</span><span class="rv neg" id="f-tax">€ 0</span></div>
           <div class="big" id="big-fl"><div class="bl">// Profitto Netto</div><div class="bv" id="br-fl">€ 0</div><div class="bsub" id="br-fls">—</div></div>
+          <!-- Disclaimer Flip — plusvalenza soggetta ad art.68 TUIR -->
+          <div class="calc-disclaimer" role="note" aria-label="Avviso legale">
+            <span class="calc-disclaimer-icon">⚠</span>
+            <span class="calc-disclaimer-text">
+              <strong>Solo scopo informativo.</strong>
+              Il calcolo della plusvalenza è un'approssimazione basata sull'art.68 TUIR.
+              Non costituisce consulenza fiscale o di investimento ai sensi del D.Lgs. 58/1998 (TUF).
+              La tassazione reale dipende dalla natura dell'immobile, dal periodo di possesso e
+              dalla destinazione d'uso. Verifica sempre con un
+              <strong>commercialista abilitato</strong> prima di procedere.
+              <a href="termini-e-condizioni.html" target="_blank" rel="noopener noreferrer">Termini e Condizioni →</a>
+            </span>
+          </div>
         </div></div>
       </div>
     </div>
@@ -1162,7 +1418,7 @@ body:has(#cookie-banner.cb-visible) #chat-widget{bottom:calc(24px + 56px)}
 <!-- ═══ AUTH ═══ -->
 <div id="auth">
   <div class="abox">
-    <button class="ax" onclick="closeAuth()">×</button>
+    <button class="ax" onclick="closeAuth()" aria-label="Chiudi" title="Chiudi">×</button>
     <div class="alogo">Invest<span>Pro</span></div>
     <div class="atag">// analisi finanziaria immobiliare</div>
     <div class="atabs"><button class="atab on" id="t-li" onclick="sTab('li')">Accedi</button><button class="atab" id="t-re" onclick="sTab('re')">Registrati</button><button class="atab" id="t-pw" onclick="sTab('pw')" style="font-size:.72rem">Password?</button></div>
@@ -1185,6 +1441,27 @@ body:has(#cookie-banner.cb-visible) #chat-widget{bottom:calc(24px + 56px)}
           Puoi passare a <strong style="color:var(--teal)">Pro</strong> in qualsiasi momento dopo il login.
         </div>
       </div>
+      <!-- Consenso T&C + Privacy — obbligatorio: art.7 GDPR + art.1326 c.c.
+           Il label wrappa l'intero blocco: click su testo = toggle checkbox.
+           border-color rosso (.terms-err) viene aggiunto da doReg() se non spuntato. -->
+      <label class="terms-wrap" id="terms-wrap" for="i-terms">
+        <input
+          class="terms-cb"
+          type="checkbox"
+          id="i-terms"
+          name="terms"
+          aria-required="true"
+          aria-describedby="terms-desc"
+          onchange="document.getElementById('terms-wrap').classList.remove('terms-err')"
+        >
+        <span class="terms-text" id="terms-desc">
+          Ho letto e accetto i
+          <a href="termini-e-condizioni.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">Termini e Condizioni</a>
+          e la
+          <a href="privacy-policy.html" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">Privacy Policy</a>
+          di InvestPro. Confermo di avere almeno 18 anni.
+        </span>
+      </label>
       <button class="abtn" id="b-re" onclick="doReg()">Crea Account →</button>
     </div>
     <div class="af hidden" id="f-pw">
@@ -1203,7 +1480,7 @@ body:has(#cookie-banner.cb-visible) #chat-widget{bottom:calc(24px + 56px)}
   <div class="adm-wrap">
     <div class="adm-header">
       <div class="adm-title">⚙ Admin Panel <span class="pill pill-sa">SUPER ADMIN</span></div>
-      <button class="adm-close" onclick="closeAdminPanel()">×</button>
+      <button class="adm-close" onclick="closeAdminPanel()" aria-label="Chiudi pannello admin" title="Chiudi">×</button>
     </div>
 
     <!-- Stats -->
@@ -1247,11 +1524,117 @@ body:has(#cookie-banner.cb-visible) #chat-widget{bottom:calc(24px + 56px)}
     <div class="adrow"><span class="adk">Analisi oggi</span><span class="adv" id="acct-usage">—</span></div>
     <div class="adrow"><span class="adk">Scadenza Pro</span><span class="adv" id="acct-exp">—</span></div>
     <button class="adbtn" id="acct-up-btn" onclick="closeAcct();openPW()">⬆ Passa a Pro</button>
+    <!-- GDPR art.20 — diritto alla portabilità dei dati -->
+    <button class="adbtn" onclick="closeAcct();openGdprModal()" style="border-color:rgba(0,212,164,.3);color:var(--teal)">📦 Esporta i miei dati</button>
     <button class="adbtn" onclick="closeAcct()">Chiudi</button>
     <div class="danger-zone">
       <div class="danger-zone-label">// zona pericolosa</div>
       <button class="adbtn-danger" onclick="closeAcct();openDelModal()">🗑 Elimina account</button>
     </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MODAL: Export dati personali — GDPR art.20 (Portabilità)
+     Raccoglie: profilo, progetti, versioni, workspace, inviti
+     Formato: JSON strutturato (machine-readable) + TXT leggibile
+     ═══════════════════════════════════════════════════════════════ -->
+<div id="gdpr-modal" role="dialog" aria-modal="true" aria-labelledby="gdpr-title">
+  <div class="gdpr-box">
+
+    <div class="gdpr-title" id="gdpr-title">
+      <span>📦</span> Esporta i tuoi dati
+    </div>
+    <div class="gdpr-sub">
+      // GDPR art.20 — diritto alla portabilità dei dati<br>
+      Riceverai un file con tutti i dati personali che InvestPro detiene sul tuo account.
+    </div>
+
+    <!-- Anteprima dati inclusi — popolata dinamicamente da openGdprModal() -->
+    <div class="gdpr-section">
+      <div class="gdpr-section-lbl">// dati inclusi nell'export</div>
+      <div class="gdpr-checklist">
+
+        <div class="gdpr-item">
+          <span class="gdpr-item-icon">👤</span>
+          <div>
+            <div class="gdpr-item-text"><strong>Profilo account</strong> — email, nome, piano, ruolo</div>
+            <div class="gdpr-item-count" id="gd-profile-info">Caricamento...</div>
+          </div>
+        </div>
+
+        <div class="gdpr-item">
+          <span class="gdpr-item-icon">📊</span>
+          <div>
+            <div class="gdpr-item-text"><strong>Progetti salvati</strong> — parametri e risultati</div>
+            <div class="gdpr-item-count" id="gd-projects-count">Caricamento...</div>
+          </div>
+        </div>
+
+        <div class="gdpr-item">
+          <span class="gdpr-item-icon">🕐</span>
+          <div>
+            <div class="gdpr-item-text"><strong>Storico versioni</strong> — tutte le versioni salvate</div>
+            <div class="gdpr-item-count" id="gd-versions-count">Caricamento...</div>
+          </div>
+        </div>
+
+        <div class="gdpr-item">
+          <span class="gdpr-item-icon">🏢</span>
+          <div>
+            <div class="gdpr-item-text"><strong>Workspace</strong> — appartenenza e ruolo</div>
+            <div class="gdpr-item-count" id="gd-workspace-info">Caricamento...</div>
+          </div>
+        </div>
+
+        <div class="gdpr-item">
+          <span class="gdpr-item-icon">✉️</span>
+          <div>
+            <div class="gdpr-item-text"><strong>Inviti inviati</strong> — log degli inviti team</div>
+            <div class="gdpr-item-count" id="gd-invites-count">Caricamento...</div>
+          </div>
+        </div>
+
+        <div class="gdpr-item">
+          <span class="gdpr-item-icon">🔒</span>
+          <div>
+            <div class="gdpr-item-text"><strong>Dati di consenso</strong> — timestamp T&C, cookie</div>
+            <div class="gdpr-item-count" id="gd-consent-info">Da localStorage</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Barra progresso raccolta dati -->
+    <div class="gdpr-progress" id="gdpr-progress">
+      <div class="gdpr-spinner"></div>
+      <span id="gdpr-progress-txt">Raccolta dati in corso...</span>
+    </div>
+
+    <!-- Scelta formato -->
+    <div class="gdpr-fmt-row">
+      <button class="gdpr-fmt-btn" id="gdpr-btn-json" onclick="doExportGdpr('json')">
+        <span class="gdpr-fmt-icon">{ }</span>
+        <span class="gdpr-fmt-label">JSON</span>
+        <span style="font-size:.62rem;color:var(--tx3)">machine-readable</span>
+      </button>
+      <button class="gdpr-fmt-btn" id="gdpr-btn-txt" onclick="doExportGdpr('txt')">
+        <span class="gdpr-fmt-icon">📄</span>
+        <span class="gdpr-fmt-label">TXT</span>
+        <span style="font-size:.62rem;color:var(--tx3)">leggibile</span>
+      </button>
+    </div>
+
+    <div class="gdpr-legal">
+      In base al Regolamento UE 2016/679 (GDPR), hai il diritto di ricevere i tuoi dati
+      in formato strutturato, di uso comune e leggibile da dispositivo automatico (art.20).
+      I dati di pagamento (carte, fatture) sono gestiti da Stripe Inc. e non accessibili da InvestPro —
+      contatta <a href="https://stripe.com/it/privacy" target="_blank" rel="noopener noreferrer">Stripe</a> per richiederli.
+      Per ulteriori richieste: <a href="mailto:privacy@appnetto.it">privacy@appnetto.it</a>
+    </div>
+
+    <button class="adbtn" onclick="closeGdprModal()" style="margin-top:16px">Chiudi</button>
   </div>
 </div>
 
@@ -1337,7 +1720,7 @@ body:has(#cookie-banner.cb-visible) #chat-widget{bottom:calc(24px + 56px)}
   <div class="team-box">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <div class="adh" style="margin:0">👥 Gestione Team</div>
-      <button class="adm-close" onclick="closeTeamModal()">×</button>
+      <button class="adm-close" onclick="closeTeamModal()" aria-label="Chiudi gestione team" title="Chiudi">×</button>
     </div>
     <div class="team-section">
       <div class="team-section-lbl">Workspace</div>
@@ -1373,7 +1756,7 @@ body:has(#cookie-banner.cb-visible) #chat-widget{bottom:calc(24px + 56px)}
   <div class="brand-box">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <div class="adh" style="margin:0">🎨 Brand PDF</div>
-      <button class="adm-close" onclick="closeBrandModal()">×</button>
+      <button class="adm-close" onclick="closeBrandModal()" aria-label="Chiudi impostazioni brand" title="Chiudi">×</button>
     </div>
     <div class="brand-preview" id="brand-preview">
       <div class="brand-preview-logo" id="brand-logo-preview"><span style="color:var(--tx3);font-size:.7rem">Logo</span></div>
@@ -1454,7 +1837,7 @@ body:has(#cookie-banner.cb-visible) #chat-widget{bottom:calc(24px + 56px)}
         <div class="adh" style="margin:0">📂 Progetti</div>
         <div style="display:flex;gap:6px;align-items:center">
           <button class="proj-refresh" id="proj-refresh-btn" onclick="refreshProjects()" title="Aggiorna">↻</button>
-          <button class="adm-close" onclick="closeProjectsList()">×</button>
+          <button class="adm-close" onclick="closeProjectsList()" aria-label="Chiudi lista progetti" title="Chiudi">×</button>
         </div>
       </div>
       <div class="proj-tabs" id="proj-tabs">
@@ -1478,9 +1861,7 @@ body:has(#cookie-banner.cb-visible) #chat-widget{bottom:calc(24px + 56px)}
       <div class="proj-history-header">
         <button class="proj-history-back" onclick="showProjectListView()">← Indietro</button>
         <div class="proj-history-title" id="hist-title">Storico</div>
-        <button class="adm-close" onclick="closeProjectsList()">×</button>
-      </div>
-      <div id="hist-loading" style="text-align:center;padding:16px;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--tx3)">Caricamento versioni...</div>
+        <button class="adm-close" onclick="closeProjectsList()" aria-label="Chiudi storico versioni" title="Chiudi">×</button> style="text-align:center;padding:16px;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--tx3)">Caricamento versioni...</div>
       <div id="hist-empty" class="hidden" style="text-align:center;padding:16px;color:var(--tx3);font-size:.82rem">Nessuna versione salvata.</div>
       <div id="hist-items" style="display:flex;flex-direction:column;gap:6px;max-height:360px;overflow-y:auto"></div>
       <button class="adbtn" onclick="showProjectListView()" style="margin-top:14px">← Torna alla lista</button>
@@ -1488,24 +1869,155 @@ body:has(#cookie-banner.cb-visible) #chat-widget{bottom:calc(24px + 56px)}
   </div>
 </div>
 
-<!-- CDN pinned con SRI — tutti su jsdelivr (npm verbatim, hash verificabili) -->
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" integrity="sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js" integrity="sha384-en/ztfPSRkGfME4KIm05joYXynqzUgbsG5nMrj/xEFAHXkeZfO3yMK8QQ+mP7p1/" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js" integrity="sha384-fCAW/rDWORTbQXSiB7mOg0QtQ5c+r0f544y6XoKjuVva0nMBlCpNUjiFeG5iMdS3" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.105.4/dist/umd/supabase.js" integrity="sha384-7SfFUrg31wOnGWBLLniKFCNmCSguYA5wI1WPDOt7kP/mom4R9/0pwghVEnv0uwYP" crossorigin="anonymous"></script>
+<!-- Inline app — dipende dai CDN defer in <head> -->
 <script>
 // ════════════════════════════════════════════════
 // CONFIG
 // ════════════════════════════════════════════════
 const SB_URL='https://amzjefyegfxkpzjifynj.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtemplZnllZ2Z4a3B6amlmeW5qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1Mjk4NTcsImV4cCI6MjA5MjEwNTg1N30.RDnpaTFtSkx2wmI5vWScef2x9CFgyGxPoAvXy-1lNrE';
+// ⚠️  SOSTITUIRE con il DSN del proprio progetto Sentry:
+//    https://sentry.io → Impostazioni → Progetto → SDK Setup → DSN
+const SENTRY_DSN='';
 const PRM='price_1T0KhVCP1ytB9mXWR6roA7uB';
 const PRY='price_1TQmhkCP1ytB9mXWHDVnQiKU';
 const PPM='price_1TWETICP1ytB9mXWNf4YyJPr';
 const AGM='price_1TWETUCP1ytB9mXWwBTgcJJw';
-let sb=null;
-if(typeof supabase!=='undefined'&&supabase.createClient){try{sb=supabase.createClient(SB_URL,SB_KEY)}catch(e){console.error('[init] Supabase fallito:',e)}}
-if(!sb){document.addEventListener('DOMContentLoaded',()=>{setTimeout(()=>{if(typeof toast==='function')toast('⚠️ Modalità offline: il calcolatore funziona, autenticazione non disponibile.','warn')},800)})}
+// sb viene inizializzato in DOMContentLoaded, dopo che i CDN defer hanno eseguito.
+// Il fallback offline è gestito DENTRO DOMContentLoaded dopo il tentativo di createClient.
+
+// ════════════════════════════════════════════════
+// SENTRY ERROR TRACKING ENGINE
+// Versione: SDK 8.55.0 — bundle.tracing.min.js
+// ════════════════════════════════════════════════
+
+// Inizializzato da initSentry() in DOMContentLoaded dopo il CDN defer
+// _sentryReady = true indica che Sentry è attivo e pronto
+let _sentryReady = false;
+
+function initSentry(){
+  // Guard: SDK non caricato (offline, SRI mismatch, ad-blocker, no DSN)
+  if(typeof Sentry === 'undefined'){
+    console.warn('[Sentry] SDK non caricato — error tracking disabilitato');
+    return;
+  }
+  if(!SENTRY_DSN){
+    console.info('[Sentry] DSN non configurato — impostare SENTRY_DSN in config.js');
+    return;
+  }
+
+  Sentry.init({
+    dsn: SENTRY_DSN,
+
+    // ── Identificazione release ────────────────────────────────
+    // Permette di correlare gli errori a specifiche versioni deployate.
+    // Sostituire con il processo di build automatico in produzione.
+    release: 'investpro@1.0.0',
+    environment: location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+      ? 'development'
+      : 'production',
+
+    // ── Campionamento ──────────────────────────────────────────
+    // sampleRate: 1.0 → cattura il 100% degli errori JS (crash)
+    // tracesSampleRate: 0.1 → cattura il 10% delle performance traces
+    // Non alzare tracesSampleRate in produzione: costoso in quota Sentry
+    sampleRate: 1.0,
+    tracesSampleRate: 0.1,
+
+    // ── Integrazioni attive ────────────────────────────────────
+    integrations: [
+      // BrowserTracing: misura Web Vitals (LCP, FID, CLS) e navigazioni
+      Sentry.browserTracingIntegration(),
+    ],
+
+    // ── Privacy: rimuove dati sensibili prima dell'invio ──────
+    // beforeSend viene chiamato per ogni evento prima dell'invio a Sentry.
+    // Rimuove URL, email, IP e token dall'evento per rispettare il GDPR.
+    beforeSend(event) {
+      // Rimuove l'IP dell'utente
+      if(event.user) delete event.user.ip_address;
+
+      // Anonimizza l'email dell'utente (solo dominio)
+      if(event.user?.email){
+        const parts = event.user.email.split('@');
+        event.user.email = '***@' + (parts[1] || 'unknown');
+      }
+
+      // Rimuove token JWT dagli URL registrati (es. Supabase auth redirect)
+      if(event.request?.url){
+        event.request.url = event.request.url
+          .replace(/access_token=[^&]+/g, 'access_token=REDACTED')
+          .replace(/refresh_token=[^&]+/g, 'refresh_token=REDACTED')
+          .replace(/\?type=recovery.*$/, '?type=recovery');
+      }
+
+      // Filtra errori rumorosi e non azionabili
+      const msg = event.exception?.values?.[0]?.value || '';
+      const NOISE = [
+        'ResizeObserver loop',          // bug noto Chrome, non azionabile
+        'Non-Error promise rejection',  // promise rejection generica
+        'Load failed',                  // risorsa CDN bloccata da ad-blocker
+        'NetworkError',                 // offline momentaneo
+        'AbortError',                   // fetch abortito dall'utente (navigazione)
+      ];
+      if(NOISE.some(n => msg.includes(n))) return null; // null = non inviare
+
+      return event;
+    },
+
+    // ── beforeSendTransaction: filtra le transazioni di performance ─
+    beforeSendTransaction(event){
+      // Non tracciare le chiamate alle Edge Functions di Supabase
+      if(event.transaction?.includes('supabase.co')) return null;
+      return event;
+    },
+  });
+
+  _sentryReady = true;
+  console.info('[Sentry] ✓ Attivo — env:', Sentry.getCurrentScope()?.getScopeData?.()?.tags?.environment || 'production');
+}
+
+// Arricchisce il contesto Sentry con l'utente autenticato.
+// Chiamato da _handleAuth al SIGNED_IN — dopo che sb è pronto.
+function sentrySetUser(userObj){
+  if(!_sentryReady || !userObj) return;
+  Sentry.setUser({
+    id:   userObj.id,
+    // Email anonimizzata — beforeSend la offusca ulteriormente
+    email: userObj.email,
+  });
+  // Tag piano utente: permette di filtrare per "free" vs "pro" in Sentry
+  Sentry.setTag('plan', userObj.user_metadata?.plan || 'free');
+}
+
+// Rimuove il contesto utente al logout (GDPR: niente dati personali dopo logout)
+function sentryClearUser(){
+  if(!_sentryReady) return;
+  Sentry.setUser(null);
+  Sentry.setTag('plan', null);
+}
+
+// Cattura manualmente un'eccezione con contesto aggiuntivo.
+// Usato nei catch blocks critici: saveProject, doExportGdpr, doDeleteAccount, ecc.
+function sentryCapture(err, context={}){
+  if(!_sentryReady){ console.error('[sentryCapture fallback]', err, context); return; }
+  Sentry.withScope(scope => {
+    Object.entries(context).forEach(([k,v]) => scope.setExtra(k, v));
+    Sentry.captureException(err);
+  });
+}
+
+// Registra un breadcrumb custom: azione utente rilevante per il debug.
+// Usato prima di operazioni critiche (salvataggio, checkout, export).
+function sentryBreadcrumb(message, data={}){
+  if(!_sentryReady) return;
+  Sentry.addBreadcrumb({
+    category: 'app',
+    message,
+    data,
+    level: 'info',
+  });
+}
 
 // ════════════════════════════════════════════════
 // COOKIE CONSENT ENGINE
@@ -1644,20 +2156,22 @@ function hexToRgb(hex){const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(
 function rgbaFrom(hex,a){const[r,g,b]=hexToRgb(hex);return`rgba(${r},${g},${b},${a})`}
 
 // ════════════════════════════════════════════════
-// AUTH LIFECYCLE
+// AUTH LIFECYCLE — registrato in DOMContentLoaded dopo init sb
 // ════════════════════════════════════════════════
-if(sb){
-sb.auth.onAuthStateChange((event,session)=>{
-  _pendingAuth={event,session};
-  if(_authProcessing)return;
-  _authProcessing=true;
-  (async()=>{while(_pendingAuth){const{event:ev,session:ses}=_pendingAuth;_pendingAuth=null;try{await _handleAuth(ev,ses)}catch(err){console.error('[auth] errore lifecycle:',err)}}_authProcessing=false})();
-});
-}
 
 async function _handleAuth(event,session){
+  // ── PASSWORD_RECOVERY: intercetta PRIMA del ramo SIGNED_IN/SIGNED_OUT ──────
+  // Supabase emette questo evento quando l'utente clicca il link nell'email
+  // di recupero password. La sessione è già attiva (token valido) ma non
+  // vogliamo eseguire il normale login flow — mostriamo solo il form nuova pw.
+  if(event === 'PASSWORD_RECOVERY'){
+    openPwdReset();
+    return; // NON eseguire il resto del login flow
+  }
+
   user=session?.user??null;
   if(user){
+    sentrySetUser(user); // Sentry: contestualizza tutti gli errori con l'utente
     let p=null;
     try{const{data,error}=await sb.from('profiles').select('*').eq('id',user.id).single();if(error)throw error;p=data}
     catch(profileErr){console.error('Errore caricamento profilo:',profileErr);await new Promise(r=>setTimeout(r,500));const{data:retry}=await sb.from('profiles').select('*').eq('id',user.id).single();p=retry}
@@ -1770,6 +2284,7 @@ async function _handleAuth(event,session){
   } else {
     if(_logoutDone)return;
     user=null;isPro=false;isProPlus=false;isAgency=false;isSuperAdmin=false;profile=null;limShown=false;
+    sentryClearUser(); // Sentry: rimuove il contesto utente (GDPR)
     let stripeIntent=false;try{const intentTs=parseInt(localStorage.getItem('ip_stripe_intent'),10);if(Number.isFinite(intentTs)){if(Date.now()-intentTs<15*60*1000)stripeIntent=true;else localStorage.removeItem('ip_stripe_intent')}}catch(e){}
     const _usp=new URLSearchParams(location.search);const fromStripeSuccess=!!_usp.get('success');
     if(stripeIntent&&fromStripeSuccess){
@@ -1788,6 +2303,138 @@ async function _handleAuth(event,session){
 // ════════════════════════════════════════════════
 function openAuth(tab='login'){document.getElementById('auth').classList.add('on');sTab(tab==='login'?'li':'re');setTimeout(()=>document.getElementById(tab==='login'?'i-em':'i-nm')?.focus(),150)}
 function closeAuth(){document.getElementById('auth').classList.remove('on')}
+
+// ════════════════════════════════════════════════
+// NUOVA PASSWORD — PASSWORD_RECOVERY FLOW
+// Aperto da _handleAuth quando Supabase emette PASSWORD_RECOVERY.
+// Chiuso solo dopo salvataggio riuscito o logout esplicito.
+// ════════════════════════════════════════════════
+
+function openPwdReset(){
+  // Reset completo del form
+  ['i-pwr-new','i-pwr-confirm'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=''});
+  ['e-pwr','o-pwr'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('on')});
+  const bar=document.getElementById('pwr-strength-bar');if(bar){bar.style.width='0';bar.style.background='var(--border)'}
+  const lbl=document.getElementById('pwr-strength-label');if(lbl)lbl.textContent='';
+  const hint=document.getElementById('pwr-match-hint');if(hint)hint.textContent='';
+  ['pwr-r-len','pwr-r-upper','pwr-r-num','pwr-r-special'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('ok')});
+  // Chiudi tutti gli altri modali aperti per evitare sovrapposizioni
+  closeAuth();
+  document.getElementById('pwd-reset-modal').classList.add('on');
+  setTimeout(()=>document.getElementById('i-pwr-new')?.focus(),180);
+}
+
+function closePwdReset(){
+  document.getElementById('pwd-reset-modal').classList.remove('on');
+}
+
+// Valuta la forza della password e aggiorna la barra e le regole inline
+function pwrCheckStrength(){
+  const pw=document.getElementById('i-pwr-new')?.value||'';
+  const rules={
+    len:    pw.length>=8,
+    upper:  /[A-Z]/.test(pw),
+    num:    /[0-9]/.test(pw),
+    special:/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pw),
+  };
+  // Aggiorna le regole visive
+  const map={len:'pwr-r-len',upper:'pwr-r-upper',num:'pwr-r-num',special:'pwr-r-special'};
+  Object.entries(rules).forEach(([k,ok])=>{
+    document.getElementById(map[k])?.classList.toggle('ok',ok);
+  });
+  // Calcola score 0-4
+  const score=Object.values(rules).filter(Boolean).length;
+  const bar=document.getElementById('pwr-strength-bar');
+  const lbl=document.getElementById('pwr-strength-label');
+  const levels=[
+    {w:'0%',   bg:'var(--border)', txt:''},
+    {w:'25%',  bg:'var(--red)',    txt:'Debole'},
+    {w:'50%',  bg:'var(--amber)',  txt:'Discreta'},
+    {w:'75%',  bg:'#7ec8e3',       txt:'Buona'},
+    {w:'100%', bg:'var(--teal)',   txt:'Ottima ✓'},
+  ];
+  const lv=levels[pw.length===0?0:score];
+  if(bar){bar.style.width=lv.w;bar.style.background=lv.bg}
+  if(lbl)lbl.textContent=pw.length>0?lv.txt:'';
+  // Aggiorna anche il feedback di match se il secondo campo ha valore
+  if(document.getElementById('i-pwr-confirm')?.value) pwrCheckMatch();
+}
+
+// Verifica che i due campi coincidano
+function pwrCheckMatch(){
+  const pw=document.getElementById('i-pwr-new')?.value||'';
+  const cf=document.getElementById('i-pwr-confirm')?.value||'';
+  const hint=document.getElementById('pwr-match-hint');
+  if(!hint||!cf)return;
+  if(cf.length===0){hint.textContent='';return}
+  if(pw===cf){hint.textContent='✓ Le password coincidono';hint.style.color='var(--teal)'}
+  else{hint.textContent='✗ Le password non coincidono';hint.style.color='var(--red)'}
+}
+
+// Salva la nuova password tramite sb.auth.updateUser()
+async function doSetNewPassword(){
+  const btn=document.getElementById('b-pwr');
+  const errEl=document.getElementById('e-pwr');
+  const okEl=document.getElementById('o-pwr');
+  const pw=document.getElementById('i-pwr-new')?.value||'';
+  const cf=document.getElementById('i-pwr-confirm')?.value||'';
+
+  errEl.classList.remove('on');okEl.classList.remove('on');
+
+  // Validazione
+  if(pw.length<8){
+    errEl.textContent='La password deve avere almeno 8 caratteri.';
+    errEl.classList.add('on');return;
+  }
+  if(pw!==cf){
+    errEl.textContent='Le password non coincidono.';
+    errEl.classList.add('on');
+    document.getElementById('i-pwr-confirm')?.focus();return;
+  }
+  // Verifica requisiti minimi di sicurezza
+  const hasUpper=/[A-Z]/.test(pw), hasNum=/[0-9]/.test(pw);
+  if(!hasUpper||!hasNum){
+    errEl.textContent='La password deve contenere almeno una maiuscola e un numero.';
+    errEl.classList.add('on');return;
+  }
+
+  btn.disabled=true;btn.textContent='Salvataggio...';
+
+  try{
+    // Supabase aggiorna la password dell'utente autenticato via recovery token
+    const{error}=await sb.auth.updateUser({password:pw});
+    if(error){
+      const msgs={
+        'New password should be different from the old password.':'La nuova password deve essere diversa da quella precedente.',
+        'Password should be at least 6 characters.':'Min. 6 caratteri (usa almeno 8).',
+      };
+      errEl.textContent=msgs[error.message]||'Errore: '+error.message;
+      errEl.classList.add('on');
+      btn.disabled=false;btn.textContent='Salva nuova password →';
+      return;
+    }
+
+    // Successo: mostra conferma, pulisce URL (?type=recovery), poi chiude
+    okEl.textContent='✓ Password aggiornata. Reindirizzamento in corso...';
+    okEl.classList.add('on');
+    // Pulisce il fragment/querystring lasciato da Supabase
+    if(location.hash||location.search.includes('type=recovery')){
+      history.replaceState({},'',location.pathname);
+    }
+    // Chiude il modal e ri-triggera il normale flow di login
+    // (Supabase emette SIGNED_IN dopo updateUser su recovery session)
+    setTimeout(()=>{
+      closePwdReset();
+      toast('✓ Password aggiornata con successo.','ok');
+    },1500);
+
+  }catch(err){
+    errEl.textContent='Errore di rete. Riprova.';errEl.classList.add('on');
+    btn.disabled=false;btn.textContent='Salva nuova password →';
+    sentryCapture(err,{context:'doSetNewPassword',user_id:user?.id});
+    console.error('[pwd-reset]',err);
+  }
+}
 function sTab(t){
   ['li','re','pw'].forEach(x=>{
     const tb=document.getElementById(`t-${x}`),fm=document.getElementById(`f-${x}`);
@@ -1810,13 +2457,50 @@ async function doLogin(){
 async function doReg(){
   const b=document.getElementById('b-re'),e=document.getElementById('e-re'),ok=document.getElementById('o-re');
   b.disabled=true;b.textContent='...';e.classList.remove('on');ok.classList.remove('on');
+
+  // ── Validazione T&C — PRIMA di qualsiasi altra verifica (art.7 GDPR + art.1326 c.c.)
+  // Senza consenso esplicito la creazione account non ha base contrattuale valida.
+  const termsEl=document.getElementById('i-terms');
+  const termsWrap=document.getElementById('terms-wrap');
+  if(!termsEl?.checked){
+    termsWrap?.classList.add('terms-err');
+    termsEl?.scrollIntoView({behavior:'smooth',block:'center'});
+    e.textContent='Devi accettare Termini e Condizioni e Privacy Policy per procedere.';
+    e.classList.add('on');
+    b.disabled=false;b.textContent='Crea Account →';
+    return;
+  }
+
   const name=document.getElementById('i-nm').value.trim(),email=document.getElementById('i-rem').value.trim(),pass=document.getElementById('i-rpw').value;
   if(!name){e.textContent='Inserisci il nome.';e.classList.add('on');b.disabled=false;b.textContent='Crea Account →';return}
   if(!email){e.textContent='Inserisci l\'email.';e.classList.add('on');b.disabled=false;b.textContent='Crea Account →';return}
   if(pass.length<8){e.textContent='Min. 8 caratteri.';e.classList.add('on');b.disabled=false;b.textContent='Crea Account →';return}
-  const{error}=await sb.auth.signUp({email,password:pass,options:{data:{display_name:name}}});
-  if(error){e.textContent=error.message.includes('already')?'Email già registrata.':'Errore. Riprova.';e.classList.add('on')}
-  else{ok.textContent='✓ Account Free creato! Controlla la tua email per confermare.';ok.classList.add('on')}
+
+  // Il timestamp del consenso viene salvato come user_metadata in Supabase.
+  // Questo costituisce prova del consenso (data, IP indiretto via server log) — art.7 GDPR.
+  const consentTs=new Date().toISOString();
+  const{error}=await sb.auth.signUp({
+    email,
+    password:pass,
+    options:{
+      data:{
+        display_name:name,
+        terms_accepted:true,        // flag booleano — query-able da admin
+        terms_accepted_at:consentTs // timestamp ISO8601 dell'accettazione
+      }
+    }
+  });
+
+  if(error){
+    e.textContent=error.message.includes('already')?'Email già registrata.':'Errore. Riprova.';
+    e.classList.add('on');
+  } else {
+    ok.textContent='✓ Account Free creato! Controlla la tua email per confermare.';
+    ok.classList.add('on');
+    // Reset checkbox: se l'utente chiude e riapre il modal il form è pulito
+    if(termsEl)termsEl.checked=false;
+    termsWrap?.classList.remove('terms-err');
+  }
   b.disabled=false;b.textContent='Crea Account →';
 }
 
@@ -1835,6 +2519,239 @@ async function doResetPassword(){
 }
 
 // ── Eliminazione account (GDPR art.17) ───────────────────────────────────────
+// ════════════════════════════════════════════════
+// GDPR ART.20 — EXPORT DATI PERSONALI
+// Raccoglie in parallelo da: profiles, projects,
+// project_versions, workspace_members, workspace_invites
+// Output: JSON strutturato (machine-readable) + TXT (human-readable)
+// ════════════════════════════════════════════════
+
+// Cache dei dati raccolti — evita doppia fetch se l'utente apre più volte il modal
+let _gdprCache = null;
+
+function openGdprModal(){
+  if(!user){ toast('Devi essere autenticato.','err'); return; }
+  document.getElementById('gdpr-modal').classList.add('on');
+  // Reset contatori UI a "Caricamento..."
+  ['gd-profile-info','gd-projects-count','gd-versions-count','gd-workspace-info','gd-invites-count']
+    .forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent='Caricamento...'; });
+  document.getElementById('gd-consent-info').textContent='Da localStorage';
+  // Raccoglie i dati in background per popolare l'anteprima
+  _collectGdprData().then(d=>{
+    if(!d) return;
+    const pi=document.getElementById('gd-profile-info');
+    if(pi) pi.textContent=`Piano: ${d.profile?.plan||'free'} · Registrato: ${d.profile?.created_at?new Date(d.profile.created_at).toLocaleDateString('it-IT'):'—'}`;
+    const pc=document.getElementById('gd-projects-count');
+    if(pc) pc.textContent=`${d.projects?.length||0} progetti salvati`;
+    const vc=document.getElementById('gd-versions-count');
+    if(vc) vc.textContent=`${d.versions?.length||0} versioni totali`;
+    const wi=document.getElementById('gd-workspace-info');
+    if(wi) wi.textContent=d.workspace?`Workspace: "${d.workspace.name||'—'}" · Ruolo: ${d.wsRole||'—'}`:'Nessun workspace attivo';
+    const ic=document.getElementById('gd-invites-count');
+    if(ic) ic.textContent=`${d.invites?.length||0} inviti inviati`;
+    const ci=document.getElementById('gd-consent-info');
+    if(ci){
+      const ts=localStorage.getItem('ip_consent_ts');
+      ci.textContent=ts?`Consenso cookie: ${new Date(ts).toLocaleDateString('it-IT')} (${localStorage.getItem('ip_consent_choice')||'—'})`:'Nessun consenso cookie registrato';
+    }
+  }).catch(()=>{
+    ['gd-profile-info','gd-projects-count','gd-versions-count','gd-workspace-info','gd-invites-count']
+      .forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent='Errore caricamento'; });
+  });
+}
+
+function closeGdprModal(){
+  document.getElementById('gdpr-modal').classList.remove('on');
+}
+
+// Raccoglie tutti i dati utente da Supabase in parallelo
+// Risultato cachato in _gdprCache per evitare refetch
+async function _collectGdprData(){
+  if(_gdprCache) return _gdprCache;
+  const uid = user.id;
+  // Esecuzione parallela di tutte le query — min latenza
+  const [profRes, projRes, verRes, wsMemRes, invRes] = await Promise.allSettled([
+    sb.from('profiles').select('*').eq('id', uid).single(),
+    sb.from('projects').select('name,data,updated_at,workspace_id').eq('user_id', uid).order('updated_at',{ascending:false}),
+    sb.from('project_versions').select('project_name,version,note,data,created_at').eq('user_id', uid).order('created_at',{ascending:false}),
+    sb.from('workspace_members').select('workspace_id,role,joined_at').eq('user_id', uid),
+    // Inviti inviati dall'utente (invited_by = user.id) — max 100
+    sb.from('workspace_invites').select('invited_email,role,status,created_at,expires_at').eq('invited_by', uid).order('created_at',{ascending:false}).limit(100)
+  ]);
+
+  // Workspace attivo (nome) — se disponibile
+  let workspace = null, wsRole = null;
+  if(wsMemRes.status==='fulfilled' && wsMemRes.value.data?.length){
+    const mem = wsMemRes.value.data[0];
+    wsRole = mem.role;
+    try{
+      const{data:ws}=await sb.from('workspaces').select('id,name,created_at').eq('id',mem.workspace_id).single();
+      workspace = ws;
+    }catch(e){}
+  }
+
+  _gdprCache = {
+    // Dati Supabase
+    profile:    profRes.status==='fulfilled' ? profRes.value.data : null,
+    projects:   projRes.status==='fulfilled' ? (projRes.value.data||[]) : [],
+    versions:   verRes.status==='fulfilled'  ? (verRes.value.data||[]) : [],
+    wsMemberships: wsMemRes.status==='fulfilled' ? (wsMemRes.value.data||[]) : [],
+    workspace,
+    wsRole,
+    invites:    invRes.status==='fulfilled'  ? (invRes.value.data||[]) : [],
+    // Dati auth (dal JWT già in memoria — nessuna call aggiuntiva)
+    account: {
+      id:              user.id,
+      email:           user.email,
+      created_at:      user.created_at,
+      last_sign_in_at: user.last_sign_in_at,
+      email_confirmed: user.email_confirmed_at || null,
+      terms_accepted_at: user.user_metadata?.terms_accepted_at || null,
+      display_name:    user.user_metadata?.display_name || null,
+    },
+    // Dati localStorage (consenso cookie)
+    localConsent: {
+      consent_ts:     localStorage.getItem('ip_consent_ts'),
+      consent_choice: localStorage.getItem('ip_consent_choice'),
+    },
+    // Metadati export
+    _meta: {
+      exported_at:    new Date().toISOString(),
+      gdpr_article:   'Art.20 GDPR — Diritto alla portabilità dei dati',
+      data_controller:'AppNetto S.r.l. — privacy@appnetto.it',
+      format_version: '1.0',
+    }
+  };
+  return _gdprCache;
+}
+
+// Formatta il dump in TXT human-readable
+function _gdprToTxt(d){
+  const line = (k,v) => `  ${k.padEnd(28,' ')}: ${v??'—'}`;
+  const sep  = () => '─'.repeat(60);
+  const rows = [];
+  rows.push('EXPORT DATI PERSONALI — InvestPro');
+  rows.push(sep());
+  rows.push(`Esportato il: ${new Date(d._meta.exported_at).toLocaleString('it-IT')}`);
+  rows.push(`Base legale: ${d._meta.gdpr_article}`);
+  rows.push(`Titolare: ${d._meta.data_controller}`);
+  rows.push('');
+  rows.push('── ACCOUNT ──────────────────────────────────────────────');
+  rows.push(line('ID',              d.account.id));
+  rows.push(line('Email',           d.account.email));
+  rows.push(line('Nome visualizzato',d.account.display_name));
+  rows.push(line('Registrato il',   d.account.created_at?new Date(d.account.created_at).toLocaleString('it-IT'):null));
+  rows.push(line('Ultimo accesso',  d.account.last_sign_in_at?new Date(d.account.last_sign_in_at).toLocaleString('it-IT'):null));
+  rows.push(line('Email confermata',d.account.email_confirmed?new Date(d.account.email_confirmed).toLocaleString('it-IT'):null));
+  rows.push(line('T&C accettati il',d.account.terms_accepted_at?new Date(d.account.terms_accepted_at).toLocaleString('it-IT'):null));
+  rows.push('');
+  rows.push('── PROFILO ──────────────────────────────────────────────');
+  if(d.profile){
+    rows.push(line('Piano',             d.profile.plan));
+    rows.push(line('Ruolo',             d.profile.role));
+    rows.push(line('Subscription',      d.profile.subscription_status));
+    rows.push(line('Scadenza Pro',      d.profile.pro_expires_at?new Date(d.profile.pro_expires_at).toLocaleString('it-IT'):null));
+    rows.push(line('Stripe Customer ID',d.profile.stripe_customer_id||null));
+  } else { rows.push('  Nessun profilo trovato.'); }
+  rows.push('');
+  rows.push('── CONSENSO COOKIE ──────────────────────────────────────');
+  rows.push(line('Data consenso',   d.localConsent.consent_ts?new Date(d.localConsent.consent_ts).toLocaleString('it-IT'):null));
+  rows.push(line('Scelta',          d.localConsent.consent_choice));
+  rows.push('');
+  rows.push(`── PROGETTI SALVATI (${d.projects.length}) ${'─'.repeat(Math.max(0,40-d.projects.length.toString().length))}`);
+  if(d.projects.length){
+    d.projects.forEach((p,i)=>{
+      rows.push(`  [${i+1}] ${p.name} — aggiornato: ${new Date(p.updated_at).toLocaleString('it-IT')}${p.workspace_id?' [workspace]':''}`);
+    });
+  } else { rows.push('  Nessun progetto salvato.'); }
+  rows.push('');
+  rows.push(`── STORICO VERSIONI (${d.versions.length}) ${'─'.repeat(Math.max(0,40-d.versions.length.toString().length))}`);
+  if(d.versions.length){
+    d.versions.forEach(v=>{
+      rows.push(`  ${v.project_name} v${v.version} — ${new Date(v.created_at).toLocaleString('it-IT')}${v.note?` — "${v.note}"`:''}`);
+    });
+  } else { rows.push('  Nessuna versione nel storico.'); }
+  rows.push('');
+  rows.push('── WORKSPACE ────────────────────────────────────────────');
+  if(d.workspace){
+    rows.push(line('Nome workspace',  d.workspace.name));
+    rows.push(line('Ruolo',           d.wsRole));
+    rows.push(line('Creato il',       d.workspace.created_at?new Date(d.workspace.created_at).toLocaleString('it-IT'):null));
+  } else { rows.push('  Nessun workspace attivo.'); }
+  rows.push('');
+  rows.push(`── INVITI INVIATI (${d.invites.length}) ${'─'.repeat(Math.max(0,40-d.invites.length.toString().length))}`);
+  if(d.invites.length){
+    d.invites.forEach(inv=>{
+      rows.push(`  → ${inv.invited_email} (${inv.role}) — ${inv.status} — ${new Date(inv.created_at).toLocaleString('it-IT')}`);
+    });
+  } else { rows.push('  Nessun invito inviato.'); }
+  rows.push('');
+  rows.push(sep());
+  rows.push('NOTA: i dati di pagamento (carte, fatture) sono gestiti');
+  rows.push('interamente da Stripe Inc. Contatta stripe.com per richiederli.');
+  rows.push('Per ulteriori richieste: privacy@appnetto.it');
+  return rows.join('\n');
+}
+
+// Scarica il file sul browser dell'utente
+function _triggerDownload(content, filename, mime){
+  const blob = new Blob([content], {type: mime});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  // Cleanup: rilascia l'object URL dopo il download
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 2000);
+}
+
+async function doExportGdpr(format){
+  if(!user){ toast('Sessione scaduta. Rieffettua il login.','err'); return; }
+  const progressEl  = document.getElementById('gdpr-progress');
+  const progressTxt = document.getElementById('gdpr-progress-txt');
+  const btnJson     = document.getElementById('gdpr-btn-json');
+  const btnTxt      = document.getElementById('gdpr-btn-txt');
+
+  // UI: stato caricamento
+  progressEl.classList.add('on');
+  progressTxt.textContent = 'Raccolta dati da Supabase...';
+  if(btnJson) btnJson.disabled = true;
+  if(btnTxt)  btnTxt.disabled  = true;
+
+  try{
+    const d = await _collectGdprData();
+    progressTxt.textContent = 'Preparazione file...';
+
+    const ts    = new Date().toISOString().replace(/[:.]/g,'-').slice(0,19);
+    const email = (user.email||'user').replace(/[^a-z0-9]/gi,'_');
+
+    if(format === 'json'){
+      // JSON strutturato — machine-readable, formato raccomandato da GDPR art.20 par.1
+      const payload = JSON.stringify(d, null, 2);
+      _triggerDownload(payload, `investpro_dati_${email}_${ts}.json`, 'application/json');
+    } else {
+      // TXT formattato — human-readable per l'utente non tecnico
+      const payload = _gdprToTxt(d);
+      _triggerDownload(payload, `investpro_dati_${email}_${ts}.txt`, 'text/plain;charset=utf-8');
+    }
+
+    progressEl.classList.remove('on');
+    toast('✓ Export completato.','ok');
+  } catch(err){
+    progressEl.classList.remove('on');
+    progressTxt.textContent = 'Errore.';
+    sentryCapture(err,{context:'doExportGdpr',format,user_id:user?.id});
+    toast('Errore durante l\'export: '+(err.message||'riprova.'),'err');
+    console.error('[GDPR export]', err);
+    // Invalida la cache in caso di errore parziale
+    _gdprCache = null;
+  } finally {
+    if(btnJson) btnJson.disabled = false;
+    if(btnTxt)  btnTxt.disabled  = false;
+  }
+}
+
 function openDelModal(){
   document.getElementById('del-email-confirm').value='';
   document.getElementById('del-confirm-btn').disabled=true;
@@ -1854,6 +2771,7 @@ async function doDeleteAccount(){
   const btn=document.getElementById('del-confirm-btn'),e=document.getElementById('e-del');
   if(!user){e.textContent='Sessione non valida. Rieffettua il login.';e.classList.add('on');return}
   btn.disabled=true;btn.textContent='Eliminazione...';e.classList.remove('on');
+  sentryBreadcrumb('doDeleteAccount:start', {user_id:user?.id});
   try{
     const session=await sb.auth.getSession();
     const token=session?.data?.session?.access_token;
@@ -1864,6 +2782,7 @@ async function doDeleteAccount(){
     closeDelModal();toast('Account eliminato. Ci dispiace vederti andare.','ok');
     setTimeout(async()=>{await doLogout()},1800);
   }catch(err){
+    sentryCapture(err,{context:'doDeleteAccount',user_id:user?.id});
     e.textContent='Errore: '+(err.message||'Riprova.');e.classList.add('on');
     btn.disabled=false;btn.textContent='Elimina definitivamente';checkDelConfirm();
   }
@@ -1975,8 +2894,9 @@ async function checkout(period){
   const pidMap={monthly:PRM,yearly:PRY,proplus:PPM,agency:AGM};const btnMap={monthly:'co-m',yearly:'co-y',proplus:'co-pp',agency:'co-ag'};
   const pid=pidMap[period];if(!pid){toast('Piano non riconosciuto.','err');return}
   const btn=document.getElementById(btnMap[period]);const orig=btn?.innerHTML;if(btn){btn.disabled=true;btn.textContent='Collegamento a Stripe...'}
+  sentryBreadcrumb('checkout:start',{period,user_id:user?.id});
   try{const{data,error:fnErr}=await sb.functions.invoke('create-checkout',{body:{priceId:pid,successUrl:location.origin+location.pathname+'?success=1',cancelUrl:location.origin+location.pathname+'?canceled=1'}});if(fnErr)throw new Error(fnErr.message);if(!data?.url)throw new Error('URL checkout non ricevuto.');if(btn)btn.textContent='Reindirizzamento...';try{localStorage.setItem('ip_stripe_intent',Date.now().toString())}catch(e){}location.href=data.url}
-  catch(e){toast('Errore: '+e.message,'err');if(btn){btn.disabled=false;btn.innerHTML=orig}}
+  catch(e){sentryCapture(e,{context:'checkout',period,user_id:user?.id});toast('Errore: '+e.message,'err');if(btn){btn.disabled=false;btn.innerHTML=orig}}
 }
 
 // ════════════════════════════════════════════════
@@ -2101,6 +3021,7 @@ async function saveProject(){
   if(!canSave()){openPW('save');return}if(!user)return;
   if(_saveLock)return;_saveLock=true;
   const saveBtn=document.getElementById('nav-save');if(saveBtn){saveBtn.disabled=true;saveBtn.textContent='⏳'}
+  sentryBreadcrumb('saveProject:start', {user_id:user?.id});
   try{
     const ids=['price','reno','closing','city-tax','ltv','rate','years','apprec','adr','occ','ota','guests','fixed','varco','maint','vac','tax-rate','flip-price','flip-months','flip-ag','flip-hold','flip-tax'];
     const name=document.getElementById('proj-name').value||'Nuova Analisi';const data={mode,name};
@@ -2114,9 +3035,9 @@ async function saveProject(){
         const note=document.getElementById('save-note')?.value.trim().slice(0,200)||'';
         const{error:verErr}=await sb.from('project_versions').insert({user_id:user.id,project_name:name,data,version:nextVer,note,created_at:new Date().toISOString()});if(verErr)throw verErr;
         const noteEl=document.getElementById('save-note');if(noteEl)noteEl.value='';toast('✓ Salvato (v'+nextVer+').','ok');
-      }catch(vErr){console.error('[versions] PARTIAL_SAVE:',{user_id:user.id,project_name:name,attempted_version:nextVer,error:vErr?.message,ts:new Date().toISOString()});toast('✓ Salvato, storico non aggiornato.','warn')}
+      }catch(vErr){sentryCapture(vErr,{context:'saveProject:version',user_id:user.id,project_name:name});console.error('[versions] PARTIAL_SAVE:',{user_id:user.id,project_name:name,error:vErr?.message});toast('✓ Salvato, storico non aggiornato.','warn')}
     }else{toast('✓ Progetto salvato.','ok')}
-  }catch(e){toast('Errore salvataggio: '+(e.message||''),'err')}
+  }catch(e){sentryCapture(e,{context:'saveProject:upsert',user_id:user?.id});toast('Errore salvataggio: '+(e.message||''),'err')}
   finally{_saveLock=false;if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='💾 Salva'}}
 }
 
@@ -2508,14 +3429,49 @@ function initTheme(){let saved='dark';try{saved=localStorage.getItem('ip_theme')
 // INIT
 // ════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
+  // ── Inizializzazione Supabase ──────────────────────────────────────────────
+  // DOMContentLoaded si attiva DOPO che tutti i <script defer> hanno eseguito
+  // (spec HTML §8.1.4.3). Supabase è quindi già disponibile qui.
+  let sb=null;
+  if(typeof supabase!=='undefined'&&supabase.createClient){
+    try{sb=supabase.createClient(SB_URL,SB_KEY)}
+    catch(e){console.error('[init] Supabase fallito:',e)}
+  }else{
+    // Fallback: CDN non caricato (offline, SRI mismatch, ad-blocker)
+    console.warn('[init] Supabase CDN non disponibile — funzionalità autenticazione disabilitate');
+    setTimeout(()=>{if(typeof toast==='function')toast('⚠️ Modalità offline: il calcolatore funziona, autenticazione non disponibile.','warn')},800);
+  }
+
+  // Espone sb come variabile globale accessibile a tutte le funzioni già definite
+  window.sb = sb;
+
+  // ── Auth lifecycle ─────────────────────────────────────────────────────────
+  if(sb){
+    sb.auth.onAuthStateChange((event,session)=>{
+      _pendingAuth={event,session};
+      if(_authProcessing)return;
+      _authProcessing=true;
+      (async()=>{while(_pendingAuth){const{event:ev,session:ses}=_pendingAuth;_pendingAuth=null;try{await _handleAuth(ev,ses)}catch(err){console.error('[auth] errore lifecycle:',err)}}_authProcessing=false})();
+    });
+  }
+
+  // ── Sentry: inizializzato dopo tutti i CDN defer ───────────────────────────
+  // DEVE stare dopo window.sb per poter taggare il piano utente al login
+  initSentry();
+
   // Cookie consent: va inizializzato PRIMA di qualsiasi altra UI
   cbInit();
   initTheme();calc();
   document.getElementById('i-pw')?.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
   document.getElementById('i-rpw')?.addEventListener('keydown',e=>{if(e.key==='Enter')doReg()});
   document.getElementById('i-pw-email')?.addEventListener('keydown',e=>{if(e.key==='Enter')doResetPassword()});
+  // Enter sui campi nuova password
+  document.getElementById('i-pwr-new')?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('i-pwr-confirm')?.focus()});
+  document.getElementById('i-pwr-confirm')?.addEventListener('keydown',e=>{if(e.key==='Enter')doSetNewPassword()});
   document.addEventListener('keydown',e=>{
-    if(e.key==='Escape'){closeAuth();closePW();closeAdminPanel();closeAcct();closeProjectsList();closeBrandModal();closeTeamModal();closeDelModal()}
+    if(e.key==='Escape'){closeAuth();closePW();closeAdminPanel();closeAcct();closeProjectsList();closeBrandModal();closeTeamModal();closeDelModal();closeGdprModal();
+    // pwd-reset-modal NON si chiude con Escape — l'utente deve completare o usare doLogout
+    }
     if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();if(user)saveProject()}
   });
   document.getElementById('auth').addEventListener('click',e=>{if(e.target===e.currentTarget)closeAuth()});
@@ -2526,7 +3482,81 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('brand-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeBrandModal()});
   document.getElementById('team-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeTeamModal()});
   document.getElementById('del-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeDelModal()});
+  document.getElementById('gdpr-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeGdprModal()});
 });
 </script>
+<!-- ═══════════════════════════════════════════════════════════════
+     MODAL: Nuova Password — aperto da _handleAuth su evento PASSWORD_RECOVERY
+     L'utente arriva qui cliccando il link nell'email di recupero password.
+     Supabase inietta il token nella sessione prima di fare scattare l'evento.
+     ═══════════════════════════════════════════════════════════════ -->
+<div id="pwd-reset-modal" role="dialog" aria-modal="true" aria-labelledby="pwr-title-lbl">
+  <div class="pwr-box">
+
+    <div class="pwr-badge">// recupero password</div>
+    <div class="pwr-title" id="pwr-title-lbl">Imposta una nuova password</div>
+    <div class="pwr-sub">
+      Sei autenticato tramite il link di recupero.<br>
+      Scegli una password sicura per il tuo account.
+    </div>
+
+    <!-- Errori / successo -->
+    <div class="aerr" id="e-pwr"></div>
+    <div class="aok"  id="o-pwr"></div>
+
+    <!-- Campo: nuova password -->
+    <div class="afg">
+      <label class="afl" for="i-pwr-new">Nuova password</label>
+      <input
+        class="afi"
+        type="password"
+        id="i-pwr-new"
+        placeholder="Min. 8 caratteri"
+        minlength="8"
+        autocomplete="new-password"
+        oninput="pwrCheckStrength()"
+        aria-describedby="pwr-strength-label pwr-rules-list"
+      >
+      <!-- Barra forza password -->
+      <div class="pwr-strength" id="pwr-strength-bar"></div>
+      <div class="pwr-strength-label" id="pwr-strength-label" aria-live="polite"></div>
+    </div>
+
+    <!-- Regole inline — si colorano verde man mano che vengono soddisfatte -->
+    <div class="pwr-rules" id="pwr-rules-list" aria-label="Requisiti password">
+      <span id="pwr-r-len">· Min. 8 caratteri</span>
+      <span id="pwr-r-upper">· Almeno una lettera maiuscola</span>
+      <span id="pwr-r-num">· Almeno un numero</span>
+      <span id="pwr-r-special">· Almeno un carattere speciale (!@#$%^&amp;*)</span>
+    </div>
+
+    <!-- Campo: conferma password -->
+    <div class="afg">
+      <label class="afl" for="i-pwr-confirm">Conferma password</label>
+      <input
+        class="afi"
+        type="password"
+        id="i-pwr-confirm"
+        placeholder="Ripeti la password"
+        minlength="8"
+        autocomplete="new-password"
+        oninput="pwrCheckMatch()"
+        aria-describedby="pwr-match-hint"
+      >
+      <div class="pwr-strength-label" id="pwr-match-hint" aria-live="polite"></div>
+    </div>
+
+    <button class="abtn" id="b-pwr" onclick="doSetNewPassword()">
+      Salva nuova password →
+    </button>
+
+    <div style="margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--tx3);text-align:center;line-height:1.6">
+      La sessione di recupero scade in 1 ora.<br>
+      Dopo il salvataggio verrai portato alla dashboard.
+    </div>
+
+  </div>
+</div>
+
 </body>
 </html>
