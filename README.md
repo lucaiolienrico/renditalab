@@ -12,7 +12,7 @@ SaaS single-file per investitori immobiliari, host Airbnb e agenti. Calcolo con 
 - **Pagamenti**: Stripe (4 tier: Free / Pro / Pro+ / Agency)
 - **Email**: Resend
 - **Error tracking**: Sentry (SDK 8.55.0 — disattivo finché `SENTRY_DSN` è vuoto)
-- **Hosting**: Vercel — dominio `rendimax.app`
+- **Hosting**: Vercel — dominio `renditalab.it`
 
 ---
 
@@ -34,14 +34,14 @@ SaaS single-file per investitori immobiliari, host Airbnb e agenti. Calcolo con 
 ---
 
 ## Deploy (Vercel)
-Push su `main` → deploy automatico. Il dominio `rendimax.app` è collegato dalla dashboard Vercel (NON serve `CNAME`).
+Push su `main` → deploy automatico. Il dominio `renditalab.it` è collegato dalla dashboard Vercel (NON serve `CNAME`).
 
 ---
 
 ## Configurazione richiesta (esterna al repo)
-- **Supabase Auth**: Site URL e Redirect URLs → `https://rendimax.app/*` (rimuovere eventuali `/appnetto/`).
-- **Stripe**: success/cancel URL → `https://rendimax.app/?success=1` / `?canceled=1`. Webhook → edge function `stripe-webhook`. Price ID: `PRM` (Pro mensile), `PRY` (Pro annuale), `PPM` (Pro+), `AGM` (Agency).
-- **Email**: configurare provider per `@rendimax.app` (support@, privacy@) — al momento non attive.
+- **Supabase Auth**: Site URL e Redirect URLs → `https://renditalab.it/*` (rimuovere eventuali `/appnetto/`).
+- **Stripe**: success/cancel URL → `https://renditalab.it/?success=1` / `?canceled=1`. Webhook → edge function `stripe-webhook`. Price ID: `PRM` (Pro mensile), `PRY` (Pro annuale), `PPM` (Pro+), `AGM` (Agency).
+- **Email**: configurare provider per `@renditalab.it` (support@, privacy@) — al momento non attive.
 - **Sentry**: impostare `SENTRY_DSN` in `index.html` per attivare l'error tracking.
 
 ---
