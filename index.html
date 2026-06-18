@@ -3511,8 +3511,9 @@ async function sendInvite(){
   const emailEl=document.getElementById('tm-invite-email'),roleEl=document.getElementById('tm-invite-role'),errEl=document.getElementById('tm-invite-err'),btn=document.getElementById('tm-invite-btn');
   const email=emailEl.value.trim().toLowerCase();errEl.classList.remove('on');
   if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){errEl.textContent='Email non valida.';errEl.classList.add('on');return}
-  try{const{data:exists,error:chkErr}=await sb.rpc('check_user_exists_by_email',{p_email:email});if(chkErr)throw chkErr;if(!exists){errEl.textContent='Nessun utente con questa email. Deve prima registrarsi su RenditaLab.';errEl.classList.add('on');return}}catch(e){console.warn('[invite] check fallita, procedo:',e)}
-  if(_wsMembers.length>=_workspace.max_members){errEl.textContent='Limite '+_workspace.max_members+' membri raggiunto.';errEl.classList.add('on');return}
+  // L'esistenza dell'utente NON e' piu' bloccante: l'email di invito guida la registrazione con questo indirizzo.
+  if(email===(user?.email||'').toLowerCase()){errEl.textContent='Non puoi invitare te stesso.';errEl.classList.add('on');return}
+  const _activePending=(_wsInvites||[]).filter(i=>i.status==='pending'&&new Date(i.expires_at)>new Date()).length;if(_wsMembers.length+_activePending>=_workspace.max_members){errEl.textContent='Limite '+_workspace.max_members+' utenti raggiunto (membri + inviti pendenti).';errEl.classList.add('on');return}
   btn.disabled=true;btn.textContent='Invio...';
   try{
     const role=roleEl.value||'member';
